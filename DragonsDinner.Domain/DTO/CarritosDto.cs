@@ -11,7 +11,7 @@ public class CarritosDto
 {
     public int CarritoId { get; set; }
 
-    public ICollection<Productos> Productos { get; set; } = new List<Productos>();
+    public ICollection<ProductosDto> Productos { get; set; } = new List<ProductosDto>();
 
     public double Total { get; set; }
 }

@@ -12,13 +12,15 @@ public class CarritosDetallesDto
 {
     public int DetalleId { get; set; }
 
-    [ForeignKey("Carrito")]
     public int CarritoId { get; set; }
-    public Carritos? Carrito { get; set; }
 
-    [ForeignKey("Producto")]
     public int ProductoId { get; set; }
-    public Productos? Producto { get; set; }
+
+    public string NombreProducto { get; set; }
+
+    public string DescripcionProducto { get; set; }
+
+    public double Precio { get; set; }
 
     public int Cantidad { get; set; }
 

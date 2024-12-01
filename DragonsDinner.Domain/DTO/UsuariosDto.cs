@@ -14,10 +14,7 @@ public class UsuariosDto
     public string Nombres { get; set; }
     public string FotoPerfil { get; set; }
 
-    [ForeignKey("UsuarioId")]
-    public ICollection<Productos> Productos { get; set; } = new List<Productos>();
+    public ICollection<ProductosDto> Productos { get; set; } = new List<ProductosDto>();
 
-    [ForeignKey("Orden")]
     public int OrdenId { get; set; }
-    public Ordenes? Orden { get; set; }
 }
