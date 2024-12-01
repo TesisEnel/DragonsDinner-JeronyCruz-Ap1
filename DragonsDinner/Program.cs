@@ -14,6 +14,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+//Inyeccion del contexto
+builder.Services.RegisterServices();
+builder.Services.AddScoped<CategoriasService>();
+builder.Services.AddScoped<ProductosService>();
+builder.Services.AddScoped<CarritosService>();
+builder.Services.AddScoped<OrdenesService>();
+builder.Services.AddScoped<TarjetasService>();
+builder.Services.AddScoped<MetodosPagoService>();
+builder.Services.AddScoped<DireccionesService>();
+builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddSingleton<ToastService>();
+
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -27,7 +39,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("SqlConStr") ?? throw new InvalidOperationException("Connection string 'SqlConStr' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -38,18 +50,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-//Inyeccion del contexto
-builder.Services.RegisterServices();
-
-builder.Services.AddScoped<CategoriasService>();
-builder.Services.AddScoped<ProductosService>();
-builder.Services.AddScoped<CarritosService>();
-builder.Services.AddScoped<OrdenesService>();
-builder.Services.AddScoped<TarjetasService>();
-builder.Services.AddScoped<MetodosPagoService>();
-builder.Services.AddScoped<DireccionesService>();
-builder.Services.AddScoped<UsuariosService>();
-builder.Services.AddSingleton<ToastService>();
 
 var app = builder.Build();
 

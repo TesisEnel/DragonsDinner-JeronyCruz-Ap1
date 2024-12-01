@@ -87,19 +87,4 @@ public class CategoriasService(IDbContextFactory<ApplicationDbContext> DbFactory
         .Where(criterio)
         .ToListAsync();
     }
-
-    Task<bool> ICategoriasService.Existe(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<bool> ICategoriasService.Modificar(CategoriasDto categoriaDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<bool> ICategoriasService.Insertar(CategoriasDto categoriaDto)
-    {
-        throw new NotImplementedException();
-    }
 }

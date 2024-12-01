@@ -21,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DragonsDinner.Abstractions\DragonsDinner.Abstractions.csproj" />
+    <ProjectReference Include="..\DragonsDinner.Data\DragonsDinner.Data.csproj" />
     <ProjectReference Include="..\DragonsDinner.Domain\DragonsDinner.Domain.csproj" />
     <ProjectReference Include="..\DragonsDinner.Services\DragonsDinner.Services.csproj" />
   </ItemGroup>
