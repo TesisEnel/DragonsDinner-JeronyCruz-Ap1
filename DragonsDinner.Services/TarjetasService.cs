@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DragonsDinner.Services
+namespace DragonsDinner.Services;
+
+public class TarjetasService
 {
-    internal class TarjetasService
-    {
-    }
 }
