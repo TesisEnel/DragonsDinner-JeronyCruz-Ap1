@@ -23,8 +23,19 @@ public class UsuariosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                 UsuarioId = p.UsuarioId,
                 Nombres = p.Nombres,
                 FotoPerfil = p.FotoPerfil,
-                Productos = p.Productos,
-                Orden = p.Orden
+                OrdenId = p.OrdenId,
+                Productos = p.Productos.Select(o => new ProductosDto()
+                {
+                    ProductoId = o.ProductoId,
+                    Nombre = o.Nombre,
+                    Existencia = o.Existencia,
+                    Descripcion = o.Descripcion,
+                    Precio = o.Precio,
+                    CategoriaId = o.CategoriaId,
+                    Imagen = o.Imagen,
+                    Costo = o.Costo
+                }).ToList()
+
             }).FirstOrDefaultAsync();
         return usuario ?? new UsuariosDto();
     }
@@ -45,8 +56,18 @@ public class UsuariosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             UsuarioId = usuarioDto.UsuarioId,
             Nombres = usuarioDto.Nombres,
             FotoPerfil = usuarioDto.FotoPerfil,
-            Productos = usuarioDto.Productos,
-            Orden = usuarioDto.Orden
+            OrdenId = usuarioDto.OrdenId,
+            Productos = usuarioDto.Productos.Select(o => new Productos()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Usuarios.Add(usuario);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -62,8 +83,18 @@ public class UsuariosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             UsuarioId = usuarioDto.UsuarioId,
             Nombres = usuarioDto.Nombres,
             FotoPerfil = usuarioDto.FotoPerfil,
-            Productos = usuarioDto.Productos,
-            Orden = usuarioDto.Orden
+            OrdenId = usuarioDto.OrdenId,
+            Productos = usuarioDto.Productos.Select(o => new Productos()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Update(usuarioDto);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -93,8 +124,18 @@ public class UsuariosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             UsuarioId = p.UsuarioId,
             Nombres = p.Nombres,
             FotoPerfil = p.FotoPerfil,
-            Productos = p.Productos,
-            Orden = p.Orden
+            OrdenId = p.OrdenId,
+            Productos = p.Productos.Select(o => new ProductosDto()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         })
         .Where(criterio)
         .ToListAsync();

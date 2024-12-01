@@ -22,7 +22,7 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
             {
                 MetodoPagoId = p.MetodoPagoId,
                 MetodoPago = p.MetodoPago,
-                Tarjeta = p.Tarjeta,
+                TarjetaId = p.TarjetaId,
 
             }).FirstOrDefaultAsync();
         return metodoPago ?? new MetodosPagoDto();
@@ -43,7 +43,7 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = metodosPagoDto.MetodoPagoId,
             MetodoPago = metodosPagoDto.MetodoPago,
-            Tarjeta = metodosPagoDto.Tarjeta,
+            TarjetaId = metodosPagoDto.TarjetaId,
         };
         contexto.MetodosPagos.Add(metodoPago);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -58,7 +58,7 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = metodosPagoDto.MetodoPagoId,
             MetodoPago = metodosPagoDto.MetodoPago,
-            Tarjeta = metodosPagoDto.Tarjeta,
+            TarjetaId = metodosPagoDto.TarjetaId,
         };
         contexto.Update(metodoPago);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -87,7 +87,7 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = p.MetodoPagoId,
             MetodoPago = p.MetodoPago,
-            Tarjeta = p.Tarjeta,
+            TarjetaId = p.TarjetaId,
         })
         .Where(criterio)
         .ToListAsync();

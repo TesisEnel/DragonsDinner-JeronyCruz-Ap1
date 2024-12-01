@@ -23,8 +23,17 @@ public class OrdenesService(IDbContextFactory<ApplicationDbContext> DbFactory) :
                 OrdenId = p.OrdenId,
                 Total = p.Total,
                 Fecha = p.Fecha,
-                OrdenesDetalles = p.OrdenesDetalles,
-                Delivery = p.Delivery
+                Delivery = p.Delivery,
+                OrdenesDetalles = p.OrdenesDetalles.Select(o => new OrdenesDetallesDto()
+                {
+                    DetalleId = o.DetalleId,
+                    OrdenId = o.OrdenId,
+                    ProductoId = o.ProductoId,
+                    NombreProducto = o.Producto.Nombre,
+                    DescripcionProducto = o.Producto.Descripcion,
+                    Cantidad = o.Cantidad,
+                    Costo = o.Costo
+                }).ToList()
             }).FirstOrDefaultAsync();
         return Orden ?? new OrdenesDto();
     }
@@ -44,8 +53,15 @@ public class OrdenesService(IDbContextFactory<ApplicationDbContext> DbFactory) :
         {
             Total = ordenesDto.Total,
             Fecha = ordenesDto.Fecha,
-            OrdenesDetalles = ordenesDto.OrdenesDetalles,
-            Delivery = ordenesDto.Delivery
+            Delivery = ordenesDto.Delivery,
+            OrdenesDetalles = ordenesDto.OrdenesDetalles.Select(o => new OrdenesDetalles()
+            {
+                DetalleId = o.DetalleId,
+                OrdenId = o.OrdenId,
+                ProductoId = o.ProductoId,
+                Cantidad = o.Cantidad,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Ordenes.Add(ordenes);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -61,7 +77,14 @@ public class OrdenesService(IDbContextFactory<ApplicationDbContext> DbFactory) :
             Total = ordenDto.Total,
             Fecha = ordenDto.Fecha,
             Delivery = ordenDto.Delivery,
-            OrdenesDetalles = ordenDto.OrdenesDetalles,
+            OrdenesDetalles = ordenDto.OrdenesDetalles.Select(o => new OrdenesDetalles()
+            {
+                DetalleId = o.DetalleId,
+                OrdenId = o.OrdenId,
+                ProductoId = o.ProductoId,
+                Cantidad = o.Cantidad,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Update(orden);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -91,8 +114,18 @@ public class OrdenesService(IDbContextFactory<ApplicationDbContext> DbFactory) :
             OrdenId = p.OrdenId,
             Total = p.Total,
             Fecha = p.Fecha,
-            OrdenesDetalles = p.OrdenesDetalles,
-            Delivery = p.Delivery
+            Delivery = p.Delivery,
+            OrdenesDetalles = p.OrdenesDetalles.Select(o => new OrdenesDetallesDto()
+            {
+                DetalleId = o.DetalleId,
+                OrdenId = o.OrdenId,
+                ProductoId = o.ProductoId,
+                NombreProducto = o.Producto.Nombre,
+                DescripcionProducto = o.Producto.Descripcion,
+                Cantidad = o.Cantidad,
+                Costo = o.Costo
+            }).ToList()
+
         })
         .Where(criterio)
         .ToListAsync();
