@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DragonsDinner.Services.DI;
 using DragonsDinner.Services;
+using BlazorBootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ builder.Services.AddScoped<TarjetasService>();
 builder.Services.AddScoped<MetodosPagoService>();
 builder.Services.AddScoped<DireccionesService>();
 builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddSingleton<ToastService>();
 
 var app = builder.Build();
 
