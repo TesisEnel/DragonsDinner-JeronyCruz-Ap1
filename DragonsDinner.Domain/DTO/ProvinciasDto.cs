@@ -8,4 +8,7 @@ namespace DragonsDinner.Domain.DTO;
 
 public class ProvinciasDto
 {
+    public int ProvinciaId { get; set; }
+
+    public string Nombre { get; set; }
 }

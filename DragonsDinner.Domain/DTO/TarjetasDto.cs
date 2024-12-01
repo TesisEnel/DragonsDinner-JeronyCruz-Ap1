@@ -8,4 +8,12 @@ namespace DragonsDinner.Domain.DTO;
 
 public class TarjetasDto
 {
+    public int TarjetaId { get; set; }
+    public string Nombres { get; set; }
+
+    public string NumeroTarjeta { get; set; }
+
+    public string FechaVencimiento { get; set; }
+
+    public string CVV { get; set; }
 }

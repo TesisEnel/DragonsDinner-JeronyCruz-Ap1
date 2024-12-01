@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DragonsDinner.Data.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,4 +10,21 @@ namespace DragonsDinner.Domain.DTO;
 
 public class ProductosDto
 {
+    public int ProductoId { get; set; }
+
+    public string? Nombre { get; set; }
+
+    public int? Existencia { get; set; }
+
+    public string Descripcion { get; set; }
+
+    public double Precio { get; set; }
+
+    [ForeignKey("Categoria")]
+    public int CategoriaId { get; set; }
+    public Categorias? Categoria { get; set; }
+
+    public string Imagen { get; set; }
+
+    public double Costo { get; set; }
 }

@@ -8,4 +8,7 @@ namespace DragonsDinner.Domain.DTO;
 
 public class CategoriasDto
 {
+    public int CategoriaId { get; set; }
+
+    public string Nombre { get; set; }
 }
