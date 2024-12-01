@@ -9,10 +9,10 @@
 	<ItemGroup>
 		<PackageReference Include="microsoft.entityframeworkcore" Version="8.0.10" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
-		<ProjectReference Include="..\Tecnicos.Abstractions\Tecnicos.Abstractions.csproj" />
-		<ProjectReference Include="..\Tecnicos.Data\Tecnicos.Data.csproj" />
+		<ProjectReference Include="..\DragonsDinner.Abstractions\DragonsDinner.Abstractions.csproj" />
+		<ProjectReference Include="..\DragonsDinner.Data\DragonsDinner.Data.csproj" />
+		  
 	</ItemGroup>
-
 </Project>
