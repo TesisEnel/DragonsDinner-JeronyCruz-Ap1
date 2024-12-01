@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DragonsDinner.Services.DI;
+using DragonsDinner.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,15 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 //Inyeccion del contexto
 builder.Services.RegisterServices();
+
+builder.Services.AddScoped<CategoriasService>();
+builder.Services.AddScoped<ProductosService>();
+builder.Services.AddScoped<CarritosService>();
+builder.Services.AddScoped<OrdenesService>();
+builder.Services.AddScoped<TarjetasService>();
+builder.Services.AddScoped<MetodosPagoService>();
+builder.Services.AddScoped<DireccionesService>();
+builder.Services.AddScoped<UsuariosService>();
 
 var app = builder.Build();
 
