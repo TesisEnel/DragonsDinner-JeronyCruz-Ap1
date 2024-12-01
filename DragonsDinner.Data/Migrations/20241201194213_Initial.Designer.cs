@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241201180626_initial")]
-    partial class initial
+    [Migration("20241201194213_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
