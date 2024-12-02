@@ -1,13 +1,11 @@
 ﻿@page "/"
+@using DragonsDinner.Domain.DTO
 @rendermode InteractiveServer
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
 @inject NavigationManager NavigationManager
 
-<!DOCTYPE html>
-<html>
 
-<head>
     <!-- Basic -->
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -36,9 +34,7 @@
     <!-- responsive style -->
     <link href="css/responsive.css" rel="stylesheet" />
 
-</head>
 
-<body>
 
     <div class="hero_area">
         <div class="bg-box">
@@ -575,8 +571,8 @@
         </div>
     </footer>
     <!-- footer section -->
-    <!-- jQery -->
-    @*
+<!-- jQery -->
+
     <script src="js/jquery-3.4.1.min.js"></script>
     <!-- popper js -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
@@ -595,11 +591,8 @@
     <!-- Google Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
     </script>
-    <!-- End Google Map -->*@
+    <!-- End Google Map -->
 
-</body>
-
-</html>
 @code {
     private string? currentUrl;
     public List<ProductosDto> ListProductos { get; set; } = new List<ProductosDto>();
@@ -611,7 +604,6 @@
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
-
     protected override async Task OnInitializedAsync()
     {
         // Cargar todas las categorías y productos al inicializar el componente
@@ -637,7 +629,6 @@
         // Forzar la actualización de la interfaz para reflejar el filtro
         StateHasChanged();
     }
-
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
