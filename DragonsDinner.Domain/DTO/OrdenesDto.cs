@@ -17,8 +17,7 @@ public class OrdenesDto
 
     public DateTime Fecha { get; set; }
 
-    [ForeignKey("OrdenId")]
-    public ICollection<OrdenesDetalles> OrdenesDetalles { get; set; } = new List<OrdenesDetalles>();
+    public ICollection<OrdenesDetallesDto> OrdenesDetalles { get; set; } = new List<OrdenesDetallesDto>();
 
     public bool Delivery { get; set; }
 }

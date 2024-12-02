@@ -21,8 +21,19 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             .Where(e => e.CarritoId == id).Select(p => new CarritosDto()
             {
                 CarritoId = p.CarritoId,
-                Productos = p.Productos,
-                Total = p.Total
+                Total = p.Total,
+                Productos = p.Productos.Select(o => new ProductosDto()
+                {
+                    ProductoId = o.ProductoId,
+                    Nombre = o.Nombre,
+                    Existencia = o.Existencia,
+                    Descripcion = o.Descripcion,
+                    Precio = o.Precio,
+                    CategoriaId = o.CategoriaId,
+                    CategoriaNombre = o.Categoria.Nombre,
+                    Imagen = o.Imagen,
+                    Costo = o.Costo
+                }).ToList()
             }).FirstOrDefaultAsync();
         return carrito ?? new CarritosDto();
     }
@@ -40,8 +51,19 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         await using var contexto = await DbFactory.CreateDbContextAsync();
         var carrito = new Carritos()
         {
-            Productos = carritoDto.Productos,
-            Total = carritoDto.Total
+            CarritoId = carritoDto.CarritoId,
+            Total = carritoDto.Total,
+            Productos = carritoDto.Productos.Select(o => new Productos()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Carritos.Add(carrito);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -55,8 +77,18 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         var carrito = new Carritos()
         {
             CarritoId = carritoDto.CarritoId,
-            Productos = carritoDto.Productos,
-            Total = carritoDto.Total
+            Total = carritoDto.Total,
+            Productos = carritoDto.Productos.Select(o => new Productos()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         };
         contexto.Update(carrito);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -84,8 +116,18 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         return await contexto.Carritos.Select(p => new CarritosDto()
         {
             CarritoId = p.CarritoId,
-            Productos = p.Productos,
             Total = p.Total,
+            Productos = p.Productos.Select(o => new ProductosDto()
+            {
+                ProductoId = o.ProductoId,
+                Nombre = o.Nombre,
+                Existencia = o.Existencia,
+                Descripcion = o.Descripcion,
+                Precio = o.Precio,
+                CategoriaId = o.CategoriaId,
+                Imagen = o.Imagen,
+                Costo = o.Costo
+            }).ToList()
         })
         .Where(criterio)
         .ToListAsync();

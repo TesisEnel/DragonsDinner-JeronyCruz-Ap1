@@ -20,9 +20,9 @@ public class ProductosDto
 
     public double Precio { get; set; }
 
-    [ForeignKey("Categoria")]
     public int CategoriaId { get; set; }
-    public Categorias? Categoria { get; set; }
+
+    public string CategoriaNombre { get; set; }
 
     public string Imagen { get; set; }
 

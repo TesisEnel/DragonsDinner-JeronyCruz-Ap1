@@ -25,7 +25,8 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
                 Existencia = p.Existencia,
                 Descripcion = p.Descripcion,
                 Precio = p.Precio,
-                Categoria = p.Categoria,
+                CategoriaId = p.CategoriaId,
+                CategoriaNombre = p.Categoria.Nombre,
                 Imagen = p.Imagen,
                 Costo = p.Costo,
             }).FirstOrDefaultAsync();
@@ -50,7 +51,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
             Existencia = productoDto.Existencia,
             Descripcion = productoDto.Descripcion,
             Precio = productoDto.Precio,
-            Categoria = productoDto.Categoria,
+            CategoriaId = productoDto.CategoriaId,
             Imagen = productoDto.Imagen,
             Costo = productoDto.Costo,
         };
@@ -70,7 +71,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
             Existencia = productoDto.Existencia,
             Descripcion = productoDto.Descripcion,
             Precio = productoDto.Precio,
-            Categoria = productoDto.Categoria,
+            CategoriaId = productoDto.CategoriaId,
             Imagen = productoDto.Imagen,
             Costo = productoDto.Costo,
         };
@@ -93,23 +94,26 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
         else
             return await Modificar(productoDto);
     }
-
     public async Task<List<ProductosDto>> Listar(Expression<Func<ProductosDto, bool>> criterio)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Productos.Select(p => new ProductosDto()
-        {
-            ProductoId = p.ProductoId,
-            Nombre = p.Nombre,
-            Existencia = p.Existencia,
-            Descripcion = p.Descripcion,
-            Precio = p.Precio,
-            Categoria = p.Categoria,
-            Imagen = p.Imagen,
-            Costo = p.Costo,
-        })
-        .Where(criterio)
-        .ToListAsync();
+        return await contexto.Productos
+            .Include(p => p.Categoria) 
+            .Select(p => new ProductosDto
+            {
+                ProductoId = p.ProductoId,
+                Nombre = p.Nombre,
+                Existencia = p.Existencia,
+                Descripcion = p.Descripcion,
+                Precio = p.Precio,
+                Imagen = p.Imagen,
+                Costo = p.Costo,
+                CategoriaId = p.CategoriaId,
+                CategoriaNombre = p.Categoria.Nombre
+
+            })
+            .Where(criterio)
+            .ToListAsync();
     }
 
     public Task<List<string>> ObtenerCategorias()
