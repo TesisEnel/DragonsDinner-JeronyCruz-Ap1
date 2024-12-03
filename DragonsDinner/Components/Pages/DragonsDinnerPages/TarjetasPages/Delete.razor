@@ -1,0 +1,76 @@
+﻿@page "/Tarjetas/Delete/{TarjetaId:int}"
+@rendermode InteractiveServer
+@inject TarjetasService tarjetasService
+@inject NavigationManager navigation
+
+<PageTitle> Eliminar Tarjeta</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header text-center">
+            <h5><strong>Datos de mi Tarjeta</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <div class="text-center">
+                <h5>¿Desea eliminar la Tarjeta</h5>
+            </div>
+            <table class="mt-4 table">
+                <tr>
+                    <td><strong>Tarjeta Id:</strong></td>
+                    <td>@Tarjeta.TarjetaId</td>
+                </tr>
+                <tr>
+                    <td><strong>Nombres:</strong></td>
+                    <td>@Tarjeta.Nombres</td>
+                </tr>
+                <tr>
+                    <td><strong>Numero de Tarjeta:</strong></td>
+                    <td>@Tarjeta.NumeroTarjeta</td>
+                </tr>
+                <tr>
+                    <td><strong>Fecha Vencimiento:</strong></td>
+                    <td>@Tarjeta.FechaVencimiento</td>
+                </tr>
+                <tr>
+                    <td><strong>CVV:</strong></td>
+                    <td>@Tarjeta.CVV</td>
+                </tr>
+            </table>
+
+        </div>
+
+
+        <div class="card-footer text-center">
+            <a href="/Tarjetas/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+            <button type="submit" @onclick="Eliminar" class="btn btn-outline-danger btn bi bi-trash"> Eliminar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int TarjetaId { get; set; }
+    public TarjetasDto Tarjeta { get; set; } = new TarjetasDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tarjeta = await tarjetasService.Buscar(TarjetaId);
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminar = await tarjetasService.Eliminar(Tarjeta.TarjetaId);
+
+        if (eliminar)
+        {
+            Console.WriteLine("La tarjeta fue eliminado correctamente.");
+            navigation.NavigateTo("/Tarjetas/Index");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo eliminar la Tarjeta.");
+            // Aquí podrías mostrar un mensaje de error en la interfaz si lo deseas.
+        }
+    }
+}
