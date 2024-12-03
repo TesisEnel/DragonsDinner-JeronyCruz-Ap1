@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241202002845_initial")]
-    partial class initial
+    [Migration("20241202231936_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -347,6 +347,9 @@ namespace DragonsDinner.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoId"));
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CarritoId")
                         .HasColumnType("int");
 
@@ -393,6 +396,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 1,
+                            Cantidad = 0,
                             CategoriaId = 1,
                             Costo = 100.0,
                             Descripcion = "Hamburguesa con carne de res, queso, lechuga y tomate.",
@@ -404,6 +408,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 2,
+                            Cantidad = 0,
                             CategoriaId = 1,
                             Costo = 120.0,
                             Descripcion = "Hamburguesa con salsa BBQ, cebolla caramelizada y queso cheddar.",
@@ -415,6 +420,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 3,
+                            Cantidad = 0,
                             CategoriaId = 1,
                             Costo = 150.0,
                             Descripcion = "Hamburguesa con carne de pollo, queso, lechuga y tomate.",
@@ -426,6 +432,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 4,
+                            Cantidad = 0,
                             CategoriaId = 2,
                             Costo = 50.0,
                             Descripcion = "Hot dog con salchicha, ketchup y mostaza.",
@@ -437,6 +444,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 5,
+                            Cantidad = 0,
                             CategoriaId = 2,
                             Costo = 70.0,
                             Descripcion = "Hot dog con salchicha, queso derretido y cebolla.",
@@ -448,6 +456,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 6,
+                            Cantidad = 0,
                             CategoriaId = 3,
                             Costo = 200.0,
                             Descripcion = "Pizza con salsa de tomate, carne molida, pepperoni queso mozzarella.",
@@ -459,6 +468,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 7,
+                            Cantidad = 0,
                             CategoriaId = 3,
                             Costo = 250.0,
                             Descripcion = "Pizza con queso mozzarella y pepperoni.",
@@ -470,6 +480,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 8,
+                            Cantidad = 0,
                             CategoriaId = 3,
                             Costo = 300.0,
                             Descripcion = "Pizza con mezcla de cuatro tipos de quesos.",
@@ -481,6 +492,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 9,
+                            Cantidad = 0,
                             CategoriaId = 4,
                             Costo = 70.0,
                             Descripcion = "Taco con carne, queso y vegetales.",
@@ -492,6 +504,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 10,
+                            Cantidad = 0,
                             CategoriaId = 4,
                             Costo = 90.0,
                             Descripcion = "Taco con pollo, queso y salsa especial.",
@@ -503,6 +516,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 11,
+                            Cantidad = 0,
                             CategoriaId = 5,
                             Costo = 30.0,
                             Descripcion = "Refresco tradicional dominicano.",
@@ -514,6 +528,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 12,
+                            Cantidad = 0,
                             CategoriaId = 5,
                             Costo = 30.0,
                             Descripcion = "Refresco de uva con sabor único dominicano.",
@@ -525,6 +540,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 13,
+                            Cantidad = 0,
                             CategoriaId = 5,
                             Costo = 30.0,
                             Descripcion = "Refresco sabor merengue dominicano.",
@@ -536,6 +552,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 14,
+                            Cantidad = 0,
                             CategoriaId = 6,
                             Costo = 40.0,
                             Descripcion = "Donut clásica con glaseado.",
@@ -547,6 +564,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 15,
+                            Cantidad = 0,
                             CategoriaId = 6,
                             Costo = 50.0,
                             Descripcion = "Donut cubierta de chocolate.",
@@ -558,6 +576,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 16,
+                            Cantidad = 0,
                             CategoriaId = 6,
                             Costo = 30.0,
                             Descripcion = "Donut espolvoreada con azúcar.",
@@ -569,6 +588,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 17,
+                            Cantidad = 0,
                             CategoriaId = 7,
                             Costo = 100.0,
                             Descripcion = "Yaroa con pollo y queso derretido.",
@@ -580,6 +600,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 18,
+                            Cantidad = 0,
                             CategoriaId = 7,
                             Costo = 120.0,
                             Descripcion = "Yaroa con carne de res y queso.",
@@ -591,6 +612,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 19,
+                            Cantidad = 0,
                             CategoriaId = 8,
                             Costo = 180.0,
                             Descripcion = "Mofongo con ajo y chicharrón.",
@@ -602,6 +624,7 @@ namespace DragonsDinner.Data.Migrations
                         new
                         {
                             ProductoId = 20,
+                            Cantidad = 0,
                             CategoriaId = 8,
                             Costo = 220.0,
                             Descripcion = "Mofongo con camarones y salsa especial.",
