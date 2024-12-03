@@ -79,12 +79,12 @@
                     </ul>
                     <div class="user_option">
                         <a href="" class="user_link">
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <i class="bi bi-person-circle" aria-hidden="true"></i>
                         </a>
                         <a>
                             <!-- botón Carrito de compras -->
                             <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
-                                <i class="bi bi-cart-fill"></i>
+                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
                             <AuthorizeView>
@@ -120,7 +120,6 @@
 
                                 <Authorized>
                                     <!-- Modal carrito de compras -->
-                                    <!-- Modal carrito de compras -->
                                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
@@ -155,7 +154,7 @@
 
                                                             <!-- Icono de eliminar el artículo -->
                                                             <div class="cart-item-price">
-                                                                <button class="btn btn-danger fs-3" @onclick="() => EliminarDelCarrito(producto)">
+                                                                <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
                                                                     <i class="bi bi-x"></i>
                                                                 </button>
                                                             </div>
@@ -178,7 +177,7 @@
                         </a>
                         <form class="form-inline">
                             <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <i class="bi bi-search" aria-hidden="true"></i>
                             </button>
                         </form>
 
@@ -742,5 +741,4 @@
     {
         // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
     }
-
 }
