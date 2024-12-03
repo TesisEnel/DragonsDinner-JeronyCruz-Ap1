@@ -1,0 +1,102 @@
+﻿@page "/Tarjetas/Index"
+@rendermode InteractiveServer
+@inject TarjetasService tarjetasService
+
+<PageTitle> Index Tarjetas</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center">Registro de Mis Tarjetas</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="filtrarPor"> Filtrar por:</label>
+                    <InputSelect id="filtrarPor" class="form-select" @bind-Value="FiltroSeleccionado">
+                        <option value="ID">ID</option>
+                        <option value="Nombre Tarjeta">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-6 d-flex justify-content-center mt-4">
+                    <div class="input-group">
+                        <InputText id="Busqueda" class="form-control" @bind-Value="CriterioBusqueda"></InputText>
+                        <button @onclick="BuscarTecnicos" class="btn btn-outline-primary bi bi-search"> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col text-end">
+                    <a href="/Tecnicos/Create" class="btn btn-primary bi bi-plus-square mt-3">Crear</a>
+                </div>
+            </div>
+
+            <table class="table table-light table-hover">
+                <thead class="table table-striped">
+                    <tr class="text-center">
+                        <th>Tarjeta Id</th>
+                        <th>Nombres</th>
+                        <th>Numero Tarjeta</th>
+                        <th>Fecha Vencimiento</th>
+                        <th>CVV</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tarjeta in Tarjetas)
+                    {
+                        <tr class="text-center">
+                            <td>@tarjeta.TarjetaId</td>
+                            <td>@tarjeta.Nombres</td>
+                            <td>@tarjeta.NumeroTarjeta</td>
+                            <td>@tarjeta.FechaVencimiento</td>
+                            <td>@tarjeta.CVV</td>
+                            <td><a href="/Tarjetas/Delete/@tarjeta.TarjetaId" class="btn btn-outline-danger bi bi-trash"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <p><strong>Total de Tarjetas: </strong>@Tarjetas.Count</p>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<TarjetasDto> Tarjetas { get; set; } = new List<TarjetasDto>();
+    private string FiltroSeleccionado { get; set; } = "ID";
+    private string CriterioBusqueda { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tarjetas = await tarjetasService.Listar(a => true);
+    }
+
+    private async Task BuscarTecnicos()
+    {
+        switch (FiltroSeleccionado)
+        {
+            case "ID":
+                if (int.TryParse(CriterioBusqueda, out int id))
+                {
+                    Tarjetas = await tarjetasService.Listar(a => a.TarjetaId == id);
+                }
+                break;
+
+            case "Nombre Tarjeta":
+                Tarjetas = await tarjetasService.Listar(e => e.Nombres.ToLower().Contains(CriterioBusqueda.ToLower()));
+                break;
+        }
+    }
+
+    private async Task RefrescarDatos()
+    {
+        Tarjetas = await tarjetasService.Listar(a => true);
+        CriterioBusqueda = string.Empty;
+    }
+
+}

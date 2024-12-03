@@ -27,4 +27,6 @@ public class ProductosDto
     public string Imagen { get; set; }
 
     public double Costo { get; set; }
+
+    public int Cantidad { get; set; }
 }

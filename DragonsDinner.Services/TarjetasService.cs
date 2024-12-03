@@ -32,10 +32,18 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
     public async Task<bool> Eliminar(int tarjeta)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Tarjetas
-            .Where(e => e.TarjetaId == tarjeta)
-            .ExecuteDeleteAsync() > 0;
+        var tarjetaEntity = await contexto.Tarjetas.FindAsync(tarjeta);
+
+        if (tarjetaEntity != null)
+        {
+            contexto.Tarjetas.Remove(tarjetaEntity);
+            await contexto.SaveChangesAsync();
+            return true;  
+        }
+
+        return false; 
     }
+
 
     private async Task<bool> Insertar(TarjetasDto tarjetaDto)
     {
@@ -65,7 +73,7 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             FechaVencimiento = tarjetaDto.FechaVencimiento,
             CVV = tarjetaDto.CVV
         };
-        contexto.Update(tarjetaDto);
+        contexto.Update(tarjeta);
         var modificado = await contexto.SaveChangesAsync() > 0;
         return modificado;
     }
@@ -98,5 +106,14 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         })
         .Where(criterio)
         .ToListAsync();
+    }
+
+    public async Task<bool> ExisteTarjetaAsync(string numeroTarjeta)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var tarjetaExistente = await contexto.Tarjetas
+            .FirstOrDefaultAsync(t => t.NumeroTarjeta == numeroTarjeta);
+
+        return tarjetaExistente != null;
     }
 }
