@@ -1,0 +1,77 @@
+﻿<style >
+card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.credit-card {
+    width: 400px;
+    height: 250px;
+    background: linear-gradient(135deg, #1c1c1c, #383838);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    color: white;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .credit-card .bank {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .credit-card .chip {
+        width: 60px;
+        height: 40px;
+        background: gold;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .credit-card .card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .credit-card .card-info div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credit-card .card-info label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .credit-card .card-info input {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+            .credit-card .card-info input::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+    .credit-card .footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+</style >
