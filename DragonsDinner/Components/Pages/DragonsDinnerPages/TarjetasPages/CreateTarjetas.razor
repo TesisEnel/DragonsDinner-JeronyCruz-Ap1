@@ -45,7 +45,7 @@
                         <div class="footer">
                             @*Fecha de Vencimiento*@
                             <div>
-                                <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                                <label for="FechaVencimiento" class="form-label">Valido hasta</label>
                                 <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
                                            placeholder="01/2028" />
                                 <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
