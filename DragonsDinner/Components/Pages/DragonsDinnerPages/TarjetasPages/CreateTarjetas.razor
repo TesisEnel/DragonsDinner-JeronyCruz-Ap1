@@ -1,0 +1,155 @@
+﻿@page "/Tarjetas/Create"
+@rendermode InteractiveServer
+@inject TarjetasService tarjetasService
+@inject NavigationManager navigation
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="Create.css">
+</head>
+
+<PageTitle>Agregar Tarjeta</PageTitle>
+
+<EditForm Model="@Tarjetas" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <h1>Agregar Tarjetas</h1>
+            <input type="text" placeholder="Name">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Sign Up</button>
+        </div>
+        <div class="form-container sign-in">
+            <form>
+                <h1>Agregar Tarjetas</h1>
+                    <InputNumber class="form-control" @bind-Value="Tarjetas.TarjetaId" placeholder="Id" readonly></InputNumber>
+                    <InputText class="form-control" @bind-Value="Tarjetas.Nombres" placeholder="Nombre"></InputText>
+                    <ValidationMessage For="(()=> Tarjetas.Nombres)"></ValidationMessage>
+
+                    <InputText class="form-control" @bind-Value="Tarjetas.NumeroTarjeta" placeholder="# Tarjeta" @oninput="ValidarNumeroTarjeta"></InputText>
+                    <ValidationMessage For="(()=> Tarjetas.NumeroTarjeta)"></ValidationMessage>
+                    <div>
+                        @if (!string.IsNullOrEmpty(Mensaje))
+                        {
+                            <p class="alert alert-danger">@Mensaje</p>
+                        }
+                    </div>
+
+                    <InputText class="form-control" @bind-Value="Tarjetas.FechaVencimiento" placeholder="MM/AAAA" @oninput="FormatFechaVencimiento"></InputText>
+                    <ValidationMessage For="(()=> Tarjetas.FechaVencimiento)"></ValidationMessage>
+
+                    <InputText class="form-control" @bind-Value="Tarjetas.CVV" placeholder="CVV"></InputText>
+                    <ValidationMessage For="(()=> Tarjetas.CVV)"></ValidationMessage>
+
+                <div class="text-center mt-2">
+                    <a href="/Tecnicos/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+                    <button type="submit" class="btn btn-outline-success bi bi-floppy"> Guardar Tarjeta</button>
+                </div>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    public TarjetasDto Tarjetas { get; set; } = new TarjetasDto();
+    public string Mensaje { get; set; } = string.Empty;
+    public string SueldoMensaje { get; set; } = string.Empty;
+
+    private void ValidarNumeroTarjeta(ChangeEventArgs e)
+    {
+        string numeroTarjeta = e.Value.ToString();
+        numeroTarjeta = numeroTarjeta.Replace(" ", "");
+
+        if (numeroTarjeta.Length < 13 || numeroTarjeta.Length > 19 || !numeroTarjeta.All(char.IsDigit))
+        {
+            Mensaje = "El número de tarjeta debe tener entre 13 y 19 dígitos y solo contener números.";
+            Tarjetas.NumeroTarjeta = numeroTarjeta; 
+            return;
+        }
+
+        
+        int suma = 0;
+        bool esPar = false; 
+
+        
+        for (int i = numeroTarjeta.Length - 1; i >= 0; i--)
+        {
+            int digito = int.Parse(numeroTarjeta[i].ToString());
+
+            
+            if (esPar)
+            {
+                digito *= 2; 
+
+                
+                if (digito > 9)
+                {
+                    digito -= 9;
+                }
+            }
+
+            suma += digito;
+            esPar = !esPar; 
+        }
+        if (suma % 10 != 0)
+        {
+            Mensaje = "El número de tarjeta no es válido según el algoritmo de Luhn.";
+        }
+        else
+        {
+            Mensaje = string.Empty;
+        }
+    }
+
+    private void FormatFechaVencimiento(ChangeEventArgs e)
+    {
+        string fecha = e.Value.ToString();
+        fecha = new string(fecha.Where(char.IsDigit).ToArray());
+
+        if (fecha.Length > 4)
+        {
+            fecha = fecha.Substring(0, 4);
+        }
+
+        if (fecha.Length >= 2)
+        {
+            fecha = fecha.Insert(2, "/");
+        }
+
+        Tarjetas.FechaVencimiento = fecha;
+    }
+
+    public async Task Guardar()
+    {
+        if (string.IsNullOrWhiteSpace(Tarjetas.Nombres) ||
+        string.IsNullOrWhiteSpace(Tarjetas.NumeroTarjeta) ||
+        string.IsNullOrWhiteSpace(Tarjetas.FechaVencimiento) ||
+        string.IsNullOrWhiteSpace(Tarjetas.CVV))
+        {
+            Mensaje = "Todos los campos deben contener al menos una palabra o letra.";
+            return;
+        }
+
+        await tarjetasService.Guardar(Tarjetas);
+        Tarjetas = new TarjetasDto();
+        navigation.NavigateTo("/Tarjetas/Index");
+    }
+}
