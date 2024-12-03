@@ -4,6 +4,8 @@
 @inject TarjetasService tarjetasService
 @inject NavigationManager navigation
 
+<link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
+
 <PageTitle>Agregar Tarjetas</PageTitle>
 
 <EditForm Model="@Tarjetas" OnValidSubmit="Guardar">
@@ -16,6 +18,61 @@
             </div>
 
             <div class="card-body">
+                <div class="credit-card">
+                    <div class="bank">BANK</div>
+                    <div class="chip"></div>
+                    <div class="card-info">
+                        @*Número de Tarjeta*@
+                        <div>
+                            <label class="form-label" for="NumeroTarjeta">N&uacute;mero tarjeta</label>
+                            <InputText class="form-control" id="NumeroTarjeta" placeholder="7735 4299 1255 0133" @bind-Value="Tarjetas.NumeroTarjeta"></InputText>
+                            <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
+                            @if (!string.IsNullOrEmpty(MensajeErrorTarjeta))
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @MensajeErrorTarjeta
+                                </div>
+                            }
+                        </div>
+
+                        @*Nombre*@
+                        <div>
+                            <label class="form-label" for="Nombre">Nombre</label>
+                            <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
+                            <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
+                        </div>
+
+                        <div class="footer">
+                            @*Fecha de Vencimiento*@
+                            <div>
+                                <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                                <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
+                                           placeholder="01/2028" />
+                                <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
+                                @if (!string.IsNullOrEmpty(MensajeErrorFV))
+                                {
+                                    <div class="alert alert-danger" role="alert">
+                                        @MensajeErrorFV
+                                    </div>
+                                }
+                            </div>
+
+                            @*CVV*@
+                            <div>
+                                <label for="CVV" class="form-label">CVV</label>
+                                <InputText class="form-control" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
+                                <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
+                                @if (!string.IsNullOrEmpty(MensajeErrorCVV))
+                                {
+                                    <div class="alert alert-danger" role="alert">
+                                        @MensajeErrorCVV
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @*Tarjeta ID*@
                 <div class="mb-3">
                     <label for="TarjetaId" class="form-label"><strong>Tarjeta Id</strong></label>
@@ -68,6 +125,7 @@
                         </div>
                     }
                 </div>
+
 
             </div>
 
