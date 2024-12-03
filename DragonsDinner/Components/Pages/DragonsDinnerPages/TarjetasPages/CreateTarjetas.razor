@@ -60,7 +60,7 @@
                             @*CVV*@
                             <div>
                                 <label for="CVV" class="form-label">CVV</label>
-                                <InputText class="form-control" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
+                                <InputText class="form-control" placeholder ="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
                                 <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
                                 @if (!string.IsNullOrEmpty(MensajeErrorCVV))
                                 {
@@ -72,65 +72,10 @@
                         </div>
                     </div>
                 </div>
-
-                @*Tarjeta ID*@
-                <div class="mb-3">
-                    <label for="TarjetaId" class="form-label"><strong>Tarjeta Id</strong></label>
-                    <InputNumber class="form-control" @bind-Value="Tarjetas.TarjetaId" readonly></InputNumber>
-                </div>
-
-                @*Nombre*@
-                <div class="mb-3">
-                    <label for="Nombre" class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="Tarjetas.Nombres"></InputText>
-                    <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
-                </div>
-
-                @*Numero de Tarjeta*@
-                <div class="mb-3">
-                    <label for="NumeroTarjeta" class="form-label"><strong>Numero de Tarjeta</strong></label>
-                    <InputText class="form-control" @bind-Value="Tarjetas.NumeroTarjeta"></InputText>
-                    <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
-                    @if (!string.IsNullOrEmpty(MensajeErrorTarjeta))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @MensajeErrorTarjeta
-                        </div>
-                    }
-                </div>
-
-                @*Fecha de Vencimiento*@
-                <div class="mb-3">
-                    <label for="FechaVencimiento" class="form-label"><strong>Fecha de Vencimiento (DD/YYYY)</strong></label>
-                    <InputText class="form-control" @bind-Value="Tarjetas.FechaVencimiento"
-                               placeholder="DD/YYYY" />
-                    <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
-                    @if (!string.IsNullOrEmpty(MensajeErrorFV))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @MensajeErrorFV
-                        </div>
-                    }
-                </div>
-
-                @*CVV*@
-                <div class="mb-3">
-                    <label for="CVV" class="form-label"><strong>CVV</strong></label>
-                    <InputText class="form-control" @bind-Value="Tarjetas.CVV"></InputText>
-                    <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
-                    @if (!string.IsNullOrEmpty(MensajeErrorCVV))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @MensajeErrorCVV
-                        </div>
-                    }
-                </div>
-
-
             </div>
 
             <div class="card-footer text-center mt-2">
-                <a href="/Tarjetas/Index" class="btn btn-outline-primary bi bi-arrow-left mt-3">Volver</a>
+                <a href="/Tarjetas/Index" class="btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</a>
                 <button type="submit" class="btn btn-outline-success bi bi-floppy mt-3">Guardar</button>
             </div>
         </div>
