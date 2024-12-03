@@ -3,10 +3,12 @@
 @rendermode InteractiveServer
 @inject TarjetasService tarjetasService
 @inject NavigationManager navigation
+@inject ToastService Toast
 
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
 
 <PageTitle>Agregar Tarjetas</PageTitle>
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <EditForm Model="@Tarjetas" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -27,12 +29,6 @@
                             <label class="form-label" for="NumeroTarjeta">N&uacute;mero tarjeta</label>
                             <InputText class="form-control" id="NumeroTarjeta" placeholder="7735 4299 1255 0133" @bind-Value="Tarjetas.NumeroTarjeta"></InputText>
                             <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
-                            @if (!string.IsNullOrEmpty(MensajeErrorTarjeta))
-                            {
-                                <div class="alert alert-danger" role="alert">
-                                    @MensajeErrorTarjeta
-                                </div>
-                            }
                         </div>
 
                         @*Nombre*@
@@ -49,12 +45,6 @@
                                 <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
                                            placeholder="01/2028" />
                                 <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
-                                @if (!string.IsNullOrEmpty(MensajeErrorFV))
-                                {
-                                    <div class="alert alert-danger" role="alert">
-                                        @MensajeErrorFV
-                                    </div>
-                                }
                             </div>
 
                             @*CVV*@
@@ -62,12 +52,6 @@
                                 <label for="CVV" class="form-label">CVV</label>
                                 <InputText class="form-control" placeholder ="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
                                 <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
-                                @if (!string.IsNullOrEmpty(MensajeErrorCVV))
-                                {
-                                    <div class="alert alert-danger" role="alert">
-                                        @MensajeErrorCVV
-                                    </div>
-                                }
                             </div>
                         </div>
                     </div>
@@ -84,28 +68,24 @@
 
 @code {
     public TarjetasDto Tarjetas { get; set; } = new TarjetasDto();
-    public string Mensaje { get; set; } = string.Empty;
-    public string MensajeErrorCVV { get; set; } = string.Empty;
-    public string MensajeErrorFV { get; set; } = string.Empty;
-    public string MensajeErrorTarjeta { get; set; } = string.Empty;
 
     public async Task Guardar()
     {
         if (string.IsNullOrEmpty(Tarjetas.CVV) || Tarjetas.CVV.Length < 3 || Tarjetas.CVV.Length > 4)
         {
-            MensajeErrorCVV = "El CVV debe tener entre 3 y 4 dígitos.";
+            Toast.Notify(new(ToastType.Danger, "El CVV debe tener entre 3 y 4 dígitos."));
             return;
         }
         if (!ValidarNumeroTarjeta(Tarjetas.NumeroTarjeta))
         {
-            MensajeErrorTarjeta = "El número de tarjeta no es válido.";
+            Toast.Notify(new(ToastType.Danger, "El número de tarjeta no es válido."));
             return;
         }
 
         bool tarjetaExistente = await tarjetasService.ExisteTarjetaAsync(Tarjetas.NumeroTarjeta);
         if (tarjetaExistente)
         {
-            MensajeErrorTarjeta = "La tarjeta ya está registrada.";
+            Toast.Notify(new(ToastType.Danger, "La tarjeta ya está registrada."));
             return;
         }
 
@@ -116,11 +96,13 @@
 
         if (!ValidarFechaVencimiento(Tarjetas.FechaVencimiento))
         {
-            MensajeErrorFV = "La fecha de vencimiento debe ser posterior a la fecha actual.";
+            Toast.Notify(new(ToastType.Danger, "La fecha de vencimiento debe ser anterior a la fecha actual."));
             return;
         }
 
         await tarjetasService.Guardar(Tarjetas);
+        Toast.Notify(new(ToastType.Success, "Tarjeta agregada exitosamente."));
+        await Task.Delay(2000);
         Tarjetas = new TarjetasDto();
         navigation.NavigateTo("/Tarjetas/Index");
     }
