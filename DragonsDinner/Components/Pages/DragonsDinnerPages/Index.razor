@@ -82,84 +82,99 @@
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </a>
                         <a>
-<!-- botón Carrito de compras -->
-<button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
-    <i class="bi bi-cart-fill"></i>
-</button>
+                            <!-- botón Carrito de compras -->
+                            <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
+                                <i class="bi bi-cart-fill"></i>
+                            </button>
 
-                        <AuthorizeView>
-                            <NotAuthorized>
-  <!-- Modal carrito de compras -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <i class="bi bi-cart-fill fs-1"></i>
-          <div> Iniciar sesión o registrarse para ver el carrito</div>
+                            <AuthorizeView>
+                                <NotAuthorized>
+                                    <!-- Modal carrito de compras -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <i class="bi bi-cart-fill fs-1"></i>
+                                                    <div> Iniciar sesión o registrarse para ver el carrito</div>
 
-      </div>
-      <div class="modal-footer">
-                                <a href="/Account/Login" class="order_online">
-                                    Iniciar Sesion
-                                </a>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="/Account/Login" class="order_online">
+                                                        Iniciar Sesion
+                                                    </a>
 
-                                <a href="/Account/Register" class="order_onlines">
-                                    Registrarse
-                                </a>
-      </div>
-    </div>
-  </div>
-</div>
-                            </NotAuthorized>
+                                                    <a href="/Account/Register" class="order_onlines">
+                                                        Registrarse
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </NotAuthorized>
 
-                            <Authorized>
-                                <!-- Modal carrito de compras -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="cart-item justify-content-between">
-            <img src="shoe1.jpg" alt="">
-            <div class="cart-item-details">
-                <div class="cart-item-name"> <strong>Sport Shoes For Men</strong</div>
-                <div class="cart-item-actions">
-                   <div class="input-group">
-                      <button type="button" class="quantity-button" @onclick = "DescrementarCantidad"> - </button>
-                      <input type="text" value="1" class="quantity-button col-2 text-center" />
-                      <button type="button" class="quantity-button" @onclick = "IncrementarCantidad"> + </button>
-                   </div>
-                </div>
-            </div>
+                                <Authorized>
+                                    <!-- Modal carrito de compras -->
+                                    <!-- Modal carrito de compras -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Mostrar los productos del carrito -->
+                                                    @foreach (var producto in Carrito)
+                                                    {
+                                                        <div class="cart-item justify-content-between">
+                                                            <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
+                                                            <div class="cart-item-details">
+                                                                <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                <div class="cart-item-actions">
+                                                                    <div class="input-group">
+                                                                        <!-- Botón para decrementar la cantidad -->
+                                                                        <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                        <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
+                                                                        <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
+                                                                        <!-- Botón para incrementar la cantidad -->
+                                                                        <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-            <div class="cart-item-price">$99</div>
-                        <div class="cart-item-price"> <i class="btn btn bi-x fs-3"></i></div>
+                                                            <!-- Precio del artículo -->
+                                                            <div class="cart-item-price">$@producto.Precio</div>
 
+                                                            <!-- Icono de eliminar el artículo -->
+                                                            <div class="cart-item-price">
+                                                                <button class="btn btn-danger fs-3" @onclick="() => EliminarDelCarrito(producto)">
+                                                                    <i class="bi bi-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    }
 
-        </div>
-        <div class="subtotal">Subtotal: $198.00</div>
+                                                    <!-- Subtotal del carrito -->
+                                                    <div class="subtotal">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
+                                                    <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger">Vaciar carrito</button>
-        <button type="button" class="btn btn-primary">Realizar pedido</button>
-      </div>
-    </div>
-  </div>
-</div>
-                            </Authorized>
-</AuthorizeView>
+                                </Authorized>
+                            </AuthorizeView>
                         </a>
                         <form class="form-inline">
                             <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
@@ -454,7 +469,7 @@
                                             <p>@producto.Descripcion</p>
                                             <div class="options">
                                                 <h6>$@producto.Precio.ToString("N2")</h6>
-                                                <a href="" class="bi bi-cart-fill text-white"></a>
+                                                <a href="javascript:void(0)" @onclick="() => AgregarAlCarrito(producto)" class="bi bi-cart-fill text-white"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -624,6 +639,8 @@
     private string? currentUrl;
     public List<ProductosDto> ListProductos { get; set; } = new List<ProductosDto>();
     public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
+    private List<ProductosDto> Carrito { get; set; } = new List<ProductosDto>();
+
     public string FiltroActivo { get; set; } = string.Empty;
     public CarritosDetalles CarritoDetalle { get; set; }
 
@@ -668,14 +685,62 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
-    public void IncrementarCantidad()
+    public void IncrementarCantidad(ProductosDto producto)
     {
-        CarritoDetalle.Cantidad++;
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente != null)
+        {
+            existente.Cantidad++;
+        }
     }
 
-    public void DescrementarCantidad()
+    public void DescrementarCantidad(ProductosDto producto)
     {
-        CarritoDetalle.Cantidad--;
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente != null && existente.Cantidad > 1)
+        {
+            existente.Cantidad--;
+        }
+        else
+        {
+            Carrito.Remove(producto);
+        }
+    }
+
+    public void AgregarAlCarrito(ProductosDto producto)
+    {
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente == null)
+        {
+            Carrito.Add(new ProductosDto
+                {
+                    ProductoId = producto.ProductoId,
+                    Nombre = producto.Nombre,
+                    Descripcion = producto.Descripcion,
+                    Imagen = producto.Imagen,
+                    Precio = producto.Precio,
+                    Cantidad = 1
+                });
+        }
+        else
+        {
+            existente.Cantidad++;
+        }
+    }
+
+    public void EliminarDelCarrito(ProductosDto producto)
+    {
+        Carrito.Remove(producto);
+    }
+
+    public void VaciarCarrito()
+    {
+        Carrito.Clear();
+    }
+
+    public void RealizarPedido()
+    {
+        // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
     }
 
 }
