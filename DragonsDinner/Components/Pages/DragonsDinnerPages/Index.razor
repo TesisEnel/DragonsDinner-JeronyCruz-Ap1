@@ -84,7 +84,7 @@
                         <a>
                             <!-- botón Carrito de compras -->
                             <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
-                                <i class="bi bi-cart-fill"></i>
+                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
                             <AuthorizeView>
@@ -120,7 +120,6 @@
 
                                 <Authorized>
                                     <!-- Modal carrito de compras -->
-                                    <!-- Modal carrito de compras -->
                                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
@@ -155,7 +154,7 @@
 
                                                             <!-- Icono de eliminar el artículo -->
                                                             <div class="cart-item-price">
-                                                                <button class="btn btn-danger fs-3" @onclick="() => EliminarDelCarrito(producto)">
+                                                                <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
                                                                     <i class="bi bi-x"></i>
                                                                 </button>
                                                             </div>
@@ -742,5 +741,4 @@
     {
         // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
     }
-
 }
