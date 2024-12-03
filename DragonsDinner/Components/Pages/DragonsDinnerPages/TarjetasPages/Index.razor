@@ -41,7 +41,6 @@
                         <th>Numero Tarjeta</th>
                         <th>Fecha Vencimiento</th>
                         <th>CVV</th>
-                        <th>Modificar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
@@ -54,7 +53,6 @@
                             <td>@tarjeta.NumeroTarjeta</td>
                             <td>@tarjeta.FechaVencimiento</td>
                             <td>@tarjeta.CVV</td>
-                            <td><a href="/Tarjetas/Edit/@tarjeta.TarjetaId" class="btn btn-outline-primary bi bi-pencil-square"></a></td>
                             <td><a href="/Tarjetas/Delete/@tarjeta.TarjetaId" class="btn btn-outline-danger bi bi-trash"></a></td>
                         </tr>
                     }
