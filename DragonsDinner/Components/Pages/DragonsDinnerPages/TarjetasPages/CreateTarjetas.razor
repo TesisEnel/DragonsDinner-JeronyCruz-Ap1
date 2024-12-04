@@ -19,48 +19,90 @@
                 <h5 class="card-title">Guardar Tarjetas</h5>
             </div>
 
-            <div class="card-body">
-                <div class="credit-card">
-                    <div class="bank">BANK</div>
-                    <div class="chip"></div>
-                    <div class="card-info">
-                        @*Número de Tarjeta*@
-                        <div>
-                            <label class="form-label" for="NumeroTarjeta">N&uacute;mero tarjeta</label>
-                            <InputText class="form-control" id="NumeroTarjeta" placeholder="7735 4299 1255 0133" @bind-Value="Tarjetas.NumeroTarjeta"></InputText>
-                            <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
-                        </div>
+            <div class="card-body tarjeta">
+                <div>
+                    @*Id*@
+                    <div>
+                        <label class="form-label"><strong>Id</strong></label>
+                        <InputNumber class="form-control" readonly @bind-Value="Tarjetas.TarjetaId"> </InputNumber>
+                    </div>
+                    @*Número de Tarjeta*@
+                    <div>
+                        <label class="form-label" for="NumeroTarjeta"><strong>N&uacute;mero tarjeta</strong></label>
+                        <input type="number" class="form-control" id="NumeroTarjeta" placeholder="7735 4299 1255 0133"
+                               @bind="Tarjetas.NumeroTarjeta" @bind:event="oninput">
+                        </input>
+                        <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
+                    </div>
 
-                        @*Nombre*@
-                        <div>
-                            <label class="form-label" for="Nombre">Nombre</label>
-                            <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
-                            <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
-                        </div>
+                    @*Nombre*@
+                    <div>
+                        <label class="form-label" for="Nombre"><strong>Nombre</strong></label>
+                        <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
+                        <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
+                    </div>
 
-                        <div class="footer">
-                            @*Fecha de Vencimiento*@
+                    @*Fecha de Vencimiento*@
+                    <div>
+                        <label for="FechaVencimiento" class="form-label"><strong>Valido hasta</strong></label>
+                        <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
+                                   placeholder="01/2028" />
+                        <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
+                    </div>
+
+                    @*CVV*@
+                    <div>
+                        <label for="CVV" class="form-label"><strong>CVV</strong></label>
+                        <InputText class="form-control" placeholder="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
+                        <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
+                    </div>
+                </div>
+                <div>
+                    <div class="credit-card @VisaStyle @MasterCardStyle">
+                        <div class="bank">@CardLabel</div>
+                        <div class="card-info">
+                            @*Número de Tarjeta*@
                             <div>
-                                <label for="FechaVencimiento" class="form-label">Valido hasta</label>
-                                <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
-                                           placeholder="01/2028" />
-                                <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
+                                <label class="form-label" for="NumeroTarjeta">N&uacute;mero tarjeta</label>
+                                <input type="number" class="form-control" id="NumeroTarjeta" placeholder="7735 4299 1255 0133"
+                                       @bind="Tarjetas.NumeroTarjeta" @bind:event="oninput">
+                                </input>
+                                <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
                             </div>
 
-                            @*CVV*@
+                            @*Nombre*@
                             <div>
-                                <label for="CVV" class="form-label">CVV</label>
-                                <InputText class="form-control" placeholder ="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
-                                <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
+                                <label class="form-label" for="Nombre">Nombre</label>
+                                <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
+                                <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
+                            </div>
+
+                            <div class="footer">
+                                @*Fecha de Vencimiento*@
+                                <div>
+                                    <label for="FechaVencimiento" class="form-label">Valido hasta</label>
+                                    <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
+                                               placeholder="01/2028" />
+                                    <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
+                                </div>
+
+                                @*CVV*@
+                                <div>
+                                    <label for="CVV" class="form-label">CVV</label>
+                                    <InputText class="form-control" placeholder="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
+                                    <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
+                                </div>
+
                             </div>
                         </div>
                     </div>
+                    <div class="credit-card-column">
+                        
+                        <a href="/Tarjetas/Index" class="btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</a>
+                        <button type="submit" class="btn btn-outline-success bi bi-floppy mt-3">Guardar</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card-footer text-center mt-2">
-                <a href="/Tarjetas/Index" class="btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</a>
-                <button type="submit" class="btn btn-outline-success bi bi-floppy mt-3">Guardar</button>
             </div>
         </div>
     </div>
@@ -68,6 +110,25 @@
 
 @code {
     public TarjetasDto Tarjetas { get; set; } = new TarjetasDto();
+
+    // Para Visa (13 o 16 dígitos)
+    string patronVisa = @"^4[0-9]{12}(?:[0-9]{3})?$";
+    string? VisaStyle => Regex.IsMatch(Tarjetas.NumeroTarjeta, patronVisa) ? "visa-style" : null;
+
+
+    // Para Mastercard (16 dígitos)
+    string patronMastercard = @"^5[1-5][0-9]{14}$";
+    string? MasterCardStyle => Regex.IsMatch(Tarjetas.NumeroTarjeta, patronMastercard) ? "mastercard-style" : null;
+
+    string CardLabel
+    {
+        get
+        {
+            if (VisaStyle is not null) return "Visa";
+            if (MasterCardStyle is not null) return "MasterCard";
+            else return "Desconocido";
+        }
+    }
 
     public async Task Guardar()
     {
@@ -123,7 +184,7 @@
         {
             int digito = int.Parse(numeroTarjeta[i].ToString());
 
-            
+
             if (esPar)
             {
                 digito *= 2;
