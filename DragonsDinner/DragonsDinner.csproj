@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Components\Pages\DragonsDinnerPages\TarjetasPages\View.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.2.0" />
     <PackageReference Include="Blazored.Toast" Version="4.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.5" />
@@ -29,18 +25,6 @@
     <ProjectReference Include="..\DragonsDinner.Data\DragonsDinner.Data.csproj" />
     <ProjectReference Include="..\DragonsDinner.Domain\DragonsDinner.Domain.csproj" />
     <ProjectReference Include="..\DragonsDinner.Services\DragonsDinner.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Components\Pages\DragonsDinnerPages\TarjetasPages\View.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Components\Pages\DragonsDinnerPages\TarjetasPages\View.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Components\Pages\DragonsDinnerPages\TarjetasPages\View.razor" />
   </ItemGroup>
 
 </Project>
