@@ -1,4 +1,4 @@
-﻿@page "/Tarjetas/Detail/{TarjetaId:int}"
+﻿@page "/Tarjetas/Details/{TarjetaId:int}"
 @using System.Text.RegularExpressions
 @rendermode InteractiveServer
 @inject TarjetasService tarjetasService
@@ -39,6 +39,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="card-footer text-center">
+        <a href="/" class="btn btn-outline-secondary bi bi-arrow-left"> Volver</a>
     </div>
 </div>
 
