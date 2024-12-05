@@ -8,7 +8,6 @@
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
 
 <PageTitle>Agregar Tarjetas</PageTitle>
-<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <EditForm Model="@Tarjetas" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -33,6 +32,12 @@
                                @bind="Tarjetas.NumeroTarjeta" @bind:event="oninput">
                         </input>
                         <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
+                        @if (!string.IsNullOrEmpty(MensajeErrorTarjeta))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @MensajeErrorTarjeta
+                            </div>
+                        }
                     </div>
 
                     @*Nombre*@
@@ -48,6 +53,12 @@
                         <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
                                    placeholder="01/2028" />
                         <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
+                        @if (!string.IsNullOrEmpty(MensajeErrorFV))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @MensajeErrorFV
+                            </div>
+                        }
                     </div>
 
                     @*CVV*@
@@ -55,6 +66,12 @@
                         <label for="CVV" class="form-label"><strong>CVV</strong></label>
                         <InputText class="form-control" placeholder="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
                         <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
+                        @if (!string.IsNullOrEmpty(MensajeErrorCVV))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @MensajeErrorCVV
+                            </div>
+                        }
                     </div>
                 </div>
                 <div>
@@ -75,6 +92,7 @@
                                 <label class="form-label" for="Nombre">Nombre</label>
                                 <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
                                 <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
+
                             </div>
 
                             <div class="footer">
@@ -98,7 +116,7 @@
                     </div>
                     <div class="credit-card-column">
                         
-                        <a href="/Tarjetas/Index" class="btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</a>
+                        <a href="/" class="btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</a>
                         <button type="submit" class="btn btn-outline-success bi bi-floppy mt-3">Guardar</button>
                     </div>
                 </div>
@@ -110,6 +128,10 @@
 
 @code {
     public TarjetasDto Tarjetas { get; set; } = new TarjetasDto();
+    public string Mensaje { get; set; } = string.Empty;
+    public string MensajeErrorCVV { get; set; } = string.Empty;
+    public string MensajeErrorFV { get; set; } = string.Empty;
+    public string MensajeErrorTarjeta { get; set; } = string.Empty;
 
     // Para Visa (13 o 16 dígitos)
     string patronVisa = @"^4[0-9]{12}(?:[0-9]{3})?$";
@@ -134,19 +156,24 @@
     {
         if (string.IsNullOrEmpty(Tarjetas.CVV) || Tarjetas.CVV.Length < 3 || Tarjetas.CVV.Length > 4)
         {
-            Toast.Notify(new(ToastType.Danger, "El CVV debe tener entre 3 y 4 dígitos."));
+            MensajeErrorCVV = "El CVV debe tener entre 3 y 4 dígitos.";
+            return;
+        }
+        if (string.IsNullOrEmpty(Tarjetas.NumeroTarjeta))
+        {
+            MensajeErrorTarjeta = "El número de tarjeta no puede estar vacío.";
             return;
         }
         if (!ValidarNumeroTarjeta(Tarjetas.NumeroTarjeta))
         {
-            Toast.Notify(new(ToastType.Danger, "El número de tarjeta no es válido."));
+            MensajeErrorTarjeta = "El número de tarjeta no es válido.";
             return;
         }
 
         bool tarjetaExistente = await tarjetasService.ExisteTarjetaAsync(Tarjetas.NumeroTarjeta);
         if (tarjetaExistente)
         {
-            Toast.Notify(new(ToastType.Danger, "La tarjeta ya está registrada."));
+            MensajeErrorTarjeta = "La tarjeta ya está registrada.";
             return;
         }
 
@@ -157,15 +184,13 @@
 
         if (!ValidarFechaVencimiento(Tarjetas.FechaVencimiento))
         {
-            Toast.Notify(new(ToastType.Danger, "La fecha de vencimiento debe ser anterior a la fecha actual."));
+            MensajeErrorFV = "La fecha de vencimiento debe ser posterior a la fecha actual.";
             return;
         }
 
         await tarjetasService.Guardar(Tarjetas);
-        Toast.Notify(new(ToastType.Success, "Tarjeta agregada exitosamente."));
-        await Task.Delay(2000);
         Tarjetas = new TarjetasDto();
-        navigation.NavigateTo("/Tarjetas/Index");
+        navigation.NavigateTo("/");
     }
 
     public bool ValidarNumeroTarjeta(string numeroTarjeta)

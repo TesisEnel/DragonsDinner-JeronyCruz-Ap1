@@ -5,12 +5,10 @@
 @inject NavigationManager navigation
 @inject ToastService Toast
 
+<link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
+
 
 <PageTitle> Eliminar Tarjeta</PageTitle>
-<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
-
-
-<link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
 
 <div class="container">
     <div class="card shadow-lg">
@@ -44,7 +42,7 @@
 
 
         <div class="card-footer text-center">
-            <a href="/Tarjetas/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+            <a href="/" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
             <button type="button" class="btn btn-outline-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">
                 Eliminar
             </button>
@@ -105,9 +103,7 @@
 
         if (eliminar)
         {
-            Toast.Notify(new(ToastType.Danger, "Tarjeta eliminada exitosamente."));
-            await Task.Delay(2000);
-            navigation.NavigateTo("/Tarjetas/Index");
+            navigation.NavigateTo("/");
         }
         else
         {
