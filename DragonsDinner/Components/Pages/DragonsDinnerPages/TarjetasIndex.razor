@@ -1,0 +1,133 @@
+﻿@page "/Tarjetas/Index"
+@using System.Text.RegularExpressions
+@rendermode InteractiveServer
+@inject TarjetasService tarjetasService
+
+<PageTitle> Index Tarjetas</PageTitle>
+<link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
+
+
+<!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#cardModal">
+    <i class="bi bi-credit-card-2-back-fill"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cardModalLabel">Mis Tarjetas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Lista de tarjetas -->
+                @foreach (var tarjeta in Tarjetas)
+                {
+                    <div class="list-card">
+                        <div class="d-flex align-items-center">
+                            <img src="@ObtenerLogo(tarjeta.NumeroTarjeta)" alt="Logo Tarjeta" />
+                            <div class="card-info">
+                                <span class="masked-number">@EnmascararNumero(tarjeta.NumeroTarjeta)</span>
+                                <span class="card-type">@ObtenerNombreTipoTarjeta(tarjeta.NumeroTarjeta)</span>
+                            </div>
+                        </div>
+                        <div class="expiration-date">
+                            <small>Válida hasta: <strong>@tarjeta.FechaVencimiento</strong></small>
+                        </div>
+
+                        <!-- Botón para eliminar tarjeta -->
+                        <a href="/Tarjetas/Delete/@tarjeta.TarjetaId" class="btn btn-outline-danger bi bi-trash"></a>
+
+                        <!-- Botón para ver tarjeta -->
+                        <button type="button" class="btn btn-outline-primary" >
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <p><strong>Total de Tarjetas: </strong>@Tarjetas.Count</p>
+                <a href="/Tarjetas/Create"
+                   class="btn btn-outline-primary ">
+                    <span class="bi bi-plus-square-fill"></span> Añadir tarjeta
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<TarjetasDto> Tarjetas { get; set; } = new List<TarjetasDto>();
+    private string FiltroSeleccionado { get; set; } = "ID";
+    private string CriterioBusqueda { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tarjetas = await tarjetasService.Listar(a => true);
+    }
+
+    private async Task Buscar()
+    {
+        switch (FiltroSeleccionado)
+        {
+            case "ID":
+                if (int.TryParse(CriterioBusqueda, out int id))
+                {
+                    Tarjetas = await tarjetasService.Listar(a => a.TarjetaId == id);
+                }
+                break;
+
+            case "Nombre Tarjeta":
+                Tarjetas = await tarjetasService.Listar(e => e.Nombres.ToLower().Contains(CriterioBusqueda.ToLower()));
+                break;
+        }
+    }
+
+    private async Task RefrescarDatos()
+    {
+        Tarjetas = await tarjetasService.Listar(a => true);
+        CriterioBusqueda = string.Empty;
+    }
+
+    private string EnmascararNumero(string numeroTarjeta)
+    {
+        if (string.IsNullOrWhiteSpace(numeroTarjeta) || numeroTarjeta.Length < 4)
+            return "****";
+
+        var ultimosDigitos = numeroTarjeta[^4..];
+        return $"**** {ultimosDigitos}";
+    }
+
+    private string ObtenerLogo(string numeroTarjeta)
+    {
+        if (Regex.IsMatch(numeroTarjeta, @"^4[0-9]{12}(?:[0-9]{3})?$")) // Visa
+        {
+            return "https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png";
+        }
+        else if (Regex.IsMatch(numeroTarjeta, @"^5[1-5][0-9]{14}$")) // Mastercard
+        {
+            return "https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg";
+        }
+        else
+        {
+            return "https://upload.wikimedia.org/wikipedia/commons/c/c6/Unknown_card_logo.png"; // Desconocido
+        }
+    }
+
+    private string ObtenerNombreTipoTarjeta(string numeroTarjeta)
+    {
+        if (Regex.IsMatch(numeroTarjeta, @"^4[0-9]{12}(?:[0-9]{3})?$")) 
+        {
+            return "Visa";
+        }
+        else if (Regex.IsMatch(numeroTarjeta, @"^5[1-5][0-9]{14}$")) 
+        {
+            return "MasterCard";
+        }
+        else
+        {
+            return "Desconocido";
+        }
+    }
+}
