@@ -20,90 +20,96 @@
 <!-- responsive style -->
 <link href="css/responsive.css" rel="stylesheet" />
 
-<div class="bg-box">
-    <img src="/images/Fondo.jpg" alt="">
-</div>
+<AutorizedView>
+    <Autorized>
 
-<PageTitle>Nueva direcci&oacute;n</PageTitle>
-<EditForm Model="Direccion" OnValidSubmit="Guardar">
-    <DataAnnotationsValidator />
+        <div class="bg-box">
+            <img src="/images/Fondo.jpg" alt="">
+        </div>
 
-    <div class="container">
-        <div class="card shadow-lg">
+        <PageTitle>Nueva direcci&oacute;n</PageTitle>
+        <EditForm Model="Direccion" OnValidSubmit="Guardar">
+            <DataAnnotationsValidator />
 
-            <div class="card-body ">
-                <!-- book section -->
-                <section class="book_section">
-                    <div class="container ">
-                        <div class="heading_container align-items-center">
-                            <h2>
-                                Nueva Direcci&oacute;n
-                            </h2>
-                        </div>
-                        <div class="row">
-                            <div>
-                                <div class="form_container">
-                                    <div class="col-md-5">
-                                        <div>
-                                            @* Nombre *@
-                                            <InputText id="nombre" class="form-control" @bind-Value="Direccion.Nombre" placeholder="Nombre"></InputText>
-                                            <ValidationMessage For="(() => Direccion.Nombre)" />
-                                        </div>
-                                        <div>
-                                            @*Provincia*@
-                                            <InputSelect id="provincia" class="form-control form-select" @bind-Value="Direccion.ProvinciaId">
-                                                <option value="0" selected disabled>Provincia</option>
-                                                @foreach (var provincia in ListProvincias)
+            <div class="container">
+                <div class="card shadow-lg">
+
+                    <div class="card-body ">
+                        <!-- book section -->
+                        <section class="book_section">
+                            <div class="container ">
+                                <div class="heading_container align-items-center">
+                                    <h2>
+                                        Nueva Direcci&oacute;n
+                                    </h2>
+                                </div>
+                                <div class="row">
+                                    <div>
+                                        <div class="form_container">
+                                            <div class="col-md-5">
+                                                <div>
+                                                    @* Nombre *@
+                                                    <InputText id="nombre" class="form-control" @bind-Value="Direccion.Nombre" placeholder="Nombre"></InputText>
+                                                    <ValidationMessage For="(() => Direccion.Nombre)" />
+                                                </div>
+                                                <div>
+                                                    @*Provincia*@
+                                                    <InputSelect id="provincia" class="form-control form-select" @bind-Value="Direccion.ProvinciaId">
+                                                        <option value="0" selected disabled>Provincia</option>
+                                                        @foreach (var provincia in ListProvincias)
+                                                        {
+                                                            <option value="@provincia.ProvinciaId">(@provincia.ProvinciaId) -- @provincia.Nombre</option>
+                                                        }
+                                                    </InputSelect>
+                                                    <ValidationMessage For="(() => Direccion.ProvinciaId)" />
+                                                </div>
+                                                <div>
+                                                    @* Municipio *@
+                                                    <InputText id="municipio" class="form-control" @bind-Value="Direccion.Municipio" placeholder="Municipio"></InputText>
+                                                    <ValidationMessage For="(() => Direccion.Municipio)" />
+                                                </div>
+                                                <div>
+                                                    @* Calle *@
+                                                    <InputText id="calle" class="form-control" @bind-Value="Direccion.Calle" placeholder="Calle"></InputText>
+                                                    <ValidationMessage For="(() => Direccion.Calle)" />
+                                                </div>
+                                                <div>
+                                                    @* Número *@
+                                                    <InputText id="referencia" class="form-control" @bind-Value="Direccion.Numero" placeholder="Número"></InputText>
+                                                    <ValidationMessage For="(() => Direccion.Numero)" />
+                                                </div>
+                                                <div>
+                                                    @* Referencia *@
+                                                    <InputText id="referencia" class="form-control" @bind-Value="Direccion.Referencia" placeholder="Referencia"></InputText>
+                                                    <ValidationMessage For="(() => Direccion.Referencia)" />
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="card-footer text-center">
+                                                @if (!string.IsNullOrEmpty(Mensaje))
                                                 {
-                                                    <option value="@provincia.ProvinciaId">(@provincia.ProvinciaId) -- @provincia.Nombre</option>
+                                                    <div class="alert alert-danger bi-exclamation-triangle-fill ">@Mensaje</div>
                                                 }
-                                            </InputSelect>
-                                            <ValidationMessage For="(() => Direccion.ProvinciaId)" />
+                                                <a href="/Direcciones/Index">
+                                                    <button type="button" class=" btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</button>
+                                                </a>
+                                                <button type="submit" class="btn btn-outline-success bi bi-floppy"> Guardar</button>
+                                            </div>
                                         </div>
-                                        <div>
-                                            @* Municipio *@
-                                            <InputText id="municipio" class="form-control" @bind-Value="Direccion.Municipio" placeholder="Municipio"></InputText>
-                                            <ValidationMessage For="(() => Direccion.Municipio)" />
-                                        </div>
-                                        <div>
-                                            @* Calle *@
-                                            <InputText id="calle" class="form-control" @bind-Value="Direccion.Calle" placeholder="Calle"></InputText>
-                                            <ValidationMessage For="(() => Direccion.Calle)" />
-                                        </div>
-                                        <div>
-                                            @* Número *@
-                                            <InputText id="referencia" class="form-control" @bind-Value="Direccion.Numero" placeholder="Número"></InputText>
-                                            <ValidationMessage For="(() => Direccion.Numero)" />
-                                        </div>
-                                        <div>
-                                            @* Referencia *@
-                                            <InputText id="referencia" class="form-control" @bind-Value="Direccion.Referencia" placeholder="Referencia"></InputText>
-                                            <ValidationMessage For="(() => Direccion.Referencia)" />
-                                        </div>
-
-
-
-                                    </div>
-                                    <div class="card-footer text-center">
-                                        @if (!string.IsNullOrEmpty(Mensaje))
-                                        {
-                                            <div class="alert alert-danger bi-exclamation-triangle-fill ">@Mensaje</div>
-                                        }
-                                        <a href="/Direcciones/Index">
-                                            <button type="button" class=" btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</button>
-                                        </a>
-                                        <button type="submit" class="btn btn-outline-success bi bi-floppy"> Guardar</button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </section>
+                        <!-- end book section -->
                     </div>
-                </section>
-                <!-- end book section -->
+                </div>
             </div>
-        </div>
-    </div>
-</EditForm>
+        </EditForm>
+
+    </Autorized>
+</AutorizedView>
 
 
 @code {
