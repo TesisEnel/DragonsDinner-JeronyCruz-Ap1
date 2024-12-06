@@ -1,0 +1,98 @@
+﻿@page "/Categorias/Index"
+@rendermode InteractiveServer
+@inject CategoriasService categoriasService
+
+<PageTitle> Index Categorias</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center">Registro de Categorias</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="filtrarPor"> Filtrar por:</label>
+                    <InputSelect id="filtrarPor" class="form-select" @bind-Value="FiltroSeleccionado">
+                        <option value="ID">ID</option>
+                        <option value="Nombre">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-6 d-flex justify-content-center mt-4">
+                    <div class="input-group">
+                        <InputText id="Busqueda" class="form-control" @bind-Value="CriterioBusqueda"></InputText>
+                        <button @onclick="BuscarCategoria" class="btn btn-outline-primary bi bi-search"> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col text-end">
+                    <a href="/Categorias/Create" class="btn btn-primary bi bi-plus-square mt-3"> Crear</a>
+                </div>
+            </div>
+
+            <table class="table table-light table-hover">
+                <thead class="table table-striped">
+                    <tr class="text-center">
+                        <th>Categoria Id</th>
+                        <th>Nombre</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var categoria in Categorias)
+                    {
+                        <tr class="text-center">
+                            <td>@categoria.CategoriaId</td>
+                            <td>@categoria.Nombre</td>
+                            <td><a href="/Categorias/Edit/@categoria.CategoriaId" class="btn btn-outline-success bi bi-pencil-square"></a></td>
+                            <td><a href="/Categorias/Delete/@categoria.CategoriaId" class="btn btn-outline-danger bi bi-trash"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <p><strong>Total de Tarjetas: </strong>@Categorias.Count</p>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
+    private string FiltroSeleccionado { get; set; } = "ID";
+    private string CriterioBusqueda { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categorias = await categoriasService.Listar(a => true);
+    }
+
+    private async Task BuscarCategoria()
+    {
+        switch (FiltroSeleccionado)
+        {
+            case "ID":
+                if (int.TryParse(CriterioBusqueda, out int id))
+                {
+                    Categorias = await categoriasService.Listar(a => a.CategoriaId == id);
+                }
+                break;
+
+            case "Nombre":
+                Categorias = await categoriasService.Listar(e => e.Nombre.ToLower().Contains(CriterioBusqueda.ToLower()));
+                break;
+        }
+    }
+
+    private async Task RefrescarDatos()
+    {
+        Categorias = await categoriasService.Listar(a => true);
+        CriterioBusqueda = string.Empty;
+    }
+
+}
