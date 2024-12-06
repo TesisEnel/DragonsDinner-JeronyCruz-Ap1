@@ -1,0 +1,148 @@
+﻿.card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.credit-card {
+    width: 400px;
+    height: 250px;
+    background: linear-gradient(135deg, #1c1c1c, #383838);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    color: white;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: .2s ease-in-out;
+}
+
+    .credit-card .bank {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .credit-card .chip {
+        width: 60px;
+        height: 40px;
+        background: gold;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .credit-card .card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .credit-card .card-info div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credit-card .card-info label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .credit-card .card-info input {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+            .credit-card .card-info input::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+    .credit-card .footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+.visa-style {
+    background-image: url('/images/visa.jpg');
+    background-size: cover;
+    transition: .2s ease-in-out;
+}
+
+.mastercard-style {
+    background-image: url('/images/master.jpg');
+    background-size: cover;
+    transition: .2s ease-in-out;
+}
+
+/*Estilo botones */
+
+.credit-card-column{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+
+}
+
+/*Estilos index imagen*/
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+    .cart-item img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        margin-right: 15px;
+        border-radius: 5px;
+    }
+
+.list-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+    .list-card img {
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    .list-card .card-info {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.9rem;
+    }
+
+    .list-card .masked-number {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .list-card .bank-name {
+        font-size: 0.8rem;
+        color: gray;
+    }
+
+
