@@ -76,7 +76,7 @@
                 {
                     <div class="alert alert-danger bi-exclamation-triangle-fill ">@Mensaje</div>
                 }
-                <a href="#"
+                <a href="/Direcciones/Index"
                    class="btn btn-outline-secondary">
                     <span class="bi bi-arrow-left mt-3"></span> Volver
                 </a>
@@ -109,7 +109,7 @@
         {
             await direccionesService.Guardar(Direccion);
             Direccion = new DireccionesDto();
-            navigationManager.NavigateTo("#");
+            navigationManager.NavigateTo("/Direcciones/Index");
 
         }
     }
