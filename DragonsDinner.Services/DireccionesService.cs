@@ -35,9 +35,16 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
     public async Task<bool> Eliminar(int direccionId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Direcciones
-            .Where(e => e.DireccionId == direccionId)
-            .ExecuteDeleteAsync() > 0;
+        var direccion = await contexto.Direcciones.FindAsync(direccionId);
+
+        if (direccion != null)
+        {
+            contexto.Direcciones.Remove(direccion);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(DireccionesDto direccionDto)

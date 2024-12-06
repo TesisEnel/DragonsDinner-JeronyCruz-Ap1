@@ -1,14 +1,221 @@
 ﻿@page "/Direcciones/Index"
-
 @inject DireccionesService direccionesService
 @inject NavigationManager navigationManager
+@inject ProductosService productosService
 @rendermode InteractiveServer
 
-<PageTitle>Index</PageTitle>
+<div class="bg-box">
+    <img src="/images/Fondo.jpg" alt="">
+</div>
+
+<!-- Basic -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Mobile Metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- Site Metas -->
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="shortcut icon" href="images/favicon.png" type="">
+
+<title> Dragon&acute;´s Dinner </title>
+
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<!-- nice select  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+<!-- font awesome style -->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="css/style.css" rel="stylesheet" />
+<!-- responsive style -->
+<link href="css/responsive.css" rel="stylesheet" />
+
+<div class="sub_page"
+    <div class="hero_area">
+        <div class="bg-box">
+            <img src="images/hero-bg.jpg" alt="">
+        </div>
+        <!-- header section strats -->
+        <header class="header_section">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg custom_nav-container ">
+                    <a class="navbar-brand" href="/">
+                        <span>
+                            Dragon&acute;s Dinner
+                        </span>
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class=""> </span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav  mx-auto ">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Inicio </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/DragonsDinner/Menu">Men&uacute; <span class="sr-only">(current)</span> </a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="sr-only">(current)</span> </a>
+                            </li>
+
+
+                            <AuthorizeView>
+                                <Authorized>
+                                    <div class="nav-item px-3">
+                                        <form action="Account/Logout" method="post">
+                                            <AntiforgeryToken />
+                                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                            <button type="submit" class="nav-link">
+                                                <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Cerrar sesi&Oacute;n
+                                            </button>
+                                        </form>
+                                    </div>
+                                </Authorized>
+                            </AuthorizeView>
+                        </ul>
+                        <div class="user_option">
+                            <a href="" class="user_link">
+                                <i class="bi bi-person-circle" aria-hidden="true"></i>
+                            </a>
+                            <a
+                            <!-- botón Carrito de compras -->
+                            <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
+                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
+                            </button>
+
+                            <AuthorizeView>
+                                <NotAuthorized>
+                                    <!-- Modal carrito de compras -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <i class="bi bi-cart-fill fs-1"></i>
+                                                    <div> Iniciar sesión o registrarse para ver el carrito</div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="/Account/Login" class="order_online">
+                                                        Iniciar Sesion
+                                                    </a>
+
+                                                    <a href="/Account/Register" class="order_onlines">
+                                                        Registrarse
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </NotAuthorized>
+
+                                <Authorized>
+                                    <!-- Modal carrito de compras -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Mostrar los productos del carrito -->
+                                                        @foreach (var producto in Carrito)
+                                                        {
+                                                                    <div class="cart-item justify-content-between">
+                                                                        <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
+                                                                        <div class="cart-item-details">
+                                                                            <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                            <div class="cart-item-actions">
+                                                                                <div class="input-group">
+                                                                                    <!-- Botón para decrementar la cantidad -->
+                                                                                    <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                                    <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
+                                                                                    <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
+                                                                                    <!-- Botón para incrementar la cantidad -->
+                                                                                    <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            </div>
+
+                                                                        <!-- Precio del artículo -->
+                                                                        <div class="cart-item-price">$@producto.Precio</div>
+
+                                                                        <!-- Icono de eliminar el artículo -->
+                                                                        <div class="cart-item-price">
+                                                                            <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
+                                                                                <i class="bi bi-x"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                        }
+
+                                                    <!-- Subtotal del carrito -->
+                                                    <div class="subtotal">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
+                                                    <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </Authorized>
+                            </AuthorizeView>
+                            </a>
+                            <form class="form-inline">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                            @*Credit-card-button*@
+                            <AuthorizeView>
+                               <button type="button" class="btn btn-no-color text-white">
+                                    <i class="bi bi-credit-card-2-back-fill" aria-hidden="true"></i>
+                                </button>
+                            </AuthorizeView>
+
+                            <AuthorizeView>
+                                <NotAuthorized>
+                                    <a href="/Account/Login" class="order_online">
+                                        Iniciar Sesion
+                                    </a>
+
+                                    <a href="/Account/Register" class="order_onlines">
+                                        Registrarse
+                                    </a>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- end header section -->
+    </div>
+</div>
+
+<PageTitle>Direcciones</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
-            <h5 class="card-title">Direcciones</h5>
             <a href="/Direcciones/Create" class="btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
@@ -86,9 +293,9 @@
 
 
                             <td class="text-center">
-                                <a href="/Cotizaciones/Edit/@direccion.DireccionId"
+                                <a href="/Direcciones/Edit/@direccion.DireccionId"
                                    class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/Cotizaciones/Delete/@direccion.DireccionId" class="btn btn-outline-danger bi bi-trash"></a>
+                                <a href="/Direcciones/Delete/@direccion.DireccionId" class="btn btn-outline-danger bi bi-trash"></a>
                             </td>
                         </tr>
                     }
@@ -102,7 +309,11 @@
 </div>
 
 @code {
+    private string? currentUrl;
     public List<DireccionesDto> ListDirecciones { get; set; } = new List<DireccionesDto>();
+    public List<ProductosDto> ListProductos { get; set; } = new List<ProductosDto>();
+    private List<ProductosDto> Carrito { get; set; } = new List<ProductosDto>();
+    public CarritosDetalles CarritoDetalle { get; set; }
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
@@ -111,11 +322,18 @@
 
     public DateTime? Hasta { get; set; }
 
+    protected override void OnInitialized()
+    {
+        currentUrl = navigationManager.ToBaseRelativePath(navigationManager.Uri);
+        navigationManager.LocationChanged += OnLocationChanged;
+    }
     protected override async Task OnInitializedAsync()
     {
         ListDirecciones = await direccionesService.Listar(c => c.DireccionId > 0);
+        ListProductos = await productosService.Listar(p => true);
     }
- 
+
+
     private async Task Restablecer()
     {
         ListDirecciones = await direccionesService.Listar(e => e.DireccionId > 0);
@@ -125,12 +343,83 @@
 
     private async Task Buscar()
     {
-         if (ValorFiltro.Trim() != "" && Filtro == "direccion")
+        if (ValorFiltro.Trim() != "" && Filtro == "direccion")
         {
             ListDirecciones = await direccionesService
             .Listar(p => p.Nombre.ToLower()
             .Contains(ValorFiltro.ToLower()));
         }
     }
+
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = navigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        navigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    public void IncrementarCantidad(ProductosDto producto)
+    {
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente != null)
+        {
+            existente.Cantidad++;
+        }
+    }
+
+    public void DescrementarCantidad(ProductosDto producto)
+    {
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente != null && existente.Cantidad > 1)
+        {
+            existente.Cantidad--;
+        }
+        else
+        {
+            Carrito.Remove(producto);
+        }
+    }
+
+    public void AgregarAlCarrito(ProductosDto producto)
+    {
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        if (existente == null)
+        {
+            Carrito.Add(new ProductosDto
+                {
+                    ProductoId = producto.ProductoId,
+                    Nombre = producto.Nombre,
+                    Descripcion = producto.Descripcion,
+                    Imagen = producto.Imagen,
+                    Precio = producto.Precio,
+                    Cantidad = 1
+                });
+        }
+        else
+        {
+            existente.Cantidad++;
+        }
+    }
+
+    public void EliminarDelCarrito(ProductosDto producto)
+    {
+        Carrito.Remove(producto);
+    }
+
+    public void VaciarCarrito()
+    {
+        Carrito.Clear();
+    }
+
+    public void RealizarPedido()
+    {
+        // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
+    }
+
 
 }

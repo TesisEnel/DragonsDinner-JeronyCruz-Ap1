@@ -1,0 +1,111 @@
+﻿@page "/Direcciones/Delete/{DireccionId:int}"
+@rendermode InteractiveServer
+@inject DireccionesService direccionesService
+@inject NavigationManager navigation
+
+
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<!-- nice select  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+<!-- font awesome style -->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="css/style.css" rel="stylesheet" />
+<!-- responsive style -->
+<link href="css/responsive.css" rel="stylesheet" />
+
+<div class="bg-box">
+	<img src="/images/Fondo.jpg" alt="">
+</div>
+
+<PageTitle>Eliminar direcci&oacute;n</PageTitle>
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header text-center ">
+			<h5><strong>Eliminar direcci&oacute;n</strong></h5>
+		</div>
+		<div class="card-body">
+			<h6><strong>¿Seguro que deseas eliminar esta direcci&oacute;n</strong></h6>
+			@*Datos*@
+			<div class="mb-1">
+				@*DireccionId*@
+				<div><strong>Direcci&oacute;n ID:</strong> @Direccion.DireccionId</div>
+				@*Nombre*@
+				<div><strong>Nombre</strong></div>
+				@*ProvinciaId*@
+				<div><strong>Provincia ID:</strong> @Direccion.ProvinciaId</div>
+				@*ProvinciaNombre*@
+				<div><strong>Provincia</strong>@Direccion.ProvinciaNombre</div>
+				@*Municipio*@
+				<div><strong>Municipio</strong>@Direccion.Municipio</div>
+				@*Calle*@
+				<div><strong>Calle</strong>@Direccion.Calle</div>
+				@*Numero*@
+				<div><strong>N&uacute;mero</strong>@Direccion.Numero</div>
+				@*Referencia*@
+				<div><strong>Referencia</strong>@Direccion.Referencia</div>
+				<div class="card-footer text-center">
+					<a href="/Direcciones/Index"
+					   class="btn btn-outline-secondary">
+						<span class="bi bi-arrow-left mt-3"></span> Volver
+					</a>
+					<button type="button" class="btn btn-outline-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">
+						Eliminar
+					</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteConfirmationLabel">Confirmar Eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				¿Está seguro de que desea eliminar esta direcci&oacute;n? Esta acción no se puede deshacer.
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+
+	[Parameter]
+	public int DireccionId { get; set; }
+	public DireccionesDto Direccion { get; set; } = new DireccionesDto();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (DireccionId > 0)
+		{
+			Direccion = (await direccionesService.Buscar(DireccionId));
+		}
+
+	}
+
+	public async Task Eliminar()
+	{
+		var eliminar = await direccionesService.Eliminar(Direccion.DireccionId);
+
+		if (eliminar)
+		{
+			navigation.NavigateTo("/Direcciones/Index");
+		}
+
+	}
+}

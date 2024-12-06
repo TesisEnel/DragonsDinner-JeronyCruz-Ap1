@@ -1,4 +1,4 @@
-﻿@page "/Direcciones/Create"
+﻿@page "/Direcciones/Edit/{DireccionId:int}"
 @rendermode InteractiveServer
 @inject DireccionesService direccionesService
 @inject ProvinciasService provinciasService
@@ -37,7 +37,7 @@
                     <div class="container ">
                         <div class="heading_container align-items-center">
                             <h2>
-                                Nueva Direcci&oacute;n
+                                Editar Direcci&oacute;n
                             </h2>
                         </div>
                         <div class="row">
@@ -46,11 +46,13 @@
                                     <div class="col-md-5">
                                         <div>
                                             @* Nombre *@
+                                            <label for="nombre" class="form-label"> <strong>Nombre</strong></label>
                                             <InputText id="nombre" class="form-control" @bind-Value="Direccion.Nombre" placeholder="Nombre"></InputText>
                                             <ValidationMessage For="(() => Direccion.Nombre)" />
                                         </div>
                                         <div>
                                             @*Provincia*@
+                                            <label for="provincia" class="form-label"> <strong>Provincia</strong></label>
                                             <InputSelect id="provincia" class="form-control form-select" @bind-Value="Direccion.ProvinciaId">
                                                 <option value="0" selected disabled>Provincia</option>
                                                 @foreach (var provincia in ListProvincias)
@@ -62,21 +64,25 @@
                                         </div>
                                         <div>
                                             @* Municipio *@
+                                            <label for="municipio" class="form-label"> <strong>Municipio</strong></label>
                                             <InputText id="municipio" class="form-control" @bind-Value="Direccion.Municipio" placeholder="Municipio"></InputText>
                                             <ValidationMessage For="(() => Direccion.Municipio)" />
                                         </div>
                                         <div>
                                             @* Calle *@
+                                            <label for="calle" class="form-label"> <strong>Calle</strong></label>
                                             <InputText id="calle" class="form-control" @bind-Value="Direccion.Calle" placeholder="Calle"></InputText>
                                             <ValidationMessage For="(() => Direccion.Calle)" />
                                         </div>
                                         <div>
                                             @* Número *@
-                                            <InputText id="referencia" class="form-control" @bind-Value="Direccion.Numero" placeholder="Número"></InputText>
+                                            <label for="numero" class="form-label"> <strong>N&uacute;mero</strong></label>
+                                            <InputText id="numero" class="form-control" @bind-Value="Direccion.Numero" placeholder="Número"></InputText>
                                             <ValidationMessage For="(() => Direccion.Numero)" />
                                         </div>
                                         <div>
                                             @* Referencia *@
+                                            <label for="referencia" class="form-label"> <strong>Referencia</strong></label>
                                             <InputText id="referencia" class="form-control" @bind-Value="Direccion.Referencia" placeholder="Referencia"></InputText>
                                             <ValidationMessage For="(() => Direccion.Referencia)" />
                                         </div>
@@ -105,41 +111,43 @@
     </div>
 </EditForm>
 
-
 @code {
+    [Parameter]
+    public int DireccionId { get; set; }
     public DireccionesDto Direccion { get; set; } = new DireccionesDto();
     public List<ProvinciasDto> ListProvincias { get; set; } = [];
     public string Mensaje { get; set; }
+    public string CheckMessage{ get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
+        if (DireccionId > 0)
+        {
+            Direccion = await direccionesService.Buscar(DireccionId);
+        }
         ListProvincias = await provinciasService.Listar(a => true);
 
     }
 
     public async Task Guardar()
     {
-        if (await direccionesService.Existe(Direccion.DireccionId))
-        {
-            Mensaje = "La direccion existe. Por favor, elija otra.";
-            return;
-        }
         if (Direccion.ProvinciaId == 0)
         {
             Mensaje = "Seleccione una provincia";
             return;
         }
-        else if (Direccion.Municipio == null)
+        if (string.IsNullOrWhiteSpace(Direccion.Municipio))
         {
             Mensaje = "Ingrese un municipio";
             return;
         }
-        else if (Direccion.Calle == null)
+        else if(string.IsNullOrWhiteSpace(Direccion.Calle))
         {
             Mensaje = "Ingrese una calle";
             return;
         }
-        else if (Direccion.Numero == null)
+        else if(string.IsNullOrWhiteSpace(Direccion.Numero))
         {
             Mensaje = "Ingrese un numero de casa/apartamento";
             return;
@@ -150,9 +158,7 @@
             Direccion.Referencia = (Direccion.Referencia == null) ? "-" : Direccion.Referencia;
 
             await direccionesService.Guardar(Direccion);
-            Direccion = new DireccionesDto();
-            navigationManager.NavigateTo("/Direcciones/Index");
-
+            CheckMessage = "La dirección ha sido modificada correctamente"; 
         }
     }
 
