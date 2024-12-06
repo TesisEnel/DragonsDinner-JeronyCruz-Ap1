@@ -24,6 +24,7 @@ builder.Services.AddScoped<TarjetasService>();
 builder.Services.AddScoped<MetodosPagoService>();
 builder.Services.AddScoped<DireccionesService>();
 builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddScoped<ProvinciasService>();
 builder.Services.AddSingleton<ToastService>();
 
 builder.Services.AddCascadingAuthenticationState();
