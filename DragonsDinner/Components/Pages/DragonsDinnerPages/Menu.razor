@@ -5,33 +5,35 @@
 @inject CategoriasService categoriasService
 @inject NavigationManager NavigationManager
 
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Site Metas -->
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link rel="shortcut icon" href="images/favicon.png" type="">
+<link rel=" stylesheet" href="/Estilos/Carrito.css" />
 
-    <title> Dragon&acute;´s Dinner </title>
+<!-- Basic -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Mobile Metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- Site Metas -->
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="shortcut icon" href="images/favicon.png" type="">
 
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<title> Dragon&acute;´s Dinner </title>
 
-    <!--owl slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-    <!-- nice select  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-    <!-- font awesome style -->
-    <link href="css/font-awesome.min.css" rel="stylesheet" />
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
-    <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet" />
-    <!-- responsive style -->
-    <link href="css/responsive.css" rel="stylesheet" />
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<!-- nice select  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+<!-- font awesome style -->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="css/style.css" rel="stylesheet" />
+<!-- responsive style -->
+<link href="css/responsive.css" rel="stylesheet" />
 
 
 <div class="sub_page"
@@ -82,7 +84,7 @@
                             <a
                             <!-- botón Carrito de compras -->
                             <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
-                                <i class="bi bi-cart-fill"><span class="badge">@ListProductos.Sum(p => p.Cantidad)</span></i>
+                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
                             <AuthorizeView>
@@ -129,38 +131,38 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <!-- Mostrar los productos del carrito -->
-                                                        @foreach (var producto in ListProductos)
+                                                        @foreach (var producto in Carrito)
                                                         {
-                                                            <div class="cart-item justify-content-between">
-                                                                <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
-                                                                <div class="cart-item-details">
-                                                                    <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
-                                                                    <div class="cart-item-actions">
-                                                                        <div class="input-group">
-                                                                            <!-- Botón para decrementar la cantidad -->
-                                                                            <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
-                                                                            <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                            <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
-                                                                            <!-- Botón para incrementar la cantidad -->
-                                                                            <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                <div class="cart-item justify-content-between">
+                                                                    <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
+                                                                    <div class="cart-item-details">
+                                                                        <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                        <div class="cart-item-actions">
+                                                                            <div class="input-group">
+                                                                                <!-- Botón para decrementar la cantidad -->
+                                                                                <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                                <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
+                                                                                <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
+                                                                                <!-- Botón para incrementar la cantidad -->
+                                                                                <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                            </div>
                                                                         </div>
+                                                                        </div>
+
+                                                                    <!-- Precio del artículo -->
+                                                                    <div class="cart-item-price">$@producto.Precio</div>
+
+                                                                    <!-- Icono de eliminar el artículo -->
+                                                                    <div class="cart-item-price">
+                                                                        <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
+                                                                            <i class="bi bi-x"></i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
-
-                                                                <!-- Precio del artículo -->
-                                                                <div class="cart-item-price">$@producto.Precio</div>
-
-                                                                <!-- Icono de eliminar el artículo -->
-                                                                <div class="cart-item-price">
-                                                                    <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
-                                                                        <i class="bi bi-x"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
                                                         }
 
                                                     <!-- Subtotal del carrito -->
-                                                    <div class="subtotal">Subtotal: $@ListProductos.Sum(p => p.Precio * p.Cantidad)</div>
+                                                    <div class="subtotal">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
@@ -178,6 +180,13 @@
                                     <i class="bi bi-search" aria-hidden="true"></i>
                                 </button>
                             </form>
+                            @*Credit-card-button*@
+                            <AuthorizeView>
+                               <button type="button" class="btn btn-no-color text-white">
+                                    <i class="bi bi-credit-card-2-back-fill" aria-hidden="true"></i>
+                                </button>
+                            </AuthorizeView>
+
                             <AuthorizeView>
                                 <NotAuthorized>
                                     <a href="/Account/Login" class="order_online">
@@ -212,10 +221,10 @@
                     <ul class="filters_menu">
                         @foreach (var filtro in Categorias)
                         {
-                            <li @onclick="() => SeleccionarFiltro(filtro.Nombre)"
-                                class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
+                                <li @onclick="() => SeleccionarFiltro(filtro.Nombre)"
+                                    class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
                                 @filtro.Nombre
-                            </li>
+                                </li>
                         }
                     </ul>
 
@@ -223,23 +232,23 @@
                         <div class="row grid">
                             @foreach (var producto in ListProductos)
                             {
-                                <div class="col-sm-6 col-lg-4 all">
-                                    <div class="box">
-                                        <div>
-                                            <div class="img-box">
-                                                <img src="@producto.Imagen" alt="@producto.Nombre" />
-                                            </div>
-                                            <div class="detail-box">
-                                                <h5>@producto.Nombre</h5>
-                                                <p>@producto.Descripcion</p>
-                                                <div class="options">
-                                                    <h6>$@producto.Precio.ToString("N2")</h6>
-                                                    <a href="" class="bi bi-cart-fill text-white"></a>
+                                    <div class="col-sm-6 col-lg-4 all">
+                                        <div class="box">
+                                            <div>
+                                                <div class="img-box">
+                                                    <img src="@producto.Imagen" alt="@producto.Nombre" />
+                                                </div>
+                                                <div class="detail-box">
+                                                    <h5>@producto.Nombre</h5>
+                                                    <p>@producto.Descripcion</p>
+                                                    <div class="options">
+                                                        <h6>$@producto.Precio.ToString("N2")</h6>
+                                                    <a href="javascript:void(0)" @onclick="() => AgregarAlCarrito(producto)" class="bi bi-cart-fill text-white"></a>
+                                                        </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             }
                         </div>
                     </div>
@@ -357,6 +366,8 @@
     private string? currentUrl;
     public List<ProductosDto> ListProductos { get; set; } = new List<ProductosDto>();
     public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
+    private List<ProductosDto> Carrito { get; set; } = new List<ProductosDto>();
+
     public string FiltroActivo { get; set; } = string.Empty;
 
     protected override void OnInitialized()
@@ -402,7 +413,7 @@
 
     public void IncrementarCantidad(ProductosDto producto)
     {
-        var existente = ListProductos.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
         if (existente != null)
         {
             existente.Cantidad++;
@@ -411,23 +422,23 @@
 
     public void DescrementarCantidad(ProductosDto producto)
     {
-        var existente = ListProductos.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
         if (existente != null && existente.Cantidad > 1)
         {
             existente.Cantidad--;
         }
         else
         {
-            ListProductos.Remove(producto);
+            Carrito.Remove(producto);
         }
     }
 
     public void AgregarAlCarrito(ProductosDto producto)
     {
-        var existente = ListProductos.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
         if (existente == null)
         {
-            ListProductos.Add(new ProductosDto
+            Carrito.Add(new ProductosDto
                 {
                     ProductoId = producto.ProductoId,
                     Nombre = producto.Nombre,
@@ -445,12 +456,12 @@
 
     public void EliminarDelCarrito(ProductosDto producto)
     {
-        ListProductos.Remove(producto);
+        Carrito.Remove(producto);
     }
 
     public void VaciarCarrito()
     {
-        ListProductos.Clear();
+        Carrito.Clear();
     }
 
     public void RealizarPedido()

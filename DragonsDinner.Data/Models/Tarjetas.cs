@@ -19,7 +19,7 @@ public class Tarjetas
 
     [Required(ErrorMessage = "El número de tarjeta es obligatorio")]
     [RegularExpression(@"^\d{16}$", ErrorMessage = "El número de tarjeta debe tener 16 dígitos")]
-    public string NumeroTarjeta { get; set; }
+    public string NumeroTarjeta { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La fecha de vencimiento es obligatoria")]
     [RegularExpression(@"^(0[1-9]|1[0-2])\/\d{2}$", ErrorMessage = "El formato debe ser MM/AA")]

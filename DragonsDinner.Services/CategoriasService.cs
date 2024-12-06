@@ -29,9 +29,16 @@ public class CategoriasService(IDbContextFactory<ApplicationDbContext> DbFactory
     public async Task<bool> Eliminar(int categoria)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Categorias
-            .Where(e => e.CategoriaId == categoria)
-            .ExecuteDeleteAsync() > 0;
+        var categoriaEntity = await contexto.Categorias.FindAsync(categoria);
+
+        if (categoriaEntity != null)
+        {
+            contexto.Categorias.Remove(categoriaEntity);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(CategoriasDto categoriaDto)
@@ -56,10 +63,12 @@ public class CategoriasService(IDbContextFactory<ApplicationDbContext> DbFactory
             CategoriaId = categoriaDto.CategoriaId,
             Nombre = categoriaDto.Nombre
         };
-        contexto.Update(categoriaDto);
+        contexto.Categorias.Update(categoria);
+
         var modificado = await contexto.SaveChangesAsync() > 0;
         return modificado;
     }
+
 
     private async Task<bool> Existe(int id)
     {
@@ -86,5 +95,13 @@ public class CategoriasService(IDbContextFactory<ApplicationDbContext> DbFactory
         })
         .Where(criterio)
         .ToListAsync();
+    }
+
+    public async Task<bool> NombreExiste(string NombreCategoria)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var numeroNormalizado = NombreCategoria.Trim().ToLower();
+        return await contexto.Categorias
+            .AnyAsync(t => t.Nombre.Trim().ToLower() == numeroNormalizado);
     }
 }

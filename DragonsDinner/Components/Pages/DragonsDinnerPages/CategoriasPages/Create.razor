@@ -1,0 +1,64 @@
+﻿﻿
+@page "/Categorias/Create"
+@rendermode InteractiveServer
+@inject CategoriasService categoriasService
+@inject NavigationManager navigation
+
+<link href="CreateCategorias.css" rel="stylesheet" />
+
+
+<EditForm Model="@Categorias" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card central-card shadow-lg">
+            <div class="card-header text-center">
+                <h2 class="card-title">Crear Categoria</h2>
+            </div>
+
+            <div class="card-body">
+                @*Categoria ID*@
+                <div class="mb-3">
+                    <label for="CategoriaId" class="form-label"><strong>Categoria Id</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Categorias.CategoriaId" readonly></InputNumber>
+                </div>
+
+                @*Nombre*@
+                <div class="mb-3">
+                    <label for="Nombre" class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="Categorias.Nombre"></InputText>
+                    <ValidationMessage For="(() => Categorias.Nombre)" />
+                    @if (!string.IsNullOrEmpty(Mensaje))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            @Mensaje
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="/Categorias/Index" class="btn btn-orange bi bi-arrow-left mt-3"> Volver</a>
+                <button type="submit" class="btn btn-orange bi bi-floppy mt-3"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    public CategoriasDto Categorias { get; set; } = new CategoriasDto();
+    public string Mensaje { get; set; } = string.Empty;
+
+    public async Task Guardar()
+    {
+        bool nombreExiste = await categoriasService.NombreExiste(Categorias.Nombre);
+        if (nombreExiste)
+        {
+            Mensaje = "El nombre de la categoria ya existe.";
+            return;
+        }
+        await categoriasService.Guardar(Categorias);
+        Categorias = new CategoriasDto();
+        navigation.NavigateTo("/Categorias/Index");
+    }
+}
