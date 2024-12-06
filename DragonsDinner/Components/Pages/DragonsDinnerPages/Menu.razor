@@ -63,6 +63,10 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="/DragonsDinner/Menu">Men&uacute; <span class="sr-only">(current)</span> </a>
                             </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="sr-only">(current)</span> </a>
+                        </li>
                             <AuthorizeView>
                                 <Authorized>
                                     <div class="nav-item px-3">
@@ -133,32 +137,32 @@
                                                     <!-- Mostrar los productos del carrito -->
                                                         @foreach (var producto in Carrito)
                                                         {
-                                                                <div class="cart-item justify-content-between">
-                                                                    <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
-                                                                    <div class="cart-item-details">
-                                                                        <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
-                                                                        <div class="cart-item-actions">
-                                                                            <div class="input-group">
-                                                                                <!-- Botón para decrementar la cantidad -->
-                                                                                <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
-                                                                                <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                                <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
-                                                                                <!-- Botón para incrementar la cantidad -->
-                                                                                <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                    <div class="cart-item justify-content-between">
+                                                                        <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
+                                                                        <div class="cart-item-details">
+                                                                            <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                            <div class="cart-item-actions">
+                                                                                <div class="input-group">
+                                                                                    <!-- Botón para decrementar la cantidad -->
+                                                                                    <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                                    <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
+                                                                                    <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
+                                                                                    <!-- Botón para incrementar la cantidad -->
+                                                                                    <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        </div>
+                                                                            </div>
 
-                                                                    <!-- Precio del artículo -->
-                                                                    <div class="cart-item-price">$@producto.Precio</div>
+                                                                        <!-- Precio del artículo -->
+                                                                        <div class="cart-item-price">$@producto.Precio</div>
 
-                                                                    <!-- Icono de eliminar el artículo -->
-                                                                    <div class="cart-item-price">
-                                                                        <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
-                                                                            <i class="bi bi-x"></i>
-                                                                        </button>
+                                                                        <!-- Icono de eliminar el artículo -->
+                                                                        <div class="cart-item-price">
+                                                                            <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
+                                                                                <i class="bi bi-x"></i>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
                                                         }
 
                                                     <!-- Subtotal del carrito -->
@@ -221,10 +225,10 @@
                     <ul class="filters_menu">
                         @foreach (var filtro in Categorias)
                         {
-                                <li @onclick="() => SeleccionarFiltro(filtro.Nombre)"
-                                    class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
+                                    <li @onclick="() => SeleccionarFiltro(filtro.Nombre)"
+                                        class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
                                 @filtro.Nombre
-                                </li>
+                                    </li>
                         }
                     </ul>
 
@@ -232,23 +236,23 @@
                         <div class="row grid">
                             @foreach (var producto in ListProductos)
                             {
-                                    <div class="col-sm-6 col-lg-4 all">
-                                        <div class="box">
-                                            <div>
-                                                <div class="img-box">
-                                                    <img src="@producto.Imagen" alt="@producto.Nombre" />
-                                                </div>
-                                                <div class="detail-box">
-                                                    <h5>@producto.Nombre</h5>
-                                                    <p>@producto.Descripcion</p>
-                                                    <div class="options">
-                                                        <h6>$@producto.Precio.ToString("N2")</h6>
-                                                    <a href="javascript:void(0)" @onclick="() => AgregarAlCarrito(producto)" class="bi bi-cart-fill text-white"></a>
-                                                        </div>
+                                        <div class="col-sm-6 col-lg-4 all">
+                                            <div class="box">
+                                                <div>
+                                                    <div class="img-box">
+                                                        <img src="@producto.Imagen" alt="@producto.Nombre" />
+                                                    </div>
+                                                    <div class="detail-box">
+                                                        <h5>@producto.Nombre</h5>
+                                                        <p>@producto.Descripcion</p>
+                                                        <div class="options">
+                                                            <h6>$@producto.Precio.ToString("N2")</h6>
+                                                        <a href="javascript:void(0)" @onclick="() => AgregarAlCarrito(producto)" class="bi bi-cart-fill text-white"></a>
+                                                            </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                             }
                         </div>
                     </div>
