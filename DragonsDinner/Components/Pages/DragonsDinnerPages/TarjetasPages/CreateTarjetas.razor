@@ -45,6 +45,12 @@
                         <label class="form-label" for="Nombre"><strong>Nombre</strong></label>
                         <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
                         <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
+                        @if (!string.IsNullOrEmpty(MensajeNombre))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @MensajeNombre
+                            </div>
+                        }
                     </div>
 
                     @*Fecha de Vencimiento*@
@@ -132,6 +138,7 @@
     public string MensajeErrorCVV { get; set; } = string.Empty;
     public string MensajeErrorFV { get; set; } = string.Empty;
     public string MensajeErrorTarjeta { get; set; } = string.Empty;
+    public string MensajeNombre { get; set; } = string.Empty;
 
     // Para Visa (13 o 16 dígitos)
     string patronVisa = @"^4[0-9]{12}(?:[0-9]{3})?$";
@@ -154,6 +161,7 @@
 
     public async Task Guardar()
     {
+
         if (string.IsNullOrEmpty(Tarjetas.CVV) || Tarjetas.CVV.Length < 3 || Tarjetas.CVV.Length > 4)
         {
             MensajeErrorCVV = "El CVV debe tener entre 3 y 4 dígitos.";
@@ -185,6 +193,12 @@
         if (!ValidarFechaVencimiento(Tarjetas.FechaVencimiento))
         {
             MensajeErrorFV = "La fecha de vencimiento debe ser posterior a la fecha actual.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Tarjetas.Nombres))
+        {
+            MensajeNombre = "El nombre no puede estar vacio.";
             return;
         }
 
