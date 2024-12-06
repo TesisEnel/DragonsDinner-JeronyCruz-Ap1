@@ -1,0 +1,36 @@
+﻿﻿body {
+}
+
+.custom-card {
+    max-width: 500px; 
+    margin: 50px auto; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-radius: 10px;
+    padding: 20px;
+}
+
+    .custom-card .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-card .card-body {
+        background-color: transparent;
+    }
+
+    .custom-card .card-footer {
+        background-color: transparent;
+        border-top: 1px solid #ddd;
+    }
+
+.table {
+    background-color: transparent;
+}
+
+.card-footer a, .card-footer button {
+    margin-top: 10px;
+}
+
+.card-footer a {
+    margin-right: 10px;
+}
