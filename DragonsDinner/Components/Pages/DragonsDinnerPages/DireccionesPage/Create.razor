@@ -1,0 +1,117 @@
+﻿@page "/Direcciones/Create"
+@rendermode InteractiveServer
+@inject DireccionesService direccionesService
+@inject ProvinciasService provinciasService
+@inject NavigationManager navigationManager
+
+<PageTitle>Nueva direcci&oacute;n</PageTitle>
+<EditForm Model="Direccion" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Crear cotizaci&oacute;n</h5>
+            </div>
+
+            <div class="card-body">
+                @* DireccionId *@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Direcci&oacute;n Id</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Direccion.DireccionId" readonly></InputNumber>
+                </div>
+
+                @* Nombre *@
+                <div class="mb-3">
+                    <label for="nombre" class="form-label"><strong>Nombre</strong></label>
+                    <InputText id="nombre" class="form-control" @bind-Value="Direccion.Nombre"></InputText>
+                    <ValidationMessage For="(() => Direccion.Nombre)" />
+                </div>
+
+                @*Provincia*@
+                <div class="mb-3">
+                    <label for="provincia" class="form-label"><strong>Provincia</strong></label>
+                    <InputSelect id="provincia" class="form-control form-select" @bind-Value="Direccion.ProvinciaId">
+                        <option value="0" selected disabled>Elija una opci&oacute;n</option>
+                        @foreach (var provincia in ListProvincias)
+                        {
+                            <option value="@provincia.ProvinciaId">(@provincia.ProvinciaId) -- @provincia.Nombre</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="(() => Direccion.ProvinciaId)" />
+                </div>
+
+                @* Municipio *@
+                <div class="mb-3">
+                    <label for="municipio" class="form-label"><strong>Municipio</strong></label>
+                    <InputText id="municipio" class="form-control" @bind-Value="Direccion.Municipio"></InputText>
+                    <ValidationMessage For="(() => Direccion.Municipio)" />
+                </div>
+
+                @* Calle *@
+                <div class="mb-3">
+                    <label for="calle" class="form-label"><strong>Calle</strong></label>
+                    <InputText id="calle" class="form-control" @bind-Value="Direccion.Calle"></InputText>
+                    <ValidationMessage For="(() => Direccion.Calle)" />
+                </div>
+
+                @* Referencia *@
+                <div class="mb-3">
+                    <label for="referencia" class="form-label"><strong>Referencia</strong></label>
+                    <InputText id="referencia" class="form-control" @bind-Value="Direccion.Referencia"></InputText>
+                    <ValidationMessage For="(() => Direccion.Referencia)" />
+                </div>
+
+                 @* Referencia *@
+                <div class="mb-3">
+                    <label for="Numero" class="form-label"><strong>N&uacute;mero casa/apartamento</strong></label>
+                    <InputText id="referencia" class="form-control" @bind-Value="Direccion.Numero"></InputText>
+                    <ValidationMessage For="(() => Direccion.Numero)" />
+                </div>
+
+            </div
+
+            <div class="card-footer text-center">
+                @if (!string.IsNullOrEmpty(Mensaje))
+                {
+                    <div class="alert alert-danger bi-exclamation-triangle-fill ">@Mensaje</div>
+                }
+                <a href="/Direcciones/Index"
+                   class="btn btn-outline-secondary">
+                    <span class="bi bi-arrow-left mt-3"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-outline-success bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    public DireccionesDto Direccion { get; set; } = new DireccionesDto();
+    public List<ProvinciasDto> ListProvincias { get; set; } = [];
+    public string Mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListProvincias = await provinciasService.Listar(a => true);
+
+    }
+
+    public async Task Guardar()
+    {
+
+        if (await direccionesService.Existe(Direccion.DireccionId))
+        {
+            Mensaje = "La direccion existe. Por favor, elija otra.";
+        }
+        else
+        {
+            await direccionesService.Guardar(Direccion);
+            Direccion = new DireccionesDto();
+            navigationManager.NavigateTo("/Direcciones/Index");
+
+        }
+    }
+
+}

@@ -1,0 +1,136 @@
+﻿@page "/Direcciones/Index"
+
+@inject DireccionesService direccionesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Index</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header space-between">
+            <h5 class="card-title">Direcciones</h5>
+            <a href="/Direcciones/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square mt-3"></span> Crear
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label for="filtro" class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label for="valorFiltro" class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect id="filtro" class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Cliente">Cliente</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input id="valorFiltro" class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
+                    </div>
+                </div>
+
+
+                @*Restablecer*@
+                <div class="col-3">
+                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise"
+                            @onclick="Restablecer">
+                    </button>
+                </div>
+
+            </div>
+
+            <table class="table table-hover text-center mt-3">
+                <thead class="table table-striped text-black ">
+                    <tr>
+                        <th><strong>DireccionId</strong></th>
+                        <th><strong>Nombre</strong></th>
+                        <th><strong>Provincia</strong></th>
+                        <th><strong>Municipio</strong></th>
+                        <th><strong>Calle</strong></th>
+                        <th><strong>Referencia</strong></th>
+                        <th><strong>N&uacute;mero</strong></th>
+                        <th><strong>Opciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var direccion in ListDirecciones)
+                    {
+                        <tr>
+                            <td> @direccion.DireccionId</td>
+                            <td> @direccion.Nombre</td>
+                            <td> @direccion.ProvinciaNombre</td>
+                            <td> @direccion.Municipio</td>
+                            <td> @direccion.Calle</td>
+                            <td> @direccion.Referencia</td>
+                            <td> @direccion.Numero</td>
+
+
+                            <td class="text-center">
+                                <a href="/Cotizaciones/Edit/@direccion.DireccionId"
+                                   class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="/Cotizaciones/Delete/@direccion.DireccionId" class="btn btn-outline-danger bi bi-trash"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer space-between">
+            <label class="ms-3"><strong>Cantidad:</strong> @ListDirecciones.Count</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<DireccionesDto> ListDirecciones { get; set; } = new List<DireccionesDto>();
+
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    public DateTime? Desde { get; set; }
+
+    public DateTime? Hasta { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListDirecciones = await direccionesService.Listar(c => c.DireccionId > 0);
+    }
+ 
+    private async Task Restablecer()
+    {
+        ListDirecciones = await direccionesService.Listar(e => e.DireccionId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
+    }
+
+    private async Task Buscar()
+    {
+         if (ValorFiltro.Trim() != "" && Filtro == "direccion")
+        {
+            ListDirecciones = await direccionesService
+            .Listar(p => p.Nombre.ToLower()
+            .Contains(ValorFiltro.ToLower()));
+        }
+    }
+
+}

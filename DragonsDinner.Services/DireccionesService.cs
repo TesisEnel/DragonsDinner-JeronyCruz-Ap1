@@ -21,7 +21,8 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
             .Where(e => e.DireccionId == id).Select(p => new DireccionesDto()
             {
                 DireccionId = p.DireccionId,
-                Provincia = p.Provincia,
+                ProvinciaId = p.ProvinciaId,
+                ProvinciaNombre = p.Provincia.Nombre,
                 Municipio = p.Municipio,
                 Calle = p.Calle,
                 Referencia = p.Referencia,
@@ -45,7 +46,7 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
         var direccion = new Direcciones()
         {
             DireccionId = direccionDto.DireccionId,
-            Provincia = direccionDto.Provincia,
+            ProvinciaId = direccionDto.ProvinciaId,
             Municipio = direccionDto.Municipio,
             Calle = direccionDto.Calle,
             Referencia = direccionDto.Referencia,
@@ -65,7 +66,7 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
         var direccion = new Direcciones()
         {
             DireccionId = direccionDto.DireccionId,
-            Provincia = direccionDto.Provincia,
+            ProvinciaId = direccionDto.ProvinciaId,
             Municipio = direccionDto.Municipio,
             Calle = direccionDto.Calle,
             Referencia = direccionDto.Referencia,
@@ -77,7 +78,7 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
         return modificado;
     }
 
-    private async Task<bool> Existe(int id)
+    public async Task<bool> Existe(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Direcciones
@@ -98,7 +99,8 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
         return await contexto.Direcciones.Select(p => new DireccionesDto()
         {
             DireccionId = p.DireccionId,
-            Provincia = p.Provincia,
+            ProvinciaId = p.ProvinciaId,
+            ProvinciaNombre = p.Provincia.Nombre,
             Municipio = p.Municipio,
             Calle = p.Calle,
             Referencia = p.Referencia,
