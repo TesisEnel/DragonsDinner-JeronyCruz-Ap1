@@ -1,0 +1,64 @@
+﻿@page "/Categorias/Delete/{CategoriaId:int}"
+
+@rendermode InteractiveServer
+@inject CategoriasService categoriasService
+@inject NavigationManager navigation
+
+<link href="Delete.css" rel="stylesheet" />
+
+<PageTitle>Eliminar Categoria</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg custom-card">
+        <div class="card-header text-center">
+            <h5><strong>Datos de la Categoria</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <div class="text-center">
+                <h5>¿Desea eliminar esta Categoria?</h5>
+            </div>
+            <table class="mt-4 table text-center">
+                <tr>
+                    <td><strong>Categoria Id:</strong></td>
+                    <td>@Categoria.CategoriaId</td>
+                </tr>
+                <tr>
+                    <td><strong>Nombre:</strong></td>
+                    <td>@Categoria.Nombre</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/Categorias/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+            <button type="submit" @onclick="Eliminar" class="btn btn-outline-danger btn bi bi-trash"> Eliminar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int CategoriaId { get; set; }
+    public CategoriasDto Categoria { get; set; } = new CategoriasDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categoria = await categoriasService.Buscar(CategoriaId);
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminar = await categoriasService.Eliminar(Categoria.CategoriaId);
+
+        if (eliminar)
+        {
+            Console.WriteLine("La Categoria fue eliminada correctamente.");
+            navigation.NavigateTo("/Categorias/Index");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo eliminar la Categoria.");
+        }
+    }
+}
