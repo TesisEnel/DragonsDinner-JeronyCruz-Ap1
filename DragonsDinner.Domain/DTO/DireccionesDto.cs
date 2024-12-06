@@ -11,7 +11,9 @@ public class DireccionesDto
     public int DireccionId { get; set; }
 
     public string Nombre { get; set; }
-    public string Provincia { get; set; }
+    public int ProvinciaId { get; set; }
+
+    public string ProvinciaNombre { get; set; }
 
     public string Municipio { get; set; }
 
