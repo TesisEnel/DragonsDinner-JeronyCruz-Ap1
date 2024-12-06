@@ -14,7 +14,7 @@ public class Direcciones
     public int DireccionId { get; set; }
 
     [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres.")]
-    public string Nombre { get; set; }
+    public string? Nombre { get; set; }
 
     [ForeignKey("Provincia")]
     [Range(1, int.MaxValue, ErrorMessage = "Por favor, seleccione una opción válida")]
@@ -30,7 +30,7 @@ public class Direcciones
     [Required(ErrorMessage = "Debe ingresar una calle")]
     public string Calle { get; set; }
 
-    public string Referencia { get; set; }
+    public string? Referencia { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar un numero de casa o apartamento")]
     public string Numero { get; set; }
