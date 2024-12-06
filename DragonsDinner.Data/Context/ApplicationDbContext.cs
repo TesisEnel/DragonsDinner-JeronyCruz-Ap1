@@ -20,6 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Categorias> Categorias { get; set; }
 
+    public DbSet<Estados> Estados { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
