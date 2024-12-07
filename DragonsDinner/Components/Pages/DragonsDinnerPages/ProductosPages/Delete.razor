@@ -1,0 +1,85 @@
+﻿@page "/Productos/Delete/{ProductoId:int}"
+
+@rendermode InteractiveServer
+@inject ProductosService productosService
+@inject CategoriasService categoriasService
+@inject NavigationManager navigation
+
+<link href="Delete.css" rel="stylesheet" />
+
+<PageTitle>Eliminar Categoria</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg custom-card">
+        <div class="card-header text-center">
+            <h5><strong>Datos de la Categoria</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <div class="text-center">
+                <h5>¿Desea eliminar este Producto?</h5>
+            </div>
+            <table class="mt-4 table text-center">
+                <tr>
+                    <td><strong>Producto Id:</strong></td>
+                    <td>@Productos.ProductoId</td>
+                </tr>
+                <tr>
+                    <td><strong>Nombre:</strong></td>
+                    <td>@Productos.Nombre</td>
+                </tr>
+                <tr>
+                    <td><strong>Existencia:</strong></td>
+                    <td>@Productos.Existencia</td>
+                </tr>
+                <tr>
+                    <td><strong>Descripc&iacute;on:</strong></td>
+                    <td>@Productos.Descripcion</td>
+                </tr>
+                <tr>
+                    <td><strong>Costo:</strong></td>
+                    <td>@Productos.Costo</td>
+                </tr>
+                <tr>
+                    <td><strong>Precio:</strong></td>
+                    <td>@Productos.Precio</td>
+                </tr>
+                <tr>
+                    <td><strong>Categoria:</strong></td>
+                    <td>@Productos.CategoriaNombre</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/Productos/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+            <button type="submit" @onclick="Eliminar" class="btn btn-outline-danger btn bi bi-trash"> Eliminar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProductoId { get; set; }
+    public ProductosDto Productos { get; set; } = new ProductosDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Productos = await productosService.Buscar(ProductoId);
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminar = await productosService.Eliminar(Productos.ProductoId);
+
+        if (eliminar)
+        {
+            Console.WriteLine("El Producto fue eliminado correctamente.");
+            navigation.NavigateTo("/Productos/Index");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo eliminar el Producto.");
+        }
+    }
+}
