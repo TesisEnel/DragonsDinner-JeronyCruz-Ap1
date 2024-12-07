@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241202231936_Initial")]
+    [Migration("20241206144725_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -220,15 +220,16 @@ namespace DragonsDinner.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Provincia")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProvinciaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Referencia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DireccionId");
+
+                    b.HasIndex("ProvinciaId");
 
                     b.ToTable("Direcciones");
                 });
@@ -1021,6 +1022,17 @@ namespace DragonsDinner.Data.Migrations
                     b.Navigation("Carrito");
 
                     b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("DragonsDinner.Data.Models.Direcciones", b =>
+                {
+                    b.HasOne("DragonsDinner.Data.Models.Provincias", "Provincia")
+                        .WithMany()
+                        .HasForeignKey("ProvinciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provincia");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.MetodosPago", b =>

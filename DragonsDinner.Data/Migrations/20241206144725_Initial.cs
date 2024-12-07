@@ -79,24 +79,6 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Direcciones",
-                columns: table => new
-                {
-                    DireccionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Provincia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Municipio = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Calle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Referencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Direcciones", x => x.DireccionId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Estados",
                 columns: table => new
                 {
@@ -277,6 +259,30 @@ namespace DragonsDinner.Data.Migrations
                         column: x => x.OrdenId,
                         principalTable: "Ordenes",
                         principalColumn: "OrdenId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Direcciones",
+                columns: table => new
+                {
+                    DireccionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ProvinciaId = table.Column<int>(type: "int", nullable: false),
+                    Municipio = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Calle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Referencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Direcciones", x => x.DireccionId);
+                    table.ForeignKey(
+                        name: "FK_Direcciones_Provincias_ProvinciaId",
+                        column: x => x.ProvinciaId,
+                        principalTable: "Provincias",
+                        principalColumn: "ProvinciaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -535,6 +541,11 @@ namespace DragonsDinner.Data.Migrations
                 column: "ProductoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Direcciones_ProvinciaId",
+                table: "Direcciones",
+                column: "ProvinciaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MetodosPagos_TarjetaId",
                 table: "MetodosPagos",
                 column: "TarjetaId");
@@ -604,13 +615,13 @@ namespace DragonsDinner.Data.Migrations
                 name: "OrdenesDetalles");
 
             migrationBuilder.DropTable(
-                name: "Provincias");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Provincias");
 
             migrationBuilder.DropTable(
                 name: "Tarjetas");
