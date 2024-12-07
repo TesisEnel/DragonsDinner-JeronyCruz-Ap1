@@ -1,0 +1,109 @@
+﻿@page "/Productos/Index"
+@rendermode InteractiveServer
+@inject CategoriasService categoriasService
+@inject ProductosService productosService
+
+<PageTitle> Index Productos</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center">Registro de Productos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="filtrarPor"> Filtrar por:</label>
+                    <InputSelect id="filtrarPor" class="form-select" @bind-Value="FiltroSeleccionado">
+                        <option value="ID">ID</option>
+                        <option value="Nombre">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-6 d-flex justify-content-center mt-4">
+                    <div class="input-group">
+                        <InputText id="Busqueda" class="form-control" @bind-Value="CriterioBusqueda"></InputText>
+                        <button @onclick="BuscarCategoria" class="btn btn-outline-primary bi bi-search"> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col text-end">
+                    <a href="/Productos/Create" class="btn btn-primary bi bi-plus-square mt-3"> Crear</a>
+                </div>
+            </div>
+
+            <table class="table table-light table-hover">
+                <thead class="table table-striped">
+                    <tr class="text-center">
+                        <th>Producto Id</th>
+                        <th>Nombre</th>
+                        <th>Existencia</th>
+                        <th>Descripc&iacute;on</th>
+                        <th>Costo</th>
+                        <th>Precio</th>
+                        <th>Categoria</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var productos in Productos)
+                    {
+                        <tr class="text-center">
+                            <td>@productos.ProductoId</td>
+                            <td>@productos.Nombre</td>
+                            <td>@productos.Existencia</td>
+                            <td>@productos.Descripcion</td>
+                            <td>@productos.Costo</td>
+                            <td>@productos.Precio</td>
+                            <td>@productos.CategoriaNombre</td>
+                            <td><a href="/Productos/Edit/@productos.ProductoId" class="btn btn-outline-success bi bi-pencil-square"></a></td>
+                            <td><a href="/Productos/Delete/@productos.ProductoId" class="btn btn-outline-danger bi bi-trash"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <p><strong>Total de Tarjetas: </strong>@Productos.Count</p>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<ProductosDto> Productos { get; set; } = new List<ProductosDto>();
+    private string FiltroSeleccionado { get; set; } = "ID";
+    private string CriterioBusqueda { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Productos = await productosService.Listar(a => true);
+    }
+
+    private async Task BuscarCategoria()
+    {
+        switch (FiltroSeleccionado)
+        {
+            case "ID":
+                if (int.TryParse(CriterioBusqueda, out int id))
+                {
+                    Productos = await productosService.Listar(a => a.ProductoId == id);
+                }
+                break;
+
+            case "Nombre":
+                Productos = await productosService.Listar(e => e.Nombre.ToLower().Contains(CriterioBusqueda.ToLower()));
+                break;
+        }
+    }
+
+    private async Task RefrescarDatos()
+    {
+        Productos = await productosService.Listar(a => true);
+        CriterioBusqueda = string.Empty;
+    }
+
+}
