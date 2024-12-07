@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using DragonsDinner.Services.DI;
 using DragonsDinner.Services;
 using BlazorBootstrap;
+using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
 
