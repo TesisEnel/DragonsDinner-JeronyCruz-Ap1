@@ -8,31 +8,12 @@
 <link rel=" stylesheet" href="/Estilos/Carrito.css" />
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
 
-<!-- Basic -->
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<!-- Mobile Metas -->
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<!-- Site Metas -->
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<meta name="author" content="" />
-<link rel="shortcut icon" href="images/favicon.png" type="">
-
-<title> Dragons Dinner </title>
-
-<!-- bootstrap core css -->
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-
-<!--owl slider stylesheet -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-<!-- nice select  -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
 <!-- font awesome style -->
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 
 <!-- Custom styles for this template -->
 <link href="css/style.css" rel="stylesheet" />
+
 <!-- responsive style -->
 <link href="css/responsive.css" rel="stylesheet" />
 
@@ -40,44 +21,42 @@
     <div class="bg-box">
         <img src="images/hero-bg.jpg" alt="">
     </div>
-    <!-- header section strats -->
+    <!-- header section starts -->
     <header class="header_section">
         <div class="container">
-            <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <nav class="navbar navbar-expand-lg custom_nav-container">
                 <a class="navbar-brand" href="/">
-                    <span>
-                        Dragon&acute;s Dinner
-                    </span>
+                    <span>Dragon&acute;s Dinner</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class=""> </span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav  mx-auto ">
+                    <ul class="navbar-nav mx-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/">Inicio <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/">Inicio <span class="visually-hidden">(current)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/DragonsDinner/Menu">Men&uacute;</a>
                         </li>
-
-
                         <li class="nav-item">
-                            <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="sr-only">(current)</span> </a>
+                            <AuthorizeView>
+                                <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="visually-hidden">(current)</span> </a>
+                            </AuthorizeView>
                         </li>
                         <AuthorizeView>
                             <Authorized>
-                                <div class="nav-item px-3">
+                                <li class="nav-item px-3">
                                     <form action="Account/Logout" method="post">
                                         <AntiforgeryToken />
                                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                                        <button type="submit" class="nav-link">
+                                        <button type="submit" class="nav-link btn btn-link">
                                             <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Cerrar sesi&Oacute;n
                                         </button>
                                     </form>
-                                </div>
+                                </li>
                             </Authorized>
                         </AuthorizeView>
                     </ul>
@@ -87,33 +66,29 @@
                         </a>
                         <a>
                             <!-- botón Carrito de compras -->
-                            <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
+                            <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                                 <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
                             <AuthorizeView>
                                 <NotAuthorized>
                                     <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body text-center">
                                                     <i class="bi bi-cart-fill fs-1"></i>
-                                                    <div> Iniciar sesión o registrarse para ver el carrito</div>
-
+                                                    <div>Iniciar sesión o registrarse para ver el carrito</div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <a href="/Account/Login" class="order_online">
-                                                        Iniciar Sesion
+                                                    <a href="/Account/Login" class="btn btn-primary">
+                                                        Iniciar Sesión
                                                     </a>
-
-                                                    <a href="/Account/Register" class="order_onlines">
+                                                    <a href="/Account/Register" class="btn btn-secondary">
                                                         Registrarse
                                                     </a>
                                                 </div>
@@ -124,31 +99,29 @@
 
                                 <Authorized>
                                     <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-center" role="document">
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <!-- Mostrar los productos del carrito -->
                                                     @foreach (var producto in Carrito)
                                                     {
-                                                        <div class="cart-item justify-content-between">
-                                                            <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
+                                                        <div class="cart-item d-flex justify-content-between align-items-center">
+                                                            <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img img-fluid">
                                                             <div class="cart-item-details">
                                                                 <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
                                                                 <div class="cart-item-actions">
                                                                     <div class="input-group">
                                                                         <!-- Botón para decrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DescrementarCantidad(producto)"> - </button>
                                                                         <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                        <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
+                                                                        <input type="text" class="quantity-button text-center col-2" @bind="producto.Cantidad" />
                                                                         <!-- Botón para incrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(producto)"> + </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -158,7 +131,7 @@
 
                                                             <!-- Icono de eliminar el artículo -->
                                                             <div>
-                                                                <button class="btn btn-danger col-lg-12" @onclick="() => EliminarDelCarrito(producto)">
+                                                                <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
                                                                     <i class="bi bi-x"></i>
                                                                 </button>
                                                             </div>
@@ -166,7 +139,7 @@
                                                     }
 
                                                     <!-- Subtotal del carrito -->
-                                                    <div class="subtotal">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
+                                                    <div class="subtotal mt-3">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
@@ -175,12 +148,12 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </Authorized>
                             </AuthorizeView>
                         </a>
+
                         <form class="form-inline">
-                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                            <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
                                 <i class="bi bi-search" aria-hidden="true"></i>
                             </button>
                         </form>
@@ -191,13 +164,8 @@
 
                         <AuthorizeView>
                             <NotAuthorized>
-                                <a href="/Account/Login" class="order_online">
-                                    Iniciar Sesion
-                                </a>
-
-                                <a href="/Account/Register" class="order_onlines">
-                                    Registrarse
-                                </a>
+                                <a href="/Account/Login" class="order_online">Iniciar Sesion</a>
+                                <a href="/Account/Register" class="order_onlines">Registrarse</a>
                             </NotAuthorized>
                         </AuthorizeView>
                     </div>
@@ -207,85 +175,70 @@
     </header>
     <!-- end header section -->
     <!-- slider section -->
-    <section class="slider_section ">
-        <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+    <section class="slider_section">
+        <div id="customCarousel1" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <div class="container ">
+                    <div class="container">
                         <div class="row">
-                            <div class="col-md-7 col-lg-6 ">
+                            <div class="col-md-7 col-lg-6">
                                 <div class="detail-box">
-                                    <h1>
-                                        Dragons Dinner
-                                    </h1>
-                                    <p>
-                                        Somos un negocio de comida rápida que ofrece una gran variedad de comida rápida, que deslumbraran tu paladar !
-                                    </p>
+                                    <h1>Dragons Dinner</h1>
+                                    <p>Somos un negocio de comida rápida que ofrece una gran variedad de comida rápida, que deslumbrarán tu paladar!</p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
-                                            A&ntilde;adir al carrito
-                                        </a>
+                                        <a href="" class="btn1">A&ntilde;adir al carrito</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item ">
-                    <div class="container ">
+
+                <div class="carousel-item active">
+                    <div class="container">
                         <div class="row">
-                            <div class="col-md-7 col-lg-6 ">
+                            <div class="col-md-7 col-lg-6">
                                 <div class="detail-box">
-                                    <h1>
-                                        Dragons Dinner
-                                    </h1>
-                                    <p>
-                                        Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.
-                                    </p>
+                                    <h1>Dragons Dinner</h1>
+                                    <p>Somos un negocio de comida rápida que ofrece una gran variedad de comida rápida, que deslumbrarán tu paladar!</p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
-                                            A&ntilde;adir al carrito
-                                        </a>
+                                        <a href="" class="btn1">A&ntilde;adir al carrito</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <div class="container ">
+
+                <div class="carousel-item active">
+                    <div class="container">
                         <div class="row">
-                            <div class="col-md-7 col-lg-6 ">
+                            <div class="col-md-7 col-lg-6">
                                 <div class="detail-box">
-                                    <h1>
-                                        Fast Food Restaurant
-                                    </h1>
-                                    <p>
-                                        Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.
-                                    </p>
+                                    <h1>Dragons Dinner</h1>
+                                    <p>Somos un negocio de comida rápida que ofrece una gran variedad de comida rápida, que deslumbrarán tu paladar!</p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
-                                            A&ntilde;adir al carrito
-                                        </a>
+                                        <a href="" class="btn1">A&ntilde;adir al carrito</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="container">
                 <ol class="carousel-indicators">
-                    <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
-                    <li data-target="#customCarousel1" data-slide-to="1"></li>
-                    <li data-target="#customCarousel1" data-slide-to="2"></li>
+                    <li data-bs-target="#customCarousel1" data-bs-slide-to="0" class="active"></li>
+                    <li data-bs-target="#customCarousel1" data-bs-slide-to="1"></li>
+                    <li data-bs-target="#customCarousel1" data-bs-slide-to="2"></li>
                 </ol>
             </div>
         </div>
-
     </section>
     <!-- end slider section -->
 </div>
+
 
 <!-- offer section -->
 

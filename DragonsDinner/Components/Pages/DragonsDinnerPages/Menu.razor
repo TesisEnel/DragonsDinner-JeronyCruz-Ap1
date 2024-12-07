@@ -65,7 +65,9 @@
                             </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="sr-only">(current)</span> </a>
+                            <AuthorizeView>
+                                <a class="nav-link" href="/Direcciones/Index">Direcciones <span class="visually-hidden">(current)</span> </a>
+                            </AuthorizeView>
                         </li>
                             <AuthorizeView>
                                 <Authorized>
@@ -85,35 +87,31 @@
                             <a href="" class="user_link">
                                 <i class="bi bi-person-circle" aria-hidden="true"></i>
                             </a>
-                            <a
+                        <a>
                             <!-- botón Carrito de compras -->
-                            <button type="button" class="btn btn-no-color text-white" data-toggle="modal" data-target="#exampleModalCenter">
+                            <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                                 <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
                             <AuthorizeView>
                                 <NotAuthorized>
                                     <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body text-center">
                                                     <i class="bi bi-cart-fill fs-1"></i>
-                                                    <div> Iniciar sesión o registrarse para ver el carrito</div>
-
+                                                    <div>Iniciar sesión o registrarse para ver el carrito</div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <a href="/Account/Login" class="order_online">
-                                                        Iniciar Sesion
+                                                    <a href="/Account/Login" class="btn btn-primary">
+                                                        Iniciar Sesión
                                                     </a>
-
-                                                    <a href="/Account/Register" class="order_onlines">
+                                                    <a href="/Account/Register" class="btn btn-secondary">
                                                         Registrarse
                                                     </a>
                                                 </div>
@@ -124,49 +122,47 @@
 
                                 <Authorized>
                                     <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <!-- Mostrar los productos del carrito -->
                                                         @foreach (var producto in Carrito)
                                                         {
-                                                                    <div class="cart-item justify-content-between">
-                                                                        <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img">
-                                                                        <div class="cart-item-details">
-                                                                            <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
-                                                                            <div class="cart-item-actions">
-                                                                                <div class="input-group">
-                                                                                    <!-- Botón para decrementar la cantidad -->
-                                                                                    <button type="button" class="quantity-button" @onclick="() => DescrementarCantidad(producto)"> - </button>
-                                                                                    <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                                    <input type="text" class="quantity-button col-2 text-center" @bind="producto.Cantidad" readonly />
-                                                                                    <!-- Botón para incrementar la cantidad -->
-                                                                                    <button type="button" class="quantity-button" @onclick="() => IncrementarCantidad(producto)"> + </button>
-                                                                                </div>
-                                                                            </div>
-                                                                            </div>
-
-                                                                        <!-- Precio del artículo -->
-                                                                        <div class="cart-item-price">$@producto.Precio</div>
-
-                                                                        <!-- Icono de eliminar el artículo -->
-                                                                        <div class="cart-item-price">
-                                                                            <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
-                                                                                <i class="bi bi-x"></i>
-                                                                            </button>
+                                                            <div class="cart-item d-flex justify-content-between align-items-center">
+                                                                <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img img-fluid">
+                                                                <div class="cart-item-details">
+                                                                    <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                    <div class="cart-item-actions">
+                                                                        <div class="input-group">
+                                                                            <!-- Botón para decrementar la cantidad -->
+                                                                            <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DescrementarCantidad(producto)"> - </button>
+                                                                            <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
+                                                                            <input type="text" class="quantity-button text-center col-2" @bind="producto.Cantidad" />
+                                                                            <!-- Botón para incrementar la cantidad -->
+                                                                            <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(producto)"> + </button>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+
+                                                                <!-- Precio del artículo -->
+                                                                <div class="cart-item-price">$@producto.Precio</div>
+
+                                                                <!-- Icono de eliminar el artículo -->
+                                                                <div>
+                                                                    <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
+                                                                        <i class="bi bi-x"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         }
 
                                                     <!-- Subtotal del carrito -->
-                                                    <div class="subtotal">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
+                                                    <div class="subtotal mt-3">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
@@ -175,20 +171,17 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </Authorized>
                             </AuthorizeView>
-                            </a>
+                        </a>
                             <form class="form-inline">
                                 <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
                                     <i class="bi bi-search" aria-hidden="true"></i>
                                 </button>
                             </form>
-                            @*Credit-card-button*@
+                            @*Credit-card-modal*@
                             <AuthorizeView>
-                               <button type="button" class="btn btn-no-color text-white">
-                                    <i class="bi bi-credit-card-2-back-fill" aria-hidden="true"></i>
-                                </button>
+                                <TarjetasIndex />
                             </AuthorizeView>
 
                             <AuthorizeView>
