@@ -3,8 +3,9 @@
 @inject DireccionesService direccionesService
 @inject ProvinciasService provinciasService
 @inject NavigationManager navigationManager
+@inject ToastService Toast
 
-
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" /> 
 <!-- bootstrap core css -->
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
@@ -88,10 +89,6 @@
 
                                             </div>
                                             <div class="card-footer text-center">
-                                                @if (!string.IsNullOrEmpty(Mensaje))
-                                                {
-                                                    <div class="alert alert-danger bi-exclamation-triangle-fill ">@Mensaje</div>
-                                                }
                                                 <a href="/Direcciones/Index">
                                                     <button type="button" class=" btn btn-outline-secondary bi bi-arrow-left mt-3">Volver</button>
                                                 </a>
@@ -115,7 +112,6 @@
 @code {
     public DireccionesDto Direccion { get; set; } = new DireccionesDto();
     public List<ProvinciasDto> ListProvincias { get; set; } = [];
-    public string Mensaje { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,27 +123,27 @@
     {
         if (await direccionesService.Existe(Direccion.DireccionId))
         {
-            Mensaje = "La direccion existe. Por favor, elija otra.";
+            Toast.Notify(new(ToastType.Danger, $"La direccion existe. Por favor, elija otra."));
             return;
         }
         if (Direccion.ProvinciaId == 0)
         {
-            Mensaje = "Seleccione una provincia";
+            Toast.Notify(new(ToastType.Danger, $"Seleccione una provincia"));
             return;
         }
         else if (Direccion.Municipio == null)
         {
-            Mensaje = "Ingrese un municipio";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese un municipio"));
             return;
         }
         else if (Direccion.Calle == null)
         {
-            Mensaje = "Ingrese una calle";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese una calle"));
             return;
         }
         else if (Direccion.Numero == null)
         {
-            Mensaje = "Ingrese un numero de casa/apartamento";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese un numero de casa/apartamento"));
             return;
         }
         else
@@ -157,6 +153,8 @@
 
             await direccionesService.Guardar(Direccion);
             Direccion = new DireccionesDto();
+            Toast.Notify(new(ToastType.Success, $"Dirección agregada correctamente"));
+            await Task.Delay(3000);
             navigationManager.NavigateTo("/Direcciones/Index");
 
         }

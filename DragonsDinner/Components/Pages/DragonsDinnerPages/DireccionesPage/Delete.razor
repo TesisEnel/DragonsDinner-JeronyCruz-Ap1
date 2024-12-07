@@ -2,6 +2,8 @@
 @rendermode InteractiveServer
 @inject DireccionesService direccionesService
 @inject NavigationManager navigation
+@inject ToastService Toast
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 
 <!-- bootstrap core css -->
@@ -104,6 +106,8 @@
 
 		if (eliminar)
 		{
+			Toast.Notify(new(ToastType.Danger, $"Dirección se ha eliminado"));
+			await Task.Delay(3000);
 			navigation.NavigateTo("/Direcciones/Index");
 		}
 

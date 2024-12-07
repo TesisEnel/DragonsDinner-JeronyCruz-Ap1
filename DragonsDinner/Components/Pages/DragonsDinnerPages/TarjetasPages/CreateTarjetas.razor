@@ -5,6 +5,8 @@
 @inject NavigationManager navigation
 @inject ToastService Toast
 
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
 
 <PageTitle>Agregar Tarjetas</PageTitle>
@@ -164,24 +166,24 @@
 
         if (string.IsNullOrEmpty(Tarjetas.CVV) || Tarjetas.CVV.Length < 3 || Tarjetas.CVV.Length > 4)
         {
-            MensajeErrorCVV = "El CVV debe tener entre 3 y 4 dígitos.";
+            Toast.Notify(new(ToastType.Danger, $"El CVV debe tener entre 3 y 4 dígitos."));
             return;
         }
         if (string.IsNullOrEmpty(Tarjetas.NumeroTarjeta))
         {
-            MensajeErrorTarjeta = "El número de tarjeta no puede estar vacío.";
+            Toast.Notify(new(ToastType.Danger, $"El número de tarjeta no puede estar vacío."));
             return;
         }
         if (!ValidarNumeroTarjeta(Tarjetas.NumeroTarjeta))
         {
-            MensajeErrorTarjeta = "El número de tarjeta no es válido.";
+            Toast.Notify(new(ToastType.Danger, $"El número de tarjeta no es válido."));
             return;
         }
 
         bool tarjetaExistente = await tarjetasService.ExisteTarjetaAsync(Tarjetas.NumeroTarjeta);
         if (tarjetaExistente)
         {
-            MensajeErrorTarjeta = "La tarjeta ya está registrada.";
+            Toast.Notify(new(ToastType.Danger, $"La tarjeta ya está registrada."));
             return;
         }
 
@@ -192,18 +194,20 @@
 
         if (!ValidarFechaVencimiento(Tarjetas.FechaVencimiento))
         {
-            MensajeErrorFV = "La fecha de vencimiento debe ser posterior a la fecha actual.";
+            Toast.Notify(new(ToastType.Danger, $"La fecha no puede ser anterior a la actual."));
             return;
         }
 
         if (string.IsNullOrWhiteSpace(Tarjetas.Nombres))
         {
-            MensajeNombre = "El nombre no puede estar vacio.";
+            Toast.Notify(new(ToastType.Danger, $"El nombre no puede estar vacio."));
             return;
         }
 
         await tarjetasService.Guardar(Tarjetas);
         Tarjetas = new TarjetasDto();
+        Toast.Notify(new(ToastType.Success, $"Su tarjeta ha sido registrada exitosamente."));
+        await Task.Delay(3000);
         navigation.NavigateTo("/");
     }
 

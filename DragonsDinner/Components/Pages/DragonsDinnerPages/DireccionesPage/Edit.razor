@@ -3,7 +3,9 @@
 @inject DireccionesService direccionesService
 @inject ProvinciasService provinciasService
 @inject NavigationManager navigationManager
+@inject ToastService Toast
 
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <!-- bootstrap core css -->
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -134,22 +136,22 @@
     {
         if (Direccion.ProvinciaId == 0)
         {
-            Mensaje = "Seleccione una provincia";
+            Toast.Notify(new(ToastType.Danger, $"Seleccione una provincia"));
             return;
         }
-        if (string.IsNullOrWhiteSpace(Direccion.Municipio))
+        else if (Direccion.Municipio == null)
         {
-            Mensaje = "Ingrese un municipio";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese un municipio"));
             return;
         }
-        else if(string.IsNullOrWhiteSpace(Direccion.Calle))
+        else if (Direccion.Calle == null)
         {
-            Mensaje = "Ingrese una calle";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese una calle"));
             return;
         }
-        else if(string.IsNullOrWhiteSpace(Direccion.Numero))
+        else if (Direccion.Numero == null)
         {
-            Mensaje = "Ingrese un numero de casa/apartamento";
+            Toast.Notify(new(ToastType.Danger, $"Ingrese un numero de casa/apartamento"));
             return;
         }
         else
@@ -158,7 +160,11 @@
             Direccion.Referencia = (Direccion.Referencia == null) ? "-" : Direccion.Referencia;
 
             await direccionesService.Guardar(Direccion);
-            CheckMessage = "La dirección ha sido modificada correctamente"; 
+            Direccion = new DireccionesDto();
+            Toast.Notify(new(ToastType.Success, $"La dirección ha sido modificada correctamente"));
+            await Task.Delay(3000);
+            navigationManager.NavigateTo("/Direcciones/Index");
+
         }
     }
 
