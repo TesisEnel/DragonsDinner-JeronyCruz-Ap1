@@ -36,9 +36,16 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     public async Task<bool> Eliminar(int productoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Productos
-            .Where(e => e.ProductoId == productoId)
-            .ExecuteDeleteAsync() > 0;
+        var productoEntity = await contexto.Productos.FindAsync(productoId);
+
+        if (productoEntity != null)
+        {
+            contexto.Productos.Remove(productoEntity);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(ProductosDto productoDto)
@@ -120,4 +127,20 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     {
         throw new NotImplementedException();
     }
+
+    public async Task<bool> NombreExiste(string NombreProducto)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var numeroNormalizado = NombreProducto.Trim().ToLower();
+        return await contexto.Productos
+            .AnyAsync(t => t.Nombre.Trim().ToLower() == numeroNormalizado);
+    }
+
+    public async Task<string> ObtenerNombrePorId(int productoId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var producto = await contexto.Productos.FirstOrDefaultAsync(p => p.ProductoId == productoId);
+        return producto?.Nombre ?? string.Empty;
+    }
+
 }
