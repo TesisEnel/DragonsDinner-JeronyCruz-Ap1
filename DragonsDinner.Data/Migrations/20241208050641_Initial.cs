@@ -28,19 +28,6 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Carritos",
-                columns: table => new
-                {
-                    CarritoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Total = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Carritos", x => x.CarritoId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Categorias",
                 columns: table => new
                 {
@@ -237,6 +224,25 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Carritos",
+                columns: table => new
+                {
+                    CarritoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Total = table.Column<double>(type: "float", nullable: false),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carritos", x => x.CarritoId);
+                    table.ForeignKey(
+                        name: "FK_Carritos_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Direcciones",
                 columns: table => new
                 {
@@ -267,13 +273,35 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tarjetas",
+                columns: table => new
+                {
+                    TarjetaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaVencimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tarjetas", x => x.TarjetaId);
+                    table.ForeignKey(
+                        name: "FK_Tarjetas_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Productos",
                 columns: table => new
                 {
                     ProductoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Existencia = table.Column<int>(type: "int", nullable: true),
+                    Existencia = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Precio = table.Column<double>(type: "float", nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false),
@@ -305,25 +333,23 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tarjetas",
+                name: "MetodosPagos",
                 columns: table => new
                 {
-                    TarjetaId = table.Column<int>(type: "int", nullable: false)
+                    MetodoPagoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaVencimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    MetodoPago = table.Column<bool>(type: "bit", nullable: false),
+                    TarjetaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarjetas", x => x.TarjetaId);
+                    table.PrimaryKey("PK_MetodosPagos", x => x.MetodoPagoId);
                     table.ForeignKey(
-                        name: "FK_Tarjetas_AspNetUsers_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        name: "FK_MetodosPagos_Tarjetas_TarjetaId",
+                        column: x => x.TarjetaId,
+                        principalTable: "Tarjetas",
+                        principalColumn: "TarjetaId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -379,26 +405,6 @@ namespace DragonsDinner.Data.Migrations
                         column: x => x.ProductoId,
                         principalTable: "Productos",
                         principalColumn: "ProductoId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MetodosPagos",
-                columns: table => new
-                {
-                    MetodoPagoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MetodoPago = table.Column<bool>(type: "bit", nullable: false),
-                    TarjetaId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MetodosPagos", x => x.MetodoPagoId);
-                    table.ForeignKey(
-                        name: "FK_MetodosPagos_Tarjetas_TarjetaId",
-                        column: x => x.TarjetaId,
-                        principalTable: "Tarjetas",
-                        principalColumn: "TarjetaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -538,6 +544,11 @@ namespace DragonsDinner.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carritos_UsuarioId",
+                table: "Carritos",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CarritosDetalles_CarritoId",
                 table: "CarritosDetalles",
                 column: "CarritoId");
@@ -639,13 +650,13 @@ namespace DragonsDinner.Data.Migrations
                 name: "Productos");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Carritos");
 
             migrationBuilder.DropTable(
                 name: "Categorias");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Ordenes");

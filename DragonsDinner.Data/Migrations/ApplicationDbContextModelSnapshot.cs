@@ -107,7 +107,12 @@ namespace DragonsDinner.Data.Migrations
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("CarritoId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Carritos");
                 });
@@ -374,7 +379,7 @@ namespace DragonsDinner.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int?>("Existencia")
+                    b.Property<int>("Existencia")
                         .HasColumnType("int");
 
                     b.Property<string>("Imagen")
@@ -1014,6 +1019,15 @@ namespace DragonsDinner.Data.Migrations
                     b.HasIndex("OrdenId");
 
                     b.HasDiscriminator().HasValue("Usuarios");
+                });
+
+            modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>
+                {
+                    b.HasOne("DragonsDinner.Data.ApplicationUser", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.CarritosDetalles", b =>
