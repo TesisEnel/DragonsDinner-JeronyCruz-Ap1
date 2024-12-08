@@ -69,93 +69,83 @@
                         <a href="" class="user_link">
                             <i class="bi bi-person-circle" aria-hidden="true"></i>
                         </a>
-                        <a>
-                            <!-- botón Carrito de compras -->
+
+                         <!-- botón Carrito de compras -->
                             <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
+                                <i class="bi bi-cart-fill"><span class="badge"> @Carrito.Sum(p => p.Cantidad)</span></i>
                             </button>
 
-                            <AuthorizeView>
-                                <NotAuthorized>
-                                    <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <i class="bi bi-cart-fill fs-1"></i>
-                                                    <div>Iniciar sesión o registrarse para ver el carrito</div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a href="/Account/Login" class="btn btn-primary">
-                                                        Iniciar Sesión
-                                                    </a>
-                                                    <a href="/Account/Register" class="btn btn-secondary">
-                                                        Registrarse
-                                                    </a>
-                                                </div>
+                        <!-- Modal carrito de compras -->
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => GuardarCambios()"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <i class="bi bi-cart-fill fs-1"></i>
+                                                <div>Iniciar sesión o registrarse para ver el carrito</div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/Account/Login" class="btn btn-primary">Iniciar Sesión</a>
+                                                <a href="/Account/Register" class="btn btn-secondary">Registrarse</a>
                                             </div>
                                         </div>
                                     </div>
-                                </NotAuthorized>
+                                </div>
+                            </NotAuthorized>
 
-                                <Authorized>
-                                    <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <!-- Mostrar los productos del carrito -->
-                                                    @foreach (var producto in Carrito)
-                                                    {
-                                                        <div class="cart-item d-flex justify-content-between align-items-center">
-                                                            <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img img-fluid">
-                                                            <div class="cart-item-details">
-                                                                <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
-                                                                <div class="cart-item-actions">
-                                                                    <div class="input-group">
-                                                                        <!-- Botón para decrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DescrementarCantidad(producto)"> - </button>
-                                                                        <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                        <input type="text" class="quantity-button text-center col-2" @bind="producto.Cantidad" />
-                                                                        <!-- Botón para incrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(producto)"> + </button>
-                                                                    </div>
+                            <Authorized>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => GuardarCambios()"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Mostrar los productos del carrito -->
+                                                @foreach (var detalle in CarritoF.CarritoDetalle)
+                                                {
+                                                    <div class="cart-item d-flex justify-content-between align-items-center">
+                                                        <img src="@detalle.ProductoId" alt="@detalle.NombreProducto" class="cart-item-img img-fluid">
+                                                        <div class="cart-item-details">
+                                                            <div class="cart-item-name"><strong>@detalle.NombreProducto</strong></div>
+                                                            <div class="cart-item-actions">
+                                                                <div class="input-group">
+                                                                    <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DecrementarCantidad(detalle)"> - </button>
+                                                                    <input type="text" class="quantity-button text-center col-2" @bind="detalle.Cantidad" />
+                                                                    <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(detalle)"> + </button>
                                                                 </div>
                                                             </div>
-
-                                                            <!-- Precio del artículo -->
-                                                            <div class="cart-item-price">$@producto.Precio</div>
-
-                                                            <!-- Icono de eliminar el artículo -->
-                                                            <div>
-                                                                <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
-                                                                    <i class="bi bi-x"></i>
-                                                                </button>
-                                                            </div>
                                                         </div>
-                                                    }
 
-                                                    <!-- Subtotal del carrito -->
-                                                    <div class="subtotal mt-3">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
-                                                    <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
-                                                </div>
+                                                        <div class="cart-item-price">$@detalle.Precio</div>
+
+                                                        <div>
+                                                            <button class="btn btn-danger" @onclick="() => RemoverDetalle(detalle)">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                <div class="subtotal mt-3">Subtotal: $@CarritoF.CarritoDetalle.Sum(d => d.Costo)</div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
+                                                <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
                                             </div>
                                         </div>
                                     </div>
-                                </Authorized>
-                            </AuthorizeView>
-                        </a>
+                                </div>
+                            </Authorized>
+                        </AuthorizeView>
+
+
 
                         <form class="form-inline">
                             <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
@@ -609,6 +599,7 @@
     private List<CarritosDto> Carritos { get; set; } = new List<CarritosDto>();
     public CarritosDto CarritoF { get; set; } = new CarritosDto();
     private TarjetasDto nuevaTarjeta { get; set; } = new TarjetasDto();
+    public CarritosDetallesDto DetalleActual { get; set; } = new CarritosDetallesDto();
 
     public string FiltroActivo { get; set; } = string.Empty;
     public CarritosDetalles CarritoDetalle { get; set; }
@@ -622,30 +613,47 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var usuario = authState.User;
+
         if (usuario.Identity.IsAuthenticated)
         {
-            string? usuarioId = usuario.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine($"Usuario ID: {usuarioId}");
+            Console.WriteLine("Usuario autenticado.");
 
-            if (!string.IsNullOrEmpty(usuarioId))
+            // Cargar el carrito desde la base de datos
+            Carritos = await carritoService.Listar(c => true);
+
+            if (Carritos.Any())
             {
-                Carritos = await carritoService.ObtenerCarritosPorUsuarioAsync(usuarioId);
+                var carritoExistente = Carritos.FirstOrDefault();
+                if (carritoExistente != null)
+                {
+                    CarritoF = carritoExistente;
+                    Console.WriteLine("Carrito cargado desde la base de datos.");
+                }
             }
             else
             {
-                Console.WriteLine("No se pudo obtener el ID del usuario.");
+                // Crear un nuevo carrito si no existe
+                CarritoF = new CarritosDto
+                    {
+                        CarritoDetalle = new List<CarritosDetallesDto>()
+                    };
+                Console.WriteLine("No se encontraron carritos. Se ha creado uno nuevo.");
             }
         }
         else
         {
             Console.WriteLine("Usuario no autenticado.");
+            CarritoF = new CarritosDto
+                {
+                    CarritoDetalle = new List<CarritosDetallesDto>()
+                };
         }
 
-        // Cargar todas las categorías y productos al inicializar el componente
+        // Cargar categorías y productos
         Categorias = await categoriasService.Listar(p => true);
-        CarritoF = await carritoService.Listar(c => true);
         ListProductos = await productosService.Listar(p => true);
     }
+
 
     public async Task SeleccionarFiltro(string categoriaNombre)
     {
@@ -676,64 +684,108 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
-    public void IncrementarCantidad(ProductosDto producto)
+    public async void IncrementarCantidad(CarritosDetallesDto detalle)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = CarritoF.CarritoDetalle.FirstOrDefault(d => d.ProductoId == detalle.ProductoId);
         if (existente != null)
         {
             existente.Cantidad++;
+            existente.Costo = existente.Cantidad * existente.Precio; // Actualizar el costo
         }
+        await carritoService.Guardar(CarritoF);
     }
 
-    public void DescrementarCantidad(ProductosDto producto)
+
+    public async void DecrementarCantidad(CarritosDetallesDto detalle)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
-        if (existente != null && existente.Cantidad > 1)
+        var existente = CarritoF.CarritoDetalle.FirstOrDefault(d => d.ProductoId == detalle.ProductoId);
+        if (existente != null)
         {
-            existente.Cantidad--;
+            if (existente.Cantidad > 1)
+            {
+                existente.Cantidad--;
+                existente.Costo = existente.Cantidad * existente.Precio; 
+            }
+            else
+            {
+                CarritoF.CarritoDetalle.Remove(existente);
+            }
         }
-        else
-        {
-            Carrito.Remove(producto);
-        }
+        await carritoService.Guardar(CarritoF);
     }
+
 
     public async Task AgregarAlCarrito(ProductosDto producto)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = CarritoF.CarritoDetalle.FirstOrDefault(d => d.ProductoId == producto.ProductoId);
         if (existente == null)
         {
-            Carrito.Add(new ProductosDto
+            CarritoF.CarritoDetalle.Add(new CarritosDetallesDto
                 {
                     ProductoId = producto.ProductoId,
-                    Nombre = producto.Nombre,
-                    Descripcion = producto.Descripcion,
-                    Imagen = producto.Imagen,
+                    NombreProducto = producto.Nombre,
+                    DescripcionProducto = producto.Descripcion,
                     Precio = producto.Precio,
-                    Cantidad = 1
+                    Cantidad = 1,
+                    Costo = producto.Precio
                 });
         }
         else
         {
             existente.Cantidad++;
+            existente.Costo = existente.Cantidad * existente.Precio;
         }
         await carritoService.Guardar(CarritoF);
-        CarritoF = new CarritosDto();
         Toast.Notify(new(ToastType.Success, $"Producto guardado correctamente"));
     }
 
-    public void EliminarDelCarrito(ProductosDto producto)
+    public async void VaciarCarrito()
     {
-        Carrito.Remove(producto);
+        CarritoF.CarritoDetalle.Clear();
+        await carritoService.Guardar(CarritoF);
     }
 
-    public void VaciarCarrito()
+    public async void RemoverDetalle(CarritosDetallesDto detalle)
     {
-        Carrito.Clear();
+        CarritoF.CarritoDetalle.Remove(detalle);
+        DetalleActual.ProductoId = detalle.ProductoId;
+        DetalleActual.Cantidad = detalle.Cantidad;
+        DetalleActual.Precio = detalle.Precio;
+        await carritoService.Guardar(CarritoF);
+
     }
 
     public void RealizarPedido()
     {
         // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
     }
+
+    private async Task GuardarCambios()
+    {
+        // Aseguramos que CarritoF no sea null
+        if (CarritoF != null)
+        {
+            // Filtrar detalles inválidos (por ejemplo, con cantidad <= 0)
+            CarritoF.CarritoDetalle = CarritoF.CarritoDetalle
+                .Where(detalle => detalle.Cantidad > 0 && detalle.Costo > 0)
+                .ToList();
+
+            // Si no quedan detalles válidos, eliminar el carrito
+            if (!CarritoF.CarritoDetalle.Any())
+            {
+                await carritoService.Eliminar(CarritoF.CarritoId); // Eliminar el carrito vacío de la base de datos
+                CarritoF = null; // Reiniciar el carrito en memoria
+                Console.WriteLine("El carrito estaba vacío y fue eliminado.");
+            }
+            else
+            {
+                // Guardar el carrito en la base de datos
+                await carritoService.Guardar(CarritoF);
+                Console.WriteLine("Carrito sincronizado con la base de datos.");
+            }
+        }
+
+    }
+
+
 }

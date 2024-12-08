@@ -14,7 +14,7 @@ public class Carritos
     public int CarritoId { get; set; }
 
     [ForeignKey("CarritoId")]
-    public ICollection<Productos> Productos { get; set; } = new List<Productos>();
+    public ICollection<CarritosDetalles> CarritoDetalle { get; set; } = new List<CarritosDetalles>();
 
     public double Total { get; set; }
 

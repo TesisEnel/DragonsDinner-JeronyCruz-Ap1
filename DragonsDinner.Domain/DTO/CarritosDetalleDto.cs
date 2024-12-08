@@ -13,6 +13,10 @@ public class CarritosDetallesDto
     public int DetalleId { get; set; }
 
     public int CarritoId { get; set; }
+    public Carritos Carrito { get; set; }
+
+
+    public double Total { get; set; }
 
     public int ProductoId { get; set; }
 

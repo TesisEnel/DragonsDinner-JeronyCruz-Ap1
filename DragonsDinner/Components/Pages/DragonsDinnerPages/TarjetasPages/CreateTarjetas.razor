@@ -35,12 +35,7 @@
                                @bind="Tarjetas.NumeroTarjeta" @bind:event="oninput">
                         </input>
                         <ValidationMessage For="(() => Tarjetas.NumeroTarjeta)"></ValidationMessage>
-                        @if (!string.IsNullOrEmpty(MensajeErrorTarjeta))
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                @MensajeErrorTarjeta
-                            </div>
-                        }
+
                     </div>
 
                     @*Nombre*@
@@ -48,12 +43,7 @@
                         <label class="form-label" for="Nombre"><strong>Nombre</strong></label>
                         <InputText class="form-control" id="Nombre" placeholder="John Walker" @bind-Value="Tarjetas.Nombres"></InputText>
                         <ValidationMessage For="(() => Tarjetas.Nombres)"></ValidationMessage>
-                        @if (!string.IsNullOrEmpty(MensajeNombre))
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                @MensajeNombre
-                            </div>
-                        }
+
                     </div>
 
                     @*Fecha de Vencimiento*@
@@ -62,12 +52,7 @@
                         <InputText class="form-control" id="FechaVencimiento" @bind-Value="Tarjetas.FechaVencimiento"
                                    placeholder="01/2028" />
                         <ValidationMessage For="(() => Tarjetas.FechaVencimiento)"></ValidationMessage>
-                        @if (!string.IsNullOrEmpty(MensajeErrorFV))
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                @MensajeErrorFV
-                            </div>
-                        }
+
                     </div>
 
                     @*CVV*@
@@ -75,12 +60,7 @@
                         <label for="CVV" class="form-label"><strong>CVV</strong></label>
                         <InputText class="form-control" placeholder="351" id="CVV" @bind-Value="Tarjetas.CVV"></InputText>
                         <ValidationMessage For="(() => Tarjetas.CVV)"></ValidationMessage>
-                        @if (!string.IsNullOrEmpty(MensajeErrorCVV))
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                @MensajeErrorCVV
-                            </div>
-                        }
+
                     </div>
                 </div>
                 <div>
@@ -137,11 +117,7 @@
 
 @code {
     public TarjetasDto Tarjetas { get; set; } = new TarjetasDto();
-    public string Mensaje { get; set; } = string.Empty;
-    public string MensajeErrorCVV { get; set; } = string.Empty;
-    public string MensajeErrorFV { get; set; } = string.Empty;
-    public string MensajeErrorTarjeta { get; set; } = string.Empty;
-    public string MensajeNombre { get; set; } = string.Empty;
+
 
     // Para Visa (13 o 16 dígitos)
     string patronVisa = @"^4[0-9]{12}(?:[0-9]{3})?$";

@@ -23,16 +23,12 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                 CarritoId = p.CarritoId,
                 Total = p.Total,
                 UsuarioId = p.UsuarioId,
-                Productos = p.Productos.Select(o => new ProductosDto()
+                CarritoDetalle = p.CarritoDetalle.Select(o => new CarritosDetallesDto()
                 {
+                    DetalleId = o.DetalleId,
+                    CarritoId = o.CarritoId,
                     ProductoId = o.ProductoId,
-                    Nombre = o.Nombre,
-                    Existencia = o.Existencia,
-                    Descripcion = o.Descripcion,
-                    Precio = o.Precio,
-                    CategoriaId = o.CategoriaId,
-                    CategoriaNombre = o.Categoria.Nombre,
-                    Imagen = o.Imagen,
+                    Cantidad = o.Cantidad,
                     Costo = o.Costo,
                 }).ToList()
             }).FirstOrDefaultAsync();
@@ -55,16 +51,13 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
             UsuarioId = carritoDto.UsuarioId,
-            Productos = carritoDto.Productos.Select(o => new Productos()
+            CarritoDetalle = carritoDto.CarritoDetalle.Select(o => new CarritosDetalles()
             {
+                DetalleId = o.DetalleId,
+                CarritoId = o.CarritoId,
                 ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
+                Cantidad = o.Cantidad,
+                Costo = o.Costo,
             }).ToList()
         };
         contexto.Carritos.Add(carrito);
@@ -81,16 +74,13 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
             UsuarioId = carritoDto.UsuarioId,
-            Productos = carritoDto.Productos.Select(o => new Productos()
+            CarritoDetalle = carritoDto.CarritoDetalle.Select(o => new CarritosDetalles()
             {
+                DetalleId = o.DetalleId,
+                CarritoId = o.CarritoId,
                 ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
+                Cantidad = o.Cantidad,
+                Costo = o.Costo,
             }).ToList()
         };
         contexto.Update(carrito);
@@ -121,16 +111,13 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             CarritoId = p.CarritoId,
             Total = p.Total,
             UsuarioId = p.UsuarioId,
-            Productos = p.Productos.Select(o => new ProductosDto()
+            CarritoDetalle = p.CarritoDetalle.Select(o => new CarritosDetallesDto()
             {
+                DetalleId = o.DetalleId,
+                CarritoId = o.CarritoId,
                 ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
+                Cantidad = o.Cantidad,
+                Costo = o.Costo,
             }).ToList()
         })
         .Where(criterio)
@@ -147,17 +134,13 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                 CarritoId = c.CarritoId,
                 Total = c.Total,
                 UsuarioId = c.UsuarioId,
-                Productos = c.Productos.Select(p => new ProductosDto
+                CarritoDetalle = c.CarritoDetalle.Select(o => new CarritosDetallesDto()
                 {
-                    ProductoId = p.ProductoId,
-                    Nombre = p.Nombre,
-                    Existencia = p.Existencia,
-                    Descripcion = p.Descripcion,
-                    Precio = p.Precio,
-                    CategoriaId = p.CategoriaId,
-                    CategoriaNombre = p.Categoria.Nombre,
-                    Imagen = p.Imagen,
-                    Costo = p.Costo
+                    DetalleId = o.DetalleId,
+                    CarritoId = o.CarritoId,
+                    ProductoId = o.ProductoId,
+                    Cantidad = o.Cantidad,
+                    Costo = o.Costo,
                 }).ToList()
             })
             .ToListAsync();
