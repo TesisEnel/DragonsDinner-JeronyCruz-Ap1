@@ -26,20 +26,20 @@ public class EstadosService(IDbContextFactory<ApplicationDbContext> DbFactory) :
         return estado ?? new EstadosDto();
     }
 
-    public async Task<bool> Eliminar(int estado)
+    public async Task<bool> Eliminar(int estadoId)
     {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        var EstadoEntity = await contexto.Estados.FindAsync(estado);
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+		var estado = await contexto.Estados.FindAsync(estadoId);
 
-        if (EstadoEntity != null)
-        {
-            contexto.Estados.Remove(EstadoEntity);
-            await contexto.SaveChangesAsync();
-            return true;
-        }
+		if (estado != null)
+		{
+			contexto.Estados.Remove(estado);
+			await contexto.SaveChangesAsync();
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
     private async Task<bool> Insertar(EstadosDto estadoDto)
     {
@@ -97,11 +97,10 @@ public class EstadosService(IDbContextFactory<ApplicationDbContext> DbFactory) :
         .ToListAsync();
     }
 
-    public async Task<bool> NombreExiste(string NombreEstado)
+    public async Task<bool> NombreExiste(string descripcion)
     {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        var nombreNormalizado = NombreEstado.Trim().ToLower();
-        return await contexto.Estados
-            .AnyAsync(t => t.Descripcion.Trim().ToLower() == nombreNormalizado);
-    }
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+		return await contexto.Estados
+			.AnyAsync(e => e.Descripcion == descripcion);
+	}
 }
