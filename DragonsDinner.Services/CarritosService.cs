@@ -22,6 +22,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             {
                 CarritoId = p.CarritoId,
                 Total = p.Total,
+                UsuarioId = p.UsuarioId,
                 Productos = p.Productos.Select(o => new ProductosDto()
                 {
                     ProductoId = o.ProductoId,
@@ -32,7 +33,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                     CategoriaId = o.CategoriaId,
                     CategoriaNombre = o.Categoria.Nombre,
                     Imagen = o.Imagen,
-                    Costo = o.Costo
+                    Costo = o.Costo,
                 }).ToList()
             }).FirstOrDefaultAsync();
         return carrito ?? new CarritosDto();
@@ -53,6 +54,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         {
             CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
+            UsuarioId = carritoDto.UsuarioId,
             Productos = carritoDto.Productos.Select(o => new Productos()
             {
                 ProductoId = o.ProductoId,
@@ -78,6 +80,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         {
             CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
+            UsuarioId = carritoDto.UsuarioId,
             Productos = carritoDto.Productos.Select(o => new Productos()
             {
                 ProductoId = o.ProductoId,
@@ -117,6 +120,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         {
             CarritoId = p.CarritoId,
             Total = p.Total,
+            UsuarioId = p.UsuarioId,
             Productos = p.Productos.Select(o => new ProductosDto()
             {
                 ProductoId = o.ProductoId,
@@ -132,4 +136,31 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         .Where(criterio)
         .ToListAsync();
     }
+
+    public async Task<List<CarritosDto>> ObtenerCarritosPorUsuarioAsync(string usuarioId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Carritos
+            .Where(c => c.UsuarioId == usuarioId)
+            .Select(c => new CarritosDto
+            {
+                CarritoId = c.CarritoId,
+                Total = c.Total,
+                UsuarioId = c.UsuarioId,
+                Productos = c.Productos.Select(p => new ProductosDto
+                {
+                    ProductoId = p.ProductoId,
+                    Nombre = p.Nombre,
+                    Existencia = p.Existencia,
+                    Descripcion = p.Descripcion,
+                    Precio = p.Precio,
+                    CategoriaId = p.CategoriaId,
+                    CategoriaNombre = p.Categoria.Nombre,
+                    Imagen = p.Imagen,
+                    Costo = p.Costo
+                }).ToList()
+            })
+            .ToListAsync();
+    }
+
 }
