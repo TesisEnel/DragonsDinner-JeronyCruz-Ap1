@@ -24,6 +24,7 @@ public static class ServicesRegistrar
         services.AddScoped<ICategoriasService, CategoriasService>();
         services.AddScoped<IUsuariosService, UsuariosService>();
         services.AddScoped<IProvinciasService , ProvinciasService>();
+        services.AddScoped<IEstadosService, EstadosService>();
 
         return services;
     }
