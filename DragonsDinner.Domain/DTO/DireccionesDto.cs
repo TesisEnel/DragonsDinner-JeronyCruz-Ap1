@@ -22,4 +22,6 @@ public class DireccionesDto
     public string? Referencia { get; set; }
 
     public string Numero { get; set; }
+
+    public string? UsuarioId { get; set; }
 }
