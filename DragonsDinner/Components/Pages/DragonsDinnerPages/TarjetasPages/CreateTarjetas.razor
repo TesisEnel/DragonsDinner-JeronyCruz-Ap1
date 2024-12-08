@@ -2,6 +2,7 @@
 @using System.Text.RegularExpressions
 @rendermode InteractiveServer
 @inject TarjetasService tarjetasService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigation
 @inject ToastService Toast
 
@@ -163,12 +164,38 @@
 
     public async Task Guardar()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
+        // Verificar si el usuario no está autenticado
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            Toast.Notify(new(ToastType.Warning, $"Debe iniciar sesión para guardar una tarjeta."));
+            await Task.Delay(4000);
+            navigation.NavigateTo("/Account/Login");
+            return;
+        }
+
+        // Obtener el ID del usuario autenticado
+        string? usuarioId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(usuarioId))
+        {
+            Toast.Notify(new(ToastType.Danger, $"No se pudo obtener el ID del usuario."));
+            return;
+        }
+
+        // Asignar el ID del usuario a la tarjeta
+        Tarjetas.UsuarioId = usuarioId;
+
+        // Validar el CVV
         if (string.IsNullOrEmpty(Tarjetas.CVV) || Tarjetas.CVV.Length < 3 || Tarjetas.CVV.Length > 4)
         {
             Toast.Notify(new(ToastType.Danger, $"El CVV debe tener entre 3 y 4 dígitos."));
             return;
         }
+
+        // Validar el número de tarjeta
         if (string.IsNullOrEmpty(Tarjetas.NumeroTarjeta))
         {
             Toast.Notify(new(ToastType.Danger, $"El número de tarjeta no puede estar vacío."));
@@ -180,13 +207,15 @@
             return;
         }
 
-        bool tarjetaExistente = await tarjetasService.ExisteTarjetaAsync(Tarjetas.NumeroTarjeta);
+        // Verificar si la tarjeta ya está registrada para este usuario
+        bool tarjetaExistente = await tarjetasService.ExisteTarjetaParaUsuarioAsync(Tarjetas.NumeroTarjeta, usuarioId);
         if (tarjetaExistente)
         {
-            Toast.Notify(new(ToastType.Danger, $"La tarjeta ya está registrada."));
+            Toast.Notify(new(ToastType.Danger, $"Ya tienes registrada esta tarjeta."));
             return;
         }
 
+        // Formatear y validar la fecha de vencimiento
         if (!string.IsNullOrEmpty(Tarjetas.FechaVencimiento) && !Tarjetas.FechaVencimiento.Contains("/"))
         {
             Tarjetas.FechaVencimiento = Tarjetas.FechaVencimiento.Insert(2, "/");
@@ -198,18 +227,21 @@
             return;
         }
 
+        // Validar el nombre
         if (string.IsNullOrWhiteSpace(Tarjetas.Nombres))
         {
-            Toast.Notify(new(ToastType.Danger, $"El nombre no puede estar vacio."));
+            Toast.Notify(new(ToastType.Danger, $"El nombre no puede estar vacío."));
             return;
         }
 
+        // Guardar la tarjeta
         await tarjetasService.Guardar(Tarjetas);
         Tarjetas = new TarjetasDto();
         Toast.Notify(new(ToastType.Success, $"Su tarjeta ha sido registrada exitosamente."));
         await Task.Delay(3000);
         navigation.NavigateTo("/");
     }
+
 
     public bool ValidarNumeroTarjeta(string numeroTarjeta)
     {

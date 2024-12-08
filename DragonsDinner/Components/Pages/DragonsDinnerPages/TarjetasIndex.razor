@@ -2,6 +2,8 @@
 @using System.Text.RegularExpressions
 @rendermode InteractiveServer
 @inject TarjetasService tarjetasService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager navigation
 
 <PageTitle> Index Tarjetas</PageTitle>
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
@@ -60,11 +62,32 @@
     public List<TarjetasDto> Tarjetas { get; set; } = new List<TarjetasDto>();
     private string FiltroSeleccionado { get; set; } = "ID";
     private string CriterioBusqueda { get; set; } = string.Empty;
+    //private string usuarioId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Tarjetas = await tarjetasService.Listar(a => true);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var usuario = authState.User;
+        if (usuario.Identity.IsAuthenticated)
+        {
+            string? usuarioId = usuario.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine($"Usuario ID: {usuarioId}");
+
+            if (!string.IsNullOrEmpty(usuarioId))
+            {
+                Tarjetas = await tarjetasService.ObtenerTarjetasPorUsuarioAsync(usuarioId);
+            }
+            else
+            {
+                Console.WriteLine("No se pudo obtener el ID del usuario.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Usuario no autenticado.");
+        }
     }
+
 
     private async Task Buscar()
     {
@@ -116,11 +139,11 @@
 
     private string ObtenerNombreTipoTarjeta(string numeroTarjeta)
     {
-        if (Regex.IsMatch(numeroTarjeta, @"^4[0-9]{12}(?:[0-9]{3})?$")) 
+        if (Regex.IsMatch(numeroTarjeta, @"^4[0-9]{12}(?:[0-9]{3})?$"))
         {
             return "Visa";
         }
-        else if (Regex.IsMatch(numeroTarjeta, @"^5[1-5][0-9]{14}$")) 
+        else if (Regex.IsMatch(numeroTarjeta, @"^5[1-5][0-9]{14}$"))
         {
             return "MasterCard";
         }
