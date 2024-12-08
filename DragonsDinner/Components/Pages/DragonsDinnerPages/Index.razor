@@ -3,8 +3,12 @@
 @rendermode InteractiveServer
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
+@inject CarritosService carritoService
+@inject ToastService Toast
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <link rel=" stylesheet" href="/Estilos/Carrito.css" />
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
@@ -602,6 +606,8 @@
     public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
     private List<ProductosDto> Carrito { get; set; } = new List<ProductosDto>();
     private List<TarjetasDto> tarjetas { get; set; } = new List<TarjetasDto>();
+    private List<CarritosDto> Carritos { get; set; } = new List<CarritosDto>();
+    public CarritosDto CarritoF { get; set; } = new CarritosDto();
     private TarjetasDto nuevaTarjeta { get; set; } = new TarjetasDto();
 
     public string FiltroActivo { get; set; } = string.Empty;
@@ -614,9 +620,30 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var usuario = authState.User;
+        if (usuario.Identity.IsAuthenticated)
+        {
+            string? usuarioId = usuario.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine($"Usuario ID: {usuarioId}");
+
+            if (!string.IsNullOrEmpty(usuarioId))
+            {
+                Carritos = await carritoService.ObtenerCarritosPorUsuarioAsync(usuarioId);
+            }
+            else
+            {
+                Console.WriteLine("No se pudo obtener el ID del usuario.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Usuario no autenticado.");
+        }
 
         // Cargar todas las categorías y productos al inicializar el componente
         Categorias = await categoriasService.Listar(p => true);
+        CarritoF = await carritoService.Listar(c => true);
         ListProductos = await productosService.Listar(p => true);
     }
 
@@ -671,7 +698,7 @@
         }
     }
 
-    public void AgregarAlCarrito(ProductosDto producto)
+    public async Task AgregarAlCarrito(ProductosDto producto)
     {
         var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
         if (existente == null)
@@ -690,6 +717,9 @@
         {
             existente.Cantidad++;
         }
+        await carritoService.Guardar(CarritoF);
+        CarritoF = new CarritosDto();
+        Toast.Notify(new(ToastType.Success, $"Producto guardado correctamente"));
     }
 
     public void EliminarDelCarrito(ProductosDto producto)
