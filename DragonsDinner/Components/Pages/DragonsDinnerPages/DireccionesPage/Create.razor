@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject DireccionesService direccionesService
 @inject ProvinciasService provinciasService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigationManager
 @inject ToastService Toast
 
@@ -121,6 +122,29 @@
 
     public async Task Guardar()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Verificar si el usuario no está autenticado
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            Toast.Notify(new(ToastType.Warning, $"Debe iniciar sesión para guardar una direccion."));
+            await Task.Delay(4000);
+            navigationManager.NavigateTo("/Account/Login");
+            return;
+        }
+
+        // Obtener el ID del usuario autenticado
+        string? usuarioId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(usuarioId))
+        {
+            Toast.Notify(new(ToastType.Danger, $"No se pudo obtener el ID del usuario."));
+            return;
+        }
+
+        // Asignar el ID del usuario a la direccion
+        Direccion.UsuarioId = usuarioId;
         if (await direccionesService.Existe(Direccion.DireccionId))
         {
             Toast.Notify(new(ToastType.Danger, $"La direccion existe. Por favor, elija otra."));
