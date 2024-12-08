@@ -18,4 +18,8 @@ public class Carritos
 
     public double Total { get; set; }
 
+    [ForeignKey("Usuario")]
+    public string? UsuarioId { get; set; }
+    public ApplicationUser? Usuario { get; set; }
+
 }

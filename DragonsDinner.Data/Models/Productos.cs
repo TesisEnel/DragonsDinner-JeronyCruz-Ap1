@@ -18,7 +18,7 @@ public class Productos
     [RegularExpression(@"^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$", ErrorMessage = "El nombre solo debe contener letras.")]
     public string? Nombre { get; set; }
 
-    public int? Existencia { get; set; }
+    public int Existencia { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar una descripción")]
     [StringLength(300, ErrorMessage = "Ha exedido el número de caracteres.")]

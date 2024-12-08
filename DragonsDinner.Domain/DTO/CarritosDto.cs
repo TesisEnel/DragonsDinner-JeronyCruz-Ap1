@@ -14,4 +14,6 @@ public class CarritosDto
     public ICollection<ProductosDto> Productos { get; set; } = new List<ProductosDto>();
 
     public double Total { get; set; }
+
+    public string? UsuarioId { get; set; }
 }

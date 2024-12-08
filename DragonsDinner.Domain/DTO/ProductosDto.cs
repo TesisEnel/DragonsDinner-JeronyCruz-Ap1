@@ -14,7 +14,7 @@ public class ProductosDto
 
     public string? Nombre { get; set; }
 
-    public int? Existencia { get; set; }
+    public int Existencia { get; set; }
 
     public string Descripcion { get; set; }
 
