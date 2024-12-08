@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace DragonsDinner.Data.Models;
 
-public class Usuarios
+public class Usuarios : ApplicationUser
 {
-    [Key]
     public int UsuarioId { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar un nombre")]
