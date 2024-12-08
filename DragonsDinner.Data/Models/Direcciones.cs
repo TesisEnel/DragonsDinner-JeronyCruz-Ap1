@@ -34,4 +34,8 @@ public class Direcciones
 
     [Required(ErrorMessage = "Debe ingresar un numero de casa o apartamento")]
     public string Numero { get; set; }
+
+    [ForeignKey("Usuario")]
+    public string? UsuarioId { get; set; }
+    public ApplicationUser? Usuario { get; set; }
 }
