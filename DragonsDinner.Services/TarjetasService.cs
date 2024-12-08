@@ -24,7 +24,8 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                 Nombres = p.Nombres,
                 NumeroTarjeta = p.NumeroTarjeta,
                 FechaVencimiento = p.FechaVencimiento,
-                CVV = p.CVV
+                CVV = p.CVV,
+                UsuarioId = p.UsuarioId
             }).FirstOrDefaultAsync();
         return tarjeta ?? new TarjetasDto();
     }
@@ -54,7 +55,8 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             Nombres = tarjetaDto.Nombres,
             NumeroTarjeta = tarjetaDto.NumeroTarjeta,
             FechaVencimiento = tarjetaDto.FechaVencimiento,
-            CVV = tarjetaDto.CVV
+            CVV = tarjetaDto.CVV,
+            UsuarioId = tarjetaDto.UsuarioId
         };
         contexto.Tarjetas.Add(tarjeta);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -71,7 +73,8 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             Nombres = tarjetaDto.Nombres,
             NumeroTarjeta = tarjetaDto.NumeroTarjeta,
             FechaVencimiento = tarjetaDto.FechaVencimiento,
-            CVV = tarjetaDto.CVV
+            CVV = tarjetaDto.CVV,
+            UsuarioId = tarjetaDto.UsuarioId
         };
         contexto.Update(tarjeta);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -102,7 +105,8 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             Nombres = p.Nombres,
             NumeroTarjeta = p.NumeroTarjeta,
             FechaVencimiento = p.FechaVencimiento,
-            CVV = p.CVV
+            CVV = p.CVV,
+            UsuarioId = p.UsuarioId
         })
         .Where(criterio)
         .ToListAsync();
@@ -116,4 +120,30 @@ public class TarjetasService(IDbContextFactory<ApplicationDbContext> DbFactory) 
 
         return tarjetaExistente != null;
     }
+
+    public async Task<List<TarjetasDto>> ObtenerTarjetasPorUsuarioAsync(string usuarioId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Tarjetas
+            .Where(t => t.UsuarioId == usuarioId)
+            .Select(t => new TarjetasDto
+            {
+                TarjetaId = t.TarjetaId,
+                Nombres = t.Nombres,
+                NumeroTarjeta = t.NumeroTarjeta,
+                FechaVencimiento = t.FechaVencimiento,
+                CVV = t.CVV,
+                UsuarioId = t.UsuarioId
+            })
+            .ToListAsync();
+    }
+
+    public async Task<bool> ExisteTarjetaParaUsuarioAsync(string numeroTarjeta, string usuarioId)
+    {
+        var tarjetas = await ObtenerTarjetasPorUsuarioAsync(usuarioId);
+
+        return tarjetas.Any(t => t.NumeroTarjeta == numeroTarjeta);
+    }
+
+
 }
