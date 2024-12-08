@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +29,9 @@ public class Tarjetas
     [Required(ErrorMessage = "El CVV es obligatorio.")]
     [RegularExpression(@"^\d{3,4}$", ErrorMessage = "El CVV debe contener 3 o 4 dígitos.")]
     public string CVV { get; set; }
+
+    [ForeignKey("Usuario")]
+    public string? UsuarioId { get; set; }
+    public ApplicationUser? Usuario { get; set; }
 }
 
