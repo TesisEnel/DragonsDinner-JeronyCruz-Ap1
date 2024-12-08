@@ -1,0 +1,82 @@
+﻿@page "/Estados/Edit/{EstadoId:int}"
+@rendermode InteractiveServer
+@inject EstadosService estadosService
+@inject NavigationManager navigationManager
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<PageTitle>Editar estado</PageTitle>
+<EditForm Model="Estado" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator />
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header bg-primary text-white text-center">
+				<h2 class="bi bi-pencil-square"><strong>Editar estado</strong></h2>
+			</div>
+			<div class="card-body">
+				@* Id *@
+				<div class="mb-3">
+					<label class="form-label"><strong>Id </strong></label>
+					<InputNumber class="form-control" @bind-Value="Estado.EstadoId" readonly></InputNumber>
+				</div>
+
+				@*Descripcion*@
+				<label for="descripcion" class="form-label"><strong>Descripci&oacute;n </strong></label>
+				<InputText id="descripcion" class="form-control" @bind-Value="Estado.Descripcion"> </InputText>
+				<ValidationMessage For="@(() => Estado.Descripcion)"></ValidationMessage>
+				<div />
+				<div class="card-footer">
+					<a href="/Estados/Index"
+					   class="btn btn-outline-secondary">
+						<span class="bi bi-arrow-left mt-3"></span> Volver
+					</a>
+					<button type="submit" class="btn btn-outline-success bi bi-pencil-square"> Modificar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</EditForm>
+
+@code {
+
+	[Parameter]
+	public int EstadoId { get; set; }
+	public EstadosDto Estado { get; set; } = new EstadosDto();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (EstadoId > 0)
+		{
+			Estado = await estadosService.Buscar(EstadoId);
+		}
+
+	}
+
+	public async Task Guardar()
+	{
+		var estadoOriginal = await estadosService.Buscar(EstadoId);
+
+		if (Estado.Descripcion != estadoOriginal.Descripcion && await estadosService.NombreExiste(Estado.Descripcion))
+		{
+			Toast.Notify(new(ToastType.Danger, $"Estado existente, por favor elija otro"));
+		}
+		else if (string.IsNullOrWhiteSpace(Estado.Descripcion))
+		{
+			Toast.Notify(new(ToastType.Danger, $"Debe ingresar una descripcion"));
+		}
+		else if (Estado.Descripcion == estadoOriginal.Descripcion)
+		{
+			Toast.Notify(new(ToastType.Warning, $"No ha realizado ninguna modificación"));
+		}
+		else
+		{
+			await estadosService.Guardar(Estado);
+			Estado = new EstadosDto();
+			Toast.Notify(new(ToastType.Success, $"El estado ha sido modificado correctamente"));
+			await Task.Delay(3000);
+			navigationManager.NavigateTo("/Estados/Index");
+		}
+	}
+}
