@@ -1,0 +1,66 @@
+﻿@page "/Estados/Create"
+@rendermode InteractiveServer
+@inject EstadosService estadosService
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<PageTitle>Nueva estado</PageTitle>
+<EditForm Model="Estado" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white text-center">
+                <h2><strong>Crear estado</strong> <i class="bi bi-plus-circle-fill fs-2" /></h2>
+            </div>
+            <div class="card-body">
+                @*EstadoId*@
+                <label for="id" class="form-label"> <strong>Estado ID</strong></label>
+                <InputNumber id="id" class="form-control" @bind-Value="Estado.EstadoId" readonly></InputNumber>
+                <ValidationMessage For="@(() =>Estado.EstadoId)"></ValidationMessage>
+
+                @*Descripcion*@
+                <label for="id" class="form-label"> <strong>Descripci&oacute;n</strong></label>
+                <InputText id="id" class="form-control" @bind-Value="Estado.Descripcion" placeholder="Iniciado"></InputText>
+                <ValidationMessage For="@(() =>Estado.Descripcion)"></ValidationMessage>
+
+            </div>
+            <div class="card-footer">
+                <a href="/Estados/Index"
+                   class="btn btn-outline-secondary">
+                    <span class="bi bi-arrow-left mt-3"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-outline-success bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    public EstadosDto Estado { get; set; } = new EstadosDto();
+    public List<EstadosDto> ListEstado {get;set;} = [];
+
+    public async Task Guardar()
+    {
+
+        if (await estadosService.NombreExiste(Estado.Descripcion))
+        {
+            Toast.Notify(new(ToastType.Danger, $"Estado existente. Elija otro"));
+        }
+        else if (string.IsNullOrWhiteSpace(Estado.Descripcion))
+        {
+            Toast.Notify(new(ToastType.Danger, $"Debe ingresar una descripcion"));
+        }
+        else
+        {
+            await estadosService.Guardar(Estado);
+            Estado = new EstadosDto();
+            Toast.Notify(new(ToastType.Success, $"Estado guardado correctamente"));
+            await Task.Delay(3000);
+            navigationManager.NavigateTo("/Estados/Index");
+
+        }
+    }
+}
