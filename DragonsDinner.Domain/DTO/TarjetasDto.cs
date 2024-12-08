@@ -16,4 +16,6 @@ public class TarjetasDto
     public string FechaVencimiento { get; set; }
 
     public string CVV { get; set; }
+
+    public string? UsuarioId { get; set; }
 }
