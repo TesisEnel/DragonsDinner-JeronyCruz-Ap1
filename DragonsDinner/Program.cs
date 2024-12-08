@@ -27,6 +27,7 @@ builder.Services.AddScoped<DireccionesService>();
 builder.Services.AddScoped<UsuariosService>();
 builder.Services.AddScoped<ProvinciasService>();
 builder.Services.AddSingleton<ToastService>();
+builder.Services.AddScoped<EstadosService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

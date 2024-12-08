@@ -1,0 +1,87 @@
+﻿@page "/Estados/Delete/{EstadoId:int}"
+@rendermode InteractiveServer
+@inject EstadosService estadosService
+@inject NavigationManager navigation
+@inject IJSRuntime Js
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<PageTitle>Eliminar estado</PageTitle>
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header bg-primary text-white text-center ">
+			<h2><strong>Eliminar estado <i class="bi bi-journal-x" /></strong></h2>
+		</div>
+		<div class="card-body">
+			@if (Estado.Descripcion != null)
+			{
+				<h6><strong>¿Seguro que deseas eliminar este estado?</strong></h6>
+				@*EstadoId*@
+				<p class="mb-0"><strong>Estado Id:</strong> @Estado.EstadoId</p>
+				<div class="mb-1">
+					@*Descripción*@
+					<p class="mb-0"><strong>Descripci&oacute;n:</strong> @Estado.Descripcion</p>
+
+					<div class="card-footer">
+						<a href="/Estados/Index"
+						   class="btn btn-outline-secondary">
+							<span class="bi bi-arrow-left mt-3"></span> Volver
+						</a>
+						<button type="button" class="btn btn-outline-danger bi bi-trash" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">
+							Eliminar
+						</button>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteConfirmationLabel">Confirmar Eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				¿Está seguro de que desea eliminar esta direcci&oacute;n? Esta acción no se puede deshacer.
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code {
+
+	[Parameter]
+	public int EstadoId { get; set; }
+	public EstadosDto Estado { get; set; } = new EstadosDto();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (EstadoId > 0)
+		{
+			Estado = (await estadosService.Buscar(EstadoId));
+		}
+
+	}
+
+	public async Task Eliminar()
+	{
+		var eliminar = await estadosService.Eliminar(Estado.EstadoId);
+
+		if (eliminar)
+		{
+			Toast.Notify(new(ToastType.Danger, $"Estado eliminado"));
+			await Task.Delay(3000);
+			navigation.NavigateTo("/Estados/Index");
+		}
+
+	}
+}
