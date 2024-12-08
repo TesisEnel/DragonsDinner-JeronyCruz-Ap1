@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241206144725_Initial")]
+    [Migration("20241207195131_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -36,6 +36,11 @@ namespace DragonsDinner.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -88,6 +93,10 @@ namespace DragonsDinner.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>
@@ -212,7 +221,6 @@ namespace DragonsDinner.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -224,12 +232,16 @@ namespace DragonsDinner.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Referencia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("DireccionId");
 
                     b.HasIndex("ProvinciaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Direcciones");
                 });
@@ -380,8 +392,8 @@ namespace DragonsDinner.Data.Migrations
                     b.Property<double>("Precio")
                         .HasColumnType("float");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProductoId");
 
@@ -840,36 +852,14 @@ namespace DragonsDinner.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("TarjetaId");
 
+                    b.HasIndex("UsuarioId");
+
                     b.ToTable("Tarjetas");
-                });
-
-            modelBuilder.Entity("DragonsDinner.Data.Models.Usuarios", b =>
-                {
-                    b.Property<int>("UsuarioId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioId"));
-
-                    b.Property<string>("FotoPerfil")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombres")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("OrdenId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UsuarioId");
-
-                    b.HasIndex("OrdenId");
-
-                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1005,6 +995,30 @@ namespace DragonsDinner.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DragonsDinner.Data.Models.Usuarios", b =>
+                {
+                    b.HasBaseType("DragonsDinner.Data.ApplicationUser");
+
+                    b.Property<string>("FotoPerfil")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombres")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("OrdenId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("OrdenId");
+
+                    b.HasDiscriminator().HasValue("Usuarios");
+                });
+
             modelBuilder.Entity("DragonsDinner.Data.Models.CarritosDetalles", b =>
                 {
                     b.HasOne("DragonsDinner.Data.Models.Carritos", "Carrito")
@@ -1032,7 +1046,13 @@ namespace DragonsDinner.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DragonsDinner.Data.ApplicationUser", "Usuario")
+                        .WithMany("Direcciones")
+                        .HasForeignKey("UsuarioId");
+
                     b.Navigation("Provincia");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.MetodosPago", b =>
@@ -1084,15 +1104,13 @@ namespace DragonsDinner.Data.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("DragonsDinner.Data.Models.Usuarios", b =>
+            modelBuilder.Entity("DragonsDinner.Data.Models.Tarjetas", b =>
                 {
-                    b.HasOne("DragonsDinner.Data.Models.Ordenes", "Orden")
-                        .WithMany()
-                        .HasForeignKey("OrdenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("DragonsDinner.Data.ApplicationUser", "Usuario")
+                        .WithMany("Tarjetas")
+                        .HasForeignKey("UsuarioId");
 
-                    b.Navigation("Orden");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1144,6 +1162,24 @@ namespace DragonsDinner.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DragonsDinner.Data.Models.Usuarios", b =>
+                {
+                    b.HasOne("DragonsDinner.Data.Models.Ordenes", "Orden")
+                        .WithMany()
+                        .HasForeignKey("OrdenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Orden");
+                });
+
+            modelBuilder.Entity("DragonsDinner.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("Direcciones");
+
+                    b.Navigation("Tarjetas");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>

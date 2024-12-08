@@ -28,31 +28,6 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Carritos",
                 columns: table => new
                 {
@@ -120,22 +95,6 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tarjetas",
-                columns: table => new
-                {
-                    TarjetaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaVencimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CVV = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tarjetas", x => x.TarjetaId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -153,6 +112,42 @@ namespace DragonsDinner.Data.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true),
+                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    FotoPerfil = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrdenId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Ordenes_OrdenId",
+                        column: x => x.OrdenId,
+                        principalTable: "Ordenes",
+                        principalColumn: "OrdenId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -242,67 +237,32 @@ namespace DragonsDinner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FotoPerfil = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrdenId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.UsuarioId);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Ordenes_OrdenId",
-                        column: x => x.OrdenId,
-                        principalTable: "Ordenes",
-                        principalColumn: "OrdenId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Direcciones",
                 columns: table => new
                 {
                     DireccionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ProvinciaId = table.Column<int>(type: "int", nullable: false),
                     Municipio = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Calle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Referencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Referencia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Direcciones", x => x.DireccionId);
                     table.ForeignKey(
+                        name: "FK_Direcciones_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Direcciones_Provincias_ProvinciaId",
                         column: x => x.ProvinciaId,
                         principalTable: "Provincias",
                         principalColumn: "ProvinciaId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MetodosPagos",
-                columns: table => new
-                {
-                    MetodoPagoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MetodoPago = table.Column<bool>(type: "bit", nullable: false),
-                    TarjetaId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MetodosPagos", x => x.MetodoPagoId);
-                    table.ForeignKey(
-                        name: "FK_MetodosPagos_Tarjetas_TarjetaId",
-                        column: x => x.TarjetaId,
-                        principalTable: "Tarjetas",
-                        principalColumn: "TarjetaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -321,11 +281,16 @@ namespace DragonsDinner.Data.Migrations
                     Costo = table.Column<double>(type: "float", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     CarritoId = table.Column<int>(type: "int", nullable: true),
-                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Productos", x => x.ProductoId);
+                    table.ForeignKey(
+                        name: "FK_Productos_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Productos_Carritos_CarritoId",
                         column: x => x.CarritoId,
@@ -337,11 +302,28 @@ namespace DragonsDinner.Data.Migrations
                         principalTable: "Categorias",
                         principalColumn: "CategoriaId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tarjetas",
+                columns: table => new
+                {
+                    TarjetaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombres = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaVencimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tarjetas", x => x.TarjetaId);
                     table.ForeignKey(
-                        name: "FK_Productos_Usuarios_UsuarioId",
+                        name: "FK_Tarjetas_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "UsuarioId");
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -397,6 +379,26 @@ namespace DragonsDinner.Data.Migrations
                         column: x => x.ProductoId,
                         principalTable: "Productos",
                         principalColumn: "ProductoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MetodosPagos",
+                columns: table => new
+                {
+                    MetodoPagoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MetodoPago = table.Column<bool>(type: "bit", nullable: false),
+                    TarjetaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MetodosPagos", x => x.MetodoPagoId);
+                    table.ForeignKey(
+                        name: "FK_MetodosPagos_Tarjetas_TarjetaId",
+                        column: x => x.TarjetaId,
+                        principalTable: "Tarjetas",
+                        principalColumn: "TarjetaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -524,6 +526,11 @@ namespace DragonsDinner.Data.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_OrdenId",
+                table: "AspNetUsers",
+                column: "OrdenId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -544,6 +551,11 @@ namespace DragonsDinner.Data.Migrations
                 name: "IX_Direcciones_ProvinciaId",
                 table: "Direcciones",
                 column: "ProvinciaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Direcciones_UsuarioId",
+                table: "Direcciones",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MetodosPagos_TarjetaId",
@@ -576,9 +588,9 @@ namespace DragonsDinner.Data.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_OrdenId",
-                table: "Usuarios",
-                column: "OrdenId");
+                name: "IX_Tarjetas_UsuarioId",
+                table: "Tarjetas",
+                column: "UsuarioId");
         }
 
         /// <inheritdoc />
@@ -618,9 +630,6 @@ namespace DragonsDinner.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Provincias");
 
             migrationBuilder.DropTable(
@@ -630,13 +639,13 @@ namespace DragonsDinner.Data.Migrations
                 name: "Productos");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "Carritos");
 
             migrationBuilder.DropTable(
                 name: "Categorias");
-
-            migrationBuilder.DropTable(
-                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Ordenes");
