@@ -44,14 +44,14 @@ public class EstadosService(IDbContextFactory<ApplicationDbContext> DbFactory) :
     private async Task<bool> Insertar(EstadosDto estadoDto)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var categoria = new Estados()
+        var estado = new Estados()
         {
             EstadoId = estadoDto.EstadoId,
             Descripcion = estadoDto.Descripcion
         };
-        contexto.Estados.Add(categoria);
+        contexto.Estados.Add(estado);
         var guardo = await contexto.SaveChangesAsync() > 0;
-        categoria.EstadoId = categoria.EstadoId;
+        estado.EstadoId = estado.EstadoId;
         return guardo;
     }
 
@@ -73,8 +73,8 @@ public class EstadosService(IDbContextFactory<ApplicationDbContext> DbFactory) :
     private async Task<bool> Existe(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Categorias
-            .AnyAsync(e => e.CategoriaId == id);
+        return await contexto.Estados
+            .AnyAsync(e => e.EstadoId == id);
     }
 
     public async Task<bool> Guardar(EstadosDto estadoDto)
