@@ -1,5 +1,6 @@
 ﻿@page "/Direcciones/Index"
 @inject DireccionesService direccionesService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager navigationManager
 @inject ProductosService productosService
 @rendermode InteractiveServer
@@ -322,7 +323,26 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        ListDirecciones = await direccionesService.Listar(c => c.DireccionId > 0);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var usuario = authState.User;
+        if (usuario.Identity.IsAuthenticated)
+        {
+            string? usuarioId = usuario.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine($"Usuario ID: {usuarioId}");
+
+            if (!string.IsNullOrEmpty(usuarioId))
+            {
+                ListDirecciones = await direccionesService.ObtenerDireccionesPorUsuarioAsync(usuarioId);
+            }
+            else
+            {
+                Console.WriteLine("No se pudo obtener el ID del usuario.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Usuario no autenticado.");
+        }
         ListProductos = await productosService.Listar(p => true);
     }
 
