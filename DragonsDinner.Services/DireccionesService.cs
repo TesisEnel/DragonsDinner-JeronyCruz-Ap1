@@ -27,7 +27,8 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
                 Calle = p.Calle,
                 Referencia = p.Referencia,
                 Numero = p.Numero,
-                Nombre = p.Nombre
+                Nombre = p.Nombre,
+                UsuarioId = p.UsuarioId
             }).FirstOrDefaultAsync();
         return direccion ?? new DireccionesDto();
     }
@@ -58,7 +59,8 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
             Calle = direccionDto.Calle,
             Referencia = direccionDto.Referencia,
             Numero = direccionDto.Numero,
-            Nombre = direccionDto.Nombre
+            Nombre = direccionDto.Nombre,
+            UsuarioId = direccionDto.UsuarioId
 
         };
         contexto.Direcciones.Add(direccion);
@@ -78,7 +80,8 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
             Calle = direccionDto.Calle,
             Referencia = direccionDto.Referencia,
             Numero = direccionDto.Numero,
-            Nombre = direccionDto.Nombre
+            Nombre = direccionDto.Nombre,
+            UsuarioId = direccionDto.UsuarioId
         };
         contexto.Update(direccion);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -112,9 +115,34 @@ public class DireccionesService(IDbContextFactory<ApplicationDbContext> DbFactor
             Calle = p.Calle,
             Referencia = p.Referencia,
             Numero = p.Numero,
-            Nombre = p.Nombre
+            Nombre = p.Nombre,
+            UsuarioId = p.UsuarioId
         })
         .Where(criterio)
         .ToListAsync();
     }
+    public async Task<List<DireccionesDto>> ObtenerDireccionesPorUsuarioAsync(string usuarioId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+
+        var direcciones = await contexto.Direcciones
+            .Where(direccion => direccion.UsuarioId == usuarioId)
+            .Select(direccion => new DireccionesDto
+            {
+                DireccionId = direccion.DireccionId,
+                ProvinciaId = direccion.ProvinciaId,
+                ProvinciaNombre = direccion.Provincia.Nombre,
+                Municipio = direccion.Municipio,
+                Calle = direccion.Calle,
+                Referencia = direccion.Referencia,
+                Numero = direccion.Numero,
+                Nombre = direccion.Nombre,
+                UsuarioId = direccion.UsuarioId
+            })
+            .ToListAsync(); 
+
+
+        return direcciones;
+    }
+
 }
