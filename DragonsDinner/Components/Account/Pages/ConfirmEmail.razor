@@ -4,14 +4,23 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using DragonsDinner.Data
+@inject NavigationManager navigation
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Confirm email</PageTitle>
+<link rel="stylesheet" href="/Estilos/EmailConfirmadoMensaje.css" />
 
-<h1>Confirm email</h1>
-<StatusMessage Message="@statusMessage" />
+
+<PageTitle>Email confirmado</PageTitle>
+
+<div class="overlay"></div>
+<div class="container">
+    <h1>Email confirmado</h1>
+    <StatusMessage Message="@statusMessage" />
+    <a href="/" class="back-button btn btn-outline-secondary bi bi-arrow-left mt-3">Inicio</a>
+</div>
+
 
 @code {
     private string? statusMessage;
@@ -36,13 +45,14 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Error loading user with ID {UserId}";
+            statusMessage = $"Error para cargar el user Id {UserId}";
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
-            statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            statusMessage = result.Succeeded ? "Gracias por confirmar su email." : "Error para confirmar su email.";
         }
     }
+
 }

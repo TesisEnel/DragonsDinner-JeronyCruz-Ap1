@@ -1,0 +1,46 @@
+﻿/* Personalización del contenedor principal */
+.row {
+    margin-top: 50px;
+    justify-content: center;
+}
+
+/* Estilo para el formulario */
+form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para los campos de entrada */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+/* Estilo para las etiquetas flotantes */
+label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Botón personalizado */
+button {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+/* Mensajes de validación */
+.text-danger {
+    font-size: 14px;
+    margin-top: 5px;
+}

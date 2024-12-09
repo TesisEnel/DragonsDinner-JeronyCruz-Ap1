@@ -1,0 +1,66 @@
+﻿/* General Styles for Navigation Menu */
+.custom-nav {
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+    .custom-nav .nav-link {
+        color: #495057; /* Neutral text color */
+        font-size: 1.1rem;
+        padding: 10px 15px;
+        border-radius: 6px;
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    }
+
+        .custom-nav .nav-link:hover, .custom-nav .nav-link.active {
+            background-color: #007bff; /* Primary blue */
+            color: #fff; /* White text */
+        }
+
+/* Profile Form Styles */
+.form-floating {
+    margin-bottom: 1.5rem; /* Spacing between inputs */
+}
+
+    .form-floating .form-control {
+        border: 1px solid #ced4da; /* Subtle border */
+        border-radius: 6px; /* Rounded corners */
+        padding: 10px 12px; /* Comfortable padding */
+    }
+
+    .form-floating .form-label {
+        color: #6c757d; /* Gray label */
+        font-size: 0.95rem; /* Slightly smaller label text */
+    }
+
+button.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+    button.btn-primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Elevated shadow */
+    }
+
+/* Validation and Status Messages */
+.text-danger {
+    color: #dc3545 !important; /* Red for errors */
+    font-weight: bold;
+}
+
+.status-message {
+    background-color: #e9ecef; /* Light gray background */
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    color: #495057; /* Neutral text */
+    font-size: 1rem;
+    font-weight: 500;
+}
