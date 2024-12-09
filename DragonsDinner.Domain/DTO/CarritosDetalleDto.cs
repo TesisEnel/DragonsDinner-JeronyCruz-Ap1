@@ -1,10 +1,4 @@
 ﻿using DragonsDinner.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DragonsDinner.Domain.DTO;
 
@@ -13,20 +7,12 @@ public class CarritosDetallesDto
     public int DetalleId { get; set; }
 
     public int CarritoId { get; set; }
-    public Carritos Carrito { get; set; }
+    public Carritos Carrito { get; set; } = new Carritos();
 
 
     public double Total { get; set; }
 
-    public int ProductoId { get; set; }
-
-    public string NombreProducto { get; set; } = string.Empty;
-
-    public string DescripcionProducto { get; set; } = string.Empty;
-
-    public string Imagen { get; set; } = string.Empty;
-
-    public double Precio { get; set; }
+    public Productos Producto { get; set; } = new Productos();
 
     public int Cantidad { get; set; }
 
@@ -36,6 +22,9 @@ public class CarritosDetallesDto
     {
         return new CarritosDetalles()
         {
+            Producto = Producto,
+            Carrito = Carrito,
+            CarritoId = CarritoId,
             Cantidad = Cantidad,
             Costo = Costo
         };

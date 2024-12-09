@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DragonsDinner.Data.Models;
 
@@ -13,5 +9,5 @@ public class Categorias
     public int CategoriaId { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar el nombre de la categoria")]
-    public string Nombre { get; set; }
+    public string Nombre { get; set; } = string.Empty;
 }
