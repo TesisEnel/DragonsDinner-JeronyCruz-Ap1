@@ -9,4 +9,6 @@ public class CarritosDto
     public double Total => CarritoDetalle.Sum(c => c.Producto.Precio * c.Cantidad);
 
     public string UsuarioId { get; set; } = string.Empty;
+
+    public bool Comprado { get; set; }
 }

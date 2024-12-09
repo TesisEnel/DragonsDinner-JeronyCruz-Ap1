@@ -4,6 +4,9 @@
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <link href="Delete.css" rel="stylesheet" />
 
@@ -74,7 +77,8 @@
 
         if (eliminar)
         {
-            Console.WriteLine("El Producto fue eliminado correctamente.");
+            Toast.Notify(new(ToastType.Success, $"El Producto fue eliminado correctamente"));
+            await Task.Delay(3000);
             navigation.NavigateTo("/Productos/Index");
         }
         else

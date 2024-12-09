@@ -2,9 +2,13 @@
 @rendermode InteractiveServer
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <link href="CreateCategorias.css" rel="stylesheet" />
 
+<PageTitle>Editar Categoria</PageTitle>
 
 <EditForm Model="@Categorias" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -27,12 +31,6 @@
                     <label for="Nombre" class="form-label"><strong>Nombre</strong></label>
                     <InputText class="form-control" @bind-Value="Categorias.Nombre"></InputText>
                     <ValidationMessage For="(() => Categorias.Nombre)" />
-                    @if (!string.IsNullOrEmpty(Mensaje))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @Mensaje
-                        </div>
-                    }
                 </div>
             </div>
 
@@ -57,14 +55,21 @@
 
     public async Task Guardar()
     {
+        if (string.IsNullOrEmpty(Categorias.Nombre))
+        {
+            Toast.Notify(new(ToastType.Danger, $"El Nombre de la categoria no puede estar vacio."));
+            return;
+        }
         bool nombreExiste = await categoriasService.NombreExiste(Categorias.Nombre);
         if (nombreExiste)
         {
-            Mensaje = "El nombre de la categoria ya existe.";
+            Toast.Notify(new(ToastType.Danger, $"El Nombre de la categoria ya existe."));
             return;
         }
         await categoriasService.Guardar(Categorias);
         Categorias = new CategoriasDto();
+        Toast.Notify(new(ToastType.Success, $"La Categoria ha sido registrada exitosamente."));
+        await Task.Delay(3000);
         navigation.NavigateTo("/Categorias/Index");
     }
 }
