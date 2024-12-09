@@ -4,6 +4,7 @@ using DragonsDinner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209180246_MetodosPagos")]
+    partial class MetodosPagos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,7 +304,12 @@ namespace DragonsDinner.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TarjetaId")
+                        .HasColumnType("int");
+
                     b.HasKey("MetodoPagoId");
+
+                    b.HasIndex("TarjetaId");
 
                     b.ToTable("MetodosPagos");
                 });
@@ -1037,6 +1045,17 @@ namespace DragonsDinner.Migrations
                     b.Navigation("Provincia");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("DragonsDinner.Data.Models.MetodosPago", b =>
+                {
+                    b.HasOne("DragonsDinner.Data.Models.Tarjetas", "Tarjeta")
+                        .WithMany()
+                        .HasForeignKey("TarjetaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tarjeta");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.OrdenesDetalles", b =>
