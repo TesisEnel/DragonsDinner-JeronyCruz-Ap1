@@ -3,8 +3,12 @@
 @rendermode InteractiveServer
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
+@inject CarritosService carritoService
+@inject ToastService Toast
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <link rel=" stylesheet" href="/Estilos/Carrito.css" />
 <link rel=" stylesheet" href="/Estilos/Tarjetas.css" />
@@ -65,93 +69,90 @@
                         <a href="" class="user_link">
                             <i class="bi bi-person-circle" aria-hidden="true"></i>
                         </a>
-                        <a>
-                            <!-- botón Carrito de compras -->
-                            <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                <i class="bi bi-cart-fill"><span class="badge">@Carrito.Sum(p => p.Cantidad)</span></i>
-                            </button>
 
-                            <AuthorizeView>
-                                <NotAuthorized>
-                                    <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <i class="bi bi-cart-fill fs-1"></i>
-                                                    <div>Iniciar sesión o registrarse para ver el carrito</div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a href="/Account/Login" class="btn btn-primary">
-                                                        Iniciar Sesión
-                                                    </a>
-                                                    <a href="/Account/Register" class="btn btn-secondary">
-                                                        Registrarse
-                                                    </a>
-                                                </div>
+                        <!-- botón Carrito de compras -->
+                        <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                            <i class="bi bi-cart-fill"><span class="badge"> @Carrito.Sum(p => p.Cantidad)</span></i>
+                        </button>
+
+                        <!-- Modal carrito de compras -->
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compras</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => GuardarCambios()"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <i class="bi bi-cart-fill fs-1"></i>
+                                                <div>Iniciar sesión o registrarse para ver el carrito</div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/Account/Login" class="btn btn-primary">Iniciar Sesión</a>
+                                                <a href="/Account/Register" class="btn btn-secondary">Registrarse</a>
                                             </div>
                                         </div>
                                     </div>
-                                </NotAuthorized>
+                                </div>
+                            </NotAuthorized>
 
-                                <Authorized>
-                                    <!-- Modal carrito de compras -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <!-- Mostrar los productos del carrito -->
-                                                    @foreach (var producto in Carrito)
+                            <Authorized>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle"><strong>Carrito de compra</strong></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Mostrar los productos del carrito -->
+                                                @if (CarritoAMostrar is not null)
+                                                {
+                                                    @foreach (var detalle in CarritoAMostrar.CarritoDetalle)
                                                     {
                                                         <div class="cart-item d-flex justify-content-between align-items-center">
-                                                            <img src="@producto.Imagen" alt="@producto.Nombre" class="cart-item-img img-fluid">
+                                                            <img src="@detalle.Producto.Imagen" alt="@detalle.Producto.Imagen" class="cart-item-img img-fluid">
                                                             <div class="cart-item-details">
-                                                                <div class="cart-item-name"><strong>@producto.Nombre</strong></div>
+                                                                <div class="cart-item-name"><strong>@detalle.Producto.Nombre</strong></div>
                                                                 <div class="cart-item-actions">
                                                                     <div class="input-group">
-                                                                        <!-- Botón para decrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DescrementarCantidad(producto)"> - </button>
-                                                                        <!-- Input para la cantidad, enlazado con la propiedad Cantidad -->
-                                                                        <input type="text" class="quantity-button text-center col-2" @bind="producto.Cantidad" />
-                                                                        <!-- Botón para incrementar la cantidad -->
-                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(producto)"> + </button>
+                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => DecrementarCantidad(detalle)"> - </button>
+                                                                        <input type="text" class="quantity-button text-center col-2" @bind="detalle.Cantidad" />
+                                                                        <button type="button" class="quantity-button btn btn-outline-secondary" @onclick="() => IncrementarCantidad(detalle)"> + </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
-                                                            <!-- Precio del artículo -->
-                                                            <div class="cart-item-price">$@producto.Precio</div>
+                                                            <div class="cart-item-price">$@detalle.Producto.Precio</div>
 
-                                                            <!-- Icono de eliminar el artículo -->
                                                             <div>
-                                                                <button class="btn btn-danger" @onclick="() => EliminarDelCarrito(producto)">
+                                                                <button class="btn btn-danger" @onclick="() => RemoverDetalle(detalle)">
                                                                     <i class="bi bi-x"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     }
 
-                                                    <!-- Subtotal del carrito -->
-                                                    <div class="subtotal mt-3">Subtotal: $@Carrito.Sum(p => p.Precio * p.Cantidad)</div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
-                                                    <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
-                                                </div>
+                                                    <div class="subtotal mt-3">Subtotal: $@CarritoAMostrar.CarritoDetalle.Sum(d => d.Producto.Precio * d.Cantidad)</div>
+                                                }
+                                                else
+                                                {
+                                                    <div>No hay productos en el carrito.</div>
+                                                }
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" @onclick="VaciarCarrito">Vaciar carrito</button>
+                                                <button type="button" class="btn btn-primary" @onclick="RealizarPedido">Realizar pedido</button>
                                             </div>
                                         </div>
                                     </div>
-                                </Authorized>
-                            </AuthorizeView>
-                        </a>
+                                </div>
+                            </Authorized>
+                        </AuthorizeView>
+
+
 
                         <form class="form-inline">
                             <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
@@ -240,7 +241,6 @@
     <!-- end slider section -->
 </div>
 
-
 <!-- offer section -->
 
 <section class="offer_section layout_padding-bottom">
@@ -262,57 +262,57 @@
                             <a href="">
                                 A&ntilde;adir al carrito
                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                                <g>
-                                <g>
-                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                                    <g>
+                                        <g>
+                                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
                      c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                      </g>
-                    </g>
-                                <g>
-                                <g>
-                                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
                      C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
                      c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
                      C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                      </g>
-                    </g>
-                                <g>
-                                <g>
-                                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
                      c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                      </g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                  </svg>
+                                        </g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -332,57 +332,57 @@
                             <a href="">
                                 A&ntilde;adir al carrito
                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                                <g>
-                                <g>
-                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                                    <g>
+                                        <g>
+                                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
                      c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                      </g>
-                    </g>
-                                <g>
-                                <g>
-                                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
                      C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
                      c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
                      C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                      </g>
-                    </g>
-                                <g>
-                                <g>
-                                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
                      c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                      </g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                                <g>
-                    </g>
-                  </svg>
+                                        </g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                    <g>
+                                    </g>
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -409,7 +409,7 @@
                     @foreach (var filtro in Categorias)
                     {
                         <li @onclick="() => SeleccionarFiltro(filtro.Nombre)"
-                            class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
+                        class="@(FiltroActivo == filtro.Nombre ? "active" : "")">
                             @filtro.Nombre
                         </li>
                     }
@@ -595,6 +595,7 @@
 <!-- Google Map -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
+
 <!-- End Google Map -->
 @code {
     private string? currentUrl;
@@ -602,22 +603,84 @@
     public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
     private List<ProductosDto> Carrito { get; set; } = new List<ProductosDto>();
     private List<TarjetasDto> tarjetas { get; set; } = new List<TarjetasDto>();
+
+    private List<CarritosDto> Carritos { get; set; } = new List<CarritosDto>();
+
+    public CarritosDto CarritoAMostrar { get; set; } = new CarritosDto();
     private TarjetasDto nuevaTarjeta { get; set; } = new TarjetasDto();
+    public CarritosDetallesDto DetalleActual { get; set; } = new CarritosDetallesDto();
+
+
+    public string UsuarioLogeado { get; set; } = string.Empty;
 
     public string FiltroActivo { get; set; } = string.Empty;
-    public CarritosDetalles CarritoDetalle { get; set; }
 
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var usuario = authState.User;
 
-        // Cargar todas las categorías y productos al inicializar el componente
+        if (usuario.Identity is not null && usuario.Identity.IsAuthenticated)
+        {
+            Console.WriteLine("Usuario autenticado.");
+
+            string? usuarioId = usuario.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(usuarioId))
+            {
+                CarritoAMostrar.UsuarioId = usuarioId;
+                UsuarioLogeado = usuarioId;
+                var resultado = await carritoService.Listar(usuarioId);
+
+                if (resultado is not null) CarritoAMostrar = resultado;
+
+            }
+            else
+            {
+                Console.WriteLine("No se pudo obtener el ID del usuario.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Usuario no autenticado.");
+            // Crear un carrito temporal para el usuario no autenticado
+            CarritoAMostrar = new CarritosDto
+                {
+                    CarritoDetalle = new List<CarritosDetallesDto>()
+                };
+        }
+
+        // Cargar categorías y productos
         Categorias = await categoriasService.Listar(p => true);
         ListProductos = await productosService.Listar(p => true);
+
+        // Evitar duplicados y consolidar los productos en el carrito
+        if (CarritoAMostrar.CarritoDetalle != null && CarritoAMostrar.CarritoDetalle.Count > 0)
+        {
+            foreach (var detalle in CarritoAMostrar.CarritoDetalle)
+            {
+                // Verificar si el producto ya está en el carrito
+                var productoExistente = CarritoAMostrar.CarritoDetalle.FirstOrDefault(d => d.Producto.ProductoId == detalle.Producto.ProductoId);
+
+                if (productoExistente != null)
+                {
+                    // Si el producto ya está en el carrito, solo sumamos la cantidad
+                    productoExistente.Cantidad += detalle.Cantidad;
+                    productoExistente.Costo = productoExistente.Cantidad * productoExistente.Costo;
+                }
+                else
+                {
+                    // Si no existe, agregamos el producto al carrito
+                    CarritoAMostrar.CarritoDetalle.Add(detalle);
+                }
+            }
+        }
     }
 
     public async Task SeleccionarFiltro(string categoriaNombre)
@@ -627,7 +690,7 @@
         // Filtrar productos según la categoría seleccionada
         if (!string.IsNullOrEmpty(FiltroActivo))
         {
-            ListProductos = await productosService.Listar(p => p.CategoriaNombre == FiltroActivo);
+            ListProductos = await productosService.Listar(p => p.Categoria.Nombre == FiltroActivo);
         }
         else
         {
@@ -638,6 +701,7 @@
         // Forzar la actualización de la interfaz para reflejar el filtro
         StateHasChanged();
     }
+
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
@@ -649,61 +713,164 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
-    public void IncrementarCantidad(ProductosDto producto)
+
+    public async void IncrementarCantidad(CarritosDetallesDto detalle)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var existente = CarritoAMostrar.CarritoDetalle.FirstOrDefault(d => d.Producto.ProductoId == detalle.Producto.ProductoId);
         if (existente != null)
         {
             existente.Cantidad++;
+            existente.Costo = existente.Cantidad * existente.Producto.Precio; // Actualizar el costo
         }
+        await carritoService.Guardar(CarritoAMostrar);
     }
 
-    public void DescrementarCantidad(ProductosDto producto)
+    public async void DecrementarCantidad(CarritosDetallesDto detalle)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
-        if (existente != null && existente.Cantidad > 1)
+        var existente = CarritoAMostrar.CarritoDetalle.FirstOrDefault(d => d.Producto.ProductoId == detalle.Producto.ProductoId);
+        if (existente != null)
         {
-            existente.Cantidad--;
+            if (existente.Cantidad > 1)
+            {
+                existente.Cantidad--;
+                existente.Costo = existente.Cantidad * existente.Producto.Precio;
+            }
+            else
+            {
+                CarritoAMostrar.CarritoDetalle.Remove(existente);
+            }
         }
-        else
-        {
-            Carrito.Remove(producto);
-        }
+        await carritoService.Guardar(CarritoAMostrar);
     }
 
-    public void AgregarAlCarrito(ProductosDto producto)
+
+    public async Task AgregarAlCarrito(ProductosDto producto)
     {
-        var existente = Carrito.FirstOrDefault(p => p.ProductoId == producto.ProductoId);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Verificar si el usuario no está autenticado
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            Toast.Notify(new(ToastType.Warning, $"Debe iniciar sesión para guardar una tarjeta."));
+            await Task.Delay(4000);
+            NavigationManager.NavigateTo("/Account/Login");
+            return;
+        }
+
+        // Obtener el ID del usuario autenticado
+        string? usuarioId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(usuarioId))
+        {
+            Toast.Notify(new(ToastType.Danger, $"No se pudo obtener el ID del usuario."));
+            return;
+        }
+
+        // Asignar el ID del usuario al carrito
+        CarritoAMostrar.UsuarioId = usuarioId;
+
+        // Verificar que el producto no sea nulo
+        if (producto == null)
+        {
+            throw new ArgumentNullException(nameof(producto), "El producto no puede ser nulo.");
+        }
+
+        // Inicializar el carrito si es necesario
+        if (CarritoAMostrar == null)
+        {
+            CarritoAMostrar = new CarritosDto
+                {
+                    UsuarioId = usuarioId // Asigna el ID del usuario al carrito
+                };
+        }
+
+        // Inicializar el detalle del carrito si es necesario
+        if (CarritoAMostrar.CarritoDetalle == null)
+        {
+            CarritoAMostrar.CarritoDetalle = new List<CarritosDetallesDto>();
+        }
+
+        // Buscar si el producto ya existe en el carrito
+        var existente = CarritoAMostrar.CarritoDetalle.FirstOrDefault(d => d.Producto.ProductoId == producto.ProductoId);
         if (existente == null)
         {
-            Carrito.Add(new ProductosDto
+            // Si no existe, agregar un nuevo detalle al carrito
+            CarritoAMostrar.CarritoDetalle.Add(new CarritosDetallesDto
                 {
-                    ProductoId = producto.ProductoId,
-                    Nombre = producto.Nombre,
-                    Descripcion = producto.Descripcion,
-                    Imagen = producto.Imagen,
-                    Precio = producto.Precio,
-                    Cantidad = 1
+                    Producto = producto.Mappear(),
+                    Cantidad = 1,
+                    Costo = producto.Precio
                 });
         }
         else
         {
+            // Si ya existe, incrementar la cantidad y actualizar el costo
             existente.Cantidad++;
+            existente.Costo = existente.Cantidad * existente.Producto.Precio;
         }
+
+        // Verificar que carritoService no sea nulo
+        if (carritoService == null)
+        {
+            throw new InvalidOperationException("El servicio de carrito no ha sido inicializado.");
+        }
+
+        // Guardar el carrito
+        await carritoService.Guardar(CarritoAMostrar);
+
+        Toast.Notify(new(ToastType.Success, $"Producto agregado al carrito correctamente."));
     }
 
-    public void EliminarDelCarrito(ProductosDto producto)
+    public async void VaciarCarrito()
     {
-        Carrito.Remove(producto);
+        CarritoAMostrar.CarritoDetalle.Clear();
+        await carritoService.Guardar(CarritoAMostrar);
     }
 
-    public void VaciarCarrito()
+    public async void RemoverDetalle(CarritosDetallesDto detalle)
     {
-        Carrito.Clear();
+        CarritoAMostrar.CarritoDetalle.Remove(detalle);
+        DetalleActual.Producto.ProductoId = detalle.Producto.ProductoId;
+        DetalleActual.Cantidad = detalle.Cantidad;
+        DetalleActual.Producto.Precio = detalle.Producto.Precio;
+        await carritoService.Guardar(CarritoAMostrar);
+
     }
 
-    public void RealizarPedido()
+    public async void RealizarPedido()
     {
-        // Lógica para realizar el pedido, como procesar pago o enviar a base de datos
+        var result = await carritoService.RealizarPedido(CarritoAMostrar);
+        if (result)
+        {
+            Toast.Notify(new(ToastType.Success, $"Se realizó el pedido correctamente."));
+            CarritoAMostrar = new();
+            CarritoAMostrar.UsuarioId = UsuarioLogeado;
+        }
+
+
     }
+
+    private async Task GuardarCambios()
+    {
+        // Aseguramos que CarritoF no sea null
+        if (CarritoAMostrar != null)
+        {
+
+            if (!CarritoAMostrar.CarritoDetalle.Any())
+            {
+                await carritoService.Eliminar(CarritoAMostrar.CarritoId); // Eliminar el carrito vacío de la base de datos
+                CarritoAMostrar = new(); // Reiniciar el carrito en memoria
+                Console.WriteLine("El carrito estaba vacío y fue eliminado.");
+            }
+            else
+            {
+                // Guardar el carrito en la base de datos
+                await carritoService.Guardar(CarritoAMostrar);
+                Console.WriteLine("Carrito sincronizado con la base de datos.");
+            }
+        }
+
+    }
+
 }

@@ -1,49 +1,69 @@
-﻿using DragonsDinner.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using DragonsDinner.Abstractions;
 using DragonsDinner.Data.Models;
-using DragonsDinner.Data;
 using DragonsDinner.Domain.DTO;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using DragonsDinner.Data;
+using System.Runtime.CompilerServices;
 
 namespace DragonsDinner.Services;
 
 public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) : ICarritosService
 {
-    public async Task<CarritosDto> Buscar(int id)
+    public async Task<CarritosDto?> Buscar(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var carrito = await contexto.Carritos
-            .Where(e => e.CarritoId == id).Select(p => new CarritosDto()
-            {
-                CarritoId = p.CarritoId,
-                Total = p.Total,
-                Productos = p.Productos.Select(o => new ProductosDto()
-                {
-                    ProductoId = o.ProductoId,
-                    Nombre = o.Nombre,
-                    Existencia = o.Existencia,
-                    Descripcion = o.Descripcion,
-                    Precio = o.Precio,
-                    CategoriaId = o.CategoriaId,
-                    CategoriaNombre = o.Categoria.Nombre,
-                    Imagen = o.Imagen,
-                    Costo = o.Costo
-                }).ToList()
-            }).FirstOrDefaultAsync();
-        return carrito ?? new CarritosDto();
+
+        var carrito = await contexto.Carritos.FirstOrDefaultAsync(c => c.CarritoId == id);
+
+        if (carrito is null) return null;
+
+        return Mappear(carrito);
+    }
+    private CarritosDto Mappear(Carritos carrito)
+    {
+        return new CarritosDto()
+        {
+            CarritoId = carrito.CarritoId,
+            CarritoDetalle = Mappear(carrito.ListaDeArticulos),
+            UsuarioId = carrito.Id
+        };
+    }
+    private ICollection<CarritosDetallesDto> Mappear(ICollection<CarritosDetalles> articulos)
+    {
+        var ListaMapeada = new List<CarritosDetallesDto>();
+            
+        foreach(var articulo in articulos)
+            ListaMapeada.Add(Mapeado(articulo));
+        
+        return ListaMapeada;
+    }
+    private CarritosDetallesDto Mapeado(CarritosDetalles articulo)
+    {
+        return new CarritosDetallesDto()
+        {
+            DetalleId = articulo.DetalleId,
+            Carrito = articulo.Carrito,
+            Producto = articulo.Producto,
+            Cantidad = articulo.Cantidad,
+            Costo = articulo.Costo,
+
+        };
     }
 
     public async Task<bool> Eliminar(int carritoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Carritos
-            .Where(e => e.CarritoId == carritoId)
-            .ExecuteDeleteAsync() > 0;
+        var carritoEntity = await contexto.Carritos.FindAsync(carritoId);
+
+        if (carritoEntity != null)
+        {
+            contexto.Carritos.Remove(carritoEntity);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(CarritosDto carritoDto)
@@ -51,24 +71,17 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         await using var contexto = await DbFactory.CreateDbContextAsync();
         var carrito = new Carritos()
         {
-            CarritoId = carritoDto.CarritoId,
+            Id = carritoDto.UsuarioId,
+            Comprado = false,
             Total = carritoDto.Total,
-            Productos = carritoDto.Productos.Select(o => new Productos()
-            {
-                ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
-            }).ToList()
+            ListaDeArticulos = carritoDto.CarritoDetalle.Select(o => o.MapeoDetalle()).ToList()
         };
-        contexto.Carritos.Add(carrito);
-        var guardo = await contexto.SaveChangesAsync() > 0;
-        carritoDto.CarritoId = carrito.CarritoId;
-        return guardo;
+        contexto.Entry(carrito).State = EntityState.Added;
+        foreach(var articulo in carrito.ListaDeArticulos)
+        {
+            contexto.Entry(articulo).State = EntityState.Added;
+        }
+        return await contexto.SaveChangesAsync() > 0;
     }
 
     private async Task<bool> Modificar(CarritosDto carritoDto)
@@ -78,16 +91,11 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         {
             CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
-            Productos = carritoDto.Productos.Select(o => new Productos()
+            ListaDeArticulos = carritoDto.CarritoDetalle.Select(o => new CarritosDetalles()
             {
-                ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
+                DetalleId = o.DetalleId,
+                Cantidad = o.Cantidad,
+                Costo = o.Costo,
             }).ToList()
         };
         contexto.Update(carrito);
@@ -109,27 +117,36 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         else
             return await Modificar(carrito);
     }
-
-    public async Task<List<CarritosDto>> Listar(Expression<Func<CarritosDto, bool>> criterio)
+    public async Task<bool> RealizarPedido(CarritosDto carritoDto)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Carritos.Select(p => new CarritosDto()
+
+        var carrito = new Carritos()
         {
-            CarritoId = p.CarritoId,
-            Total = p.Total,
-            Productos = p.Productos.Select(o => new ProductosDto()
-            {
-                ProductoId = o.ProductoId,
-                Nombre = o.Nombre,
-                Existencia = o.Existencia,
-                Descripcion = o.Descripcion,
-                Precio = o.Precio,
-                CategoriaId = o.CategoriaId,
-                Imagen = o.Imagen,
-                Costo = o.Costo
-            }).ToList()
-        })
-        .Where(criterio)
-        .ToListAsync();
+            CarritoId = carritoDto.CarritoId,
+            Id = carritoDto.UsuarioId,
+            Comprado = true,  //LO SETEO EN TRUE
+            Total = carritoDto.Total,
+            ListaDeArticulos = carritoDto.CarritoDetalle.Select(o => o.MapeoDetalle()).ToList()
+        };
+        contexto.Entry(carrito).State = EntityState.Modified;
+
+        return await contexto.SaveChangesAsync() > 0;
+
     }
+    public async Task<CarritosDto?> Listar(string userId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+
+        var result =  await contexto.Carritos
+            .Include(c => c.ListaDeArticulos).ThenInclude(a => a.Producto)
+            .Include(c => c.Usuario)
+            .FirstOrDefaultAsync(c => c.Id == userId && !c.Comprado);// Mi carrito pendiente por comprar
+
+        if (result is null) return null;
+
+        return Mappear(result);
+    }
+
+
 }

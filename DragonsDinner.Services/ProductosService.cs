@@ -14,7 +14,7 @@ namespace DragonsDinner.Services;
 
 public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory) : IProductosService
 {
-    public async Task<ProductosDto> Buscar(int id)
+    public async Task<ProductosDto?> Buscar(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         var Producto = await contexto.Productos
@@ -26,10 +26,15 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
                 Descripcion = p.Descripcion,
                 Precio = p.Precio,
                 CategoriaId = p.CategoriaId,
-                CategoriaNombre = p.Categoria.Nombre,
+                Categoria = p.Categoria,
                 Imagen = p.Imagen,
                 Costo = p.Costo,
             }).FirstOrDefaultAsync();
+
+        if (Producto is null) return null;
+
+        var categoria = await contexto.Categorias.FindAsync(Producto.CategoriaId);
+        Producto.Categoria = categoria ?? new Categorias();
         return Producto ?? new ProductosDto();
     }
 
@@ -62,10 +67,9 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
             Imagen = productoDto.Imagen,
             Costo = productoDto.Costo,
         };
-        contexto.Productos.Add(productos);
-        var guardo = await contexto.SaveChangesAsync() > 0;
-        productoDto.ProductoId = productos.ProductoId;
-        return guardo;
+        contexto.Entry(productos).State = EntityState.Added;
+
+        return await contexto.SaveChangesAsync() > 0;
     }
 
     private async Task<bool> Modificar(ProductosDto productoDto)
@@ -78,7 +82,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
             Existencia = productoDto.Existencia,
             Descripcion = productoDto.Descripcion,
             Precio = productoDto.Precio,
-            CategoriaId = productoDto.CategoriaId,
+            Categoria = productoDto.Categoria,
             Imagen = productoDto.Imagen,
             Costo = productoDto.Costo,
         };
@@ -104,8 +108,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     public async Task<List<ProductosDto>> Listar(Expression<Func<ProductosDto, bool>> criterio)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Productos
-            .Include(p => p.Categoria) 
+        var result = await contexto.Productos
             .Select(p => new ProductosDto
             {
                 ProductoId = p.ProductoId,
@@ -115,12 +118,22 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
                 Precio = p.Precio,
                 Imagen = p.Imagen,
                 Costo = p.Costo,
-                CategoriaId = p.CategoriaId,
-                CategoriaNombre = p.Categoria.Nombre
-
+                CategoriaId = p.CategoriaId
             })
             .Where(criterio)
             .ToListAsync();
+
+        Categorias? categoria;
+        foreach (var item in result)
+        {
+            categoria = await contexto.Categorias.FindAsync(item.CategoriaId);
+
+            if (categoria is null) continue;
+
+            item.Categoria = categoria;
+        }
+
+        return result;
     }
 
     public Task<List<string>> ObtenerCategorias()

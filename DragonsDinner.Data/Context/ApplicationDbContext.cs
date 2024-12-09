@@ -81,6 +81,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            new Categorias { CategoriaId = 8, Nombre = "Mofongos" }
         });
 
+        modelBuilder.Entity<Productos>().Property(p => p.CategoriaId).ValueGeneratedNever();
 
         modelBuilder.Entity<Productos>().HasData(new List<Productos>()
     {
@@ -117,7 +118,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     new Productos { ProductoId = 18, Nombre = "Yaroa de Res", Existencia = 20, Descripcion = "Yaroa con carne de res y queso.", Precio = 170.00, CategoriaId = 7, Imagen = "https://www.afuegoalto.com/wp-content/uploads/2021/01/20160716_235522-01-600x338.jpeg", Costo = 120.00,Cantidad = 0  },
 
     // Mofongos
-    new Productos { ProductoId = 19, Nombre = "Mofongo Clásico", Existencia = 15, Descripcion = "Mofongo con ajo y chicharrón.", Precio = 250.00, CategoriaId = 8, Imagen = "https://dyj6gt4964deb.cloudfront.net/images/f7a0fb38-d918-45e3-a7d7-39c2aeaedc0e.jpeg", Costo = 180.00,Cantidad = 0  },
     new Productos { ProductoId = 20, Nombre = "Mofongo con Camarones", Existencia = 10, Descripcion = "Mofongo con camarones y salsa especial.", Precio = 300.00, CategoriaId = 8, Imagen = "https://static.wixstatic.com/media/07359e_65d3c58086bc45f8ae295f10ec354ce0~mv2.jpg/v1/fill/w_480,h_480,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/07359e_65d3c58086bc45f8ae295f10ec354ce0~mv2.jpg", Costo = 220.00,Cantidad = 0  }
     });
 

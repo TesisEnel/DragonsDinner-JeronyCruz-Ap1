@@ -16,26 +16,25 @@ public class Productos
     [Required(ErrorMessage = "Debe ingresar un nombre")]
     [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres.")]
     [RegularExpression(@"^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$", ErrorMessage = "El nombre solo debe contener letras.")]
-    public string? Nombre { get; set; }
+    public string Nombre { get; set; } = string.Empty;
 
-    public int? Existencia { get; set; }
+    public int Existencia { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar una descripción")]
     [StringLength(300, ErrorMessage = "Ha exedido el número de caracteres.")]
     [RegularExpression(@"^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$", ErrorMessage = "La descripción solo debe contener letras.")]
-    public string Descripcion { get; set; }
+    public string Descripcion { get; set; } = string.Empty ;
 
     [Required(ErrorMessage = "Debe ingresar un precio")]
     [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor que 0")]
     public double Precio { get; set; }
 
-
-    [ForeignKey("Categoria")]
     public int CategoriaId { get; set; }
-    public Categorias? Categoria { get; set; }
+    [ForeignKey("CategoriaId")]
+    public  Categorias? Categoria { get; set; }
 
     [Required(ErrorMessage = "Debe ingresar una URL")]
-    public string Imagen { get; set; }
+    public string Imagen { get; set; } = string.Empty;
 
     public double Costo { get; set; }
 

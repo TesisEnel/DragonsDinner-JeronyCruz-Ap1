@@ -1,6 +1,5 @@
 using DragonsDinner.Data.Models;
 using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DragonsDinner.Data;
 
