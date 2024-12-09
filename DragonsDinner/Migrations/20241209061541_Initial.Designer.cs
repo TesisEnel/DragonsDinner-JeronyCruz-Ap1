@@ -4,16 +4,19 @@ using DragonsDinner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DragonsDinner.Data.Migrations
+namespace DragonsDinner.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209061541_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +106,13 @@ namespace DragonsDinner.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarritoId"));
+
+                    b.Property<bool>("Comprado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Total")
                         .HasColumnType("float");
@@ -391,14 +401,9 @@ namespace DragonsDinner.Data.Migrations
                     b.Property<double>("Precio")
                         .HasColumnType("float");
 
-                    b.Property<string>("UsuarioId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ProductoId");
 
                     b.HasIndex("CategoriaId");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Productos");
 
@@ -618,18 +623,6 @@ namespace DragonsDinner.Data.Migrations
                             Imagen = "https://www.afuegoalto.com/wp-content/uploads/2021/01/20160716_235522-01-600x338.jpeg",
                             Nombre = "Yaroa de Res",
                             Precio = 170.0
-                        },
-                        new
-                        {
-                            ProductoId = 19,
-                            Cantidad = 0,
-                            CategoriaId = 8,
-                            Costo = 180.0,
-                            Descripcion = "Mofongo con ajo y chicharrón.",
-                            Existencia = 15,
-                            Imagen = "https://dyj6gt4964deb.cloudfront.net/images/f7a0fb38-d918-45e3-a7d7-39c2aeaedc0e.jpeg",
-                            Nombre = "Mofongo Clásico",
-                            Precio = 250.0
                         },
                         new
                         {
@@ -1000,15 +993,7 @@ namespace DragonsDinner.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombres")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("OrdenId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasIndex("OrdenId");
@@ -1018,7 +1003,7 @@ namespace DragonsDinner.Data.Migrations
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>
                 {
-                    b.HasOne("DragonsDinner.Data.ApplicationUser", "Usuario")
+                    b.HasOne("DragonsDinner.Data.Models.Usuarios", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId");
 
@@ -1028,7 +1013,7 @@ namespace DragonsDinner.Data.Migrations
             modelBuilder.Entity("DragonsDinner.Data.Models.CarritosDetalles", b =>
                 {
                     b.HasOne("DragonsDinner.Data.Models.Carritos", "Carrito")
-                        .WithMany("CarritoDetalle")
+                        .WithMany("ListaDeArticulos")
                         .HasForeignKey("CarritoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1098,10 +1083,6 @@ namespace DragonsDinner.Data.Migrations
                         .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("DragonsDinner.Data.Models.Usuarios", null)
-                        .WithMany("Productos")
-                        .HasForeignKey("UsuarioId");
 
                     b.Navigation("Categoria");
                 });
@@ -1186,17 +1167,12 @@ namespace DragonsDinner.Data.Migrations
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>
                 {
-                    b.Navigation("CarritoDetalle");
+                    b.Navigation("ListaDeArticulos");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Ordenes", b =>
                 {
                     b.Navigation("OrdenesDetalles");
-                });
-
-            modelBuilder.Entity("DragonsDinner.Data.Models.Usuarios", b =>
-                {
-                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }
