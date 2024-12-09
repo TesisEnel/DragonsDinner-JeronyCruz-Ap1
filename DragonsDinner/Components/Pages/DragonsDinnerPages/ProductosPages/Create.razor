@@ -1,8 +1,10 @@
 ﻿@page "/Productos/Create"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
+@attribute [Authorize(Roles = "Admin")]
 
 
 

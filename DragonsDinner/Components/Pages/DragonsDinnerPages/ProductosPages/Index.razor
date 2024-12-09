@@ -2,6 +2,8 @@
 @rendermode InteractiveServer
 @inject CategoriasService categoriasService
 @inject ProductosService productosService
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
 
 <!-- bootstrap core css -->
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />

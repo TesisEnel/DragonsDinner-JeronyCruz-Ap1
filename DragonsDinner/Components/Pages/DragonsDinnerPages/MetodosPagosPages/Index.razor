@@ -1,6 +1,8 @@
 ﻿@page "/MetodosPagos/Index"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject MetodosPagoService metodoPagoServices
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle> Index Tipo Metodos Pagos</PageTitle>
 
