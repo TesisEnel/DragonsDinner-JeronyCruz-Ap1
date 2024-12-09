@@ -22,7 +22,6 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
             {
                 MetodoPagoId = p.MetodoPagoId,
                 MetodoPago = p.MetodoPago,
-                TarjetaId = p.TarjetaId,
 
             }).FirstOrDefaultAsync();
         return metodoPago ?? new MetodosPagoDto();
@@ -31,9 +30,16 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
     public async Task<bool> Eliminar(int metodoPago)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.MetodosPagos
-            .Where(e => e.MetodoPagoId == metodoPago)
-            .ExecuteDeleteAsync() > 0;
+        var MetodoPagoEntity = await contexto.MetodosPagos.FindAsync(metodoPago);
+
+        if (MetodoPagoEntity != null)
+        {
+            contexto.MetodosPagos.Remove(MetodoPagoEntity);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(MetodosPagoDto metodosPagoDto)
@@ -43,7 +49,6 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = metodosPagoDto.MetodoPagoId,
             MetodoPago = metodosPagoDto.MetodoPago,
-            TarjetaId = metodosPagoDto.TarjetaId,
         };
         contexto.MetodosPagos.Add(metodoPago);
         var guardo = await contexto.SaveChangesAsync() > 0;
@@ -58,7 +63,6 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = metodosPagoDto.MetodoPagoId,
             MetodoPago = metodosPagoDto.MetodoPago,
-            TarjetaId = metodosPagoDto.TarjetaId,
         };
         contexto.Update(metodoPago);
         var modificado = await contexto.SaveChangesAsync() > 0;
@@ -87,9 +91,16 @@ public class MetodosPagoService(IDbContextFactory<ApplicationDbContext> DbFactor
         {
             MetodoPagoId = p.MetodoPagoId,
             MetodoPago = p.MetodoPago,
-            TarjetaId = p.TarjetaId,
         })
         .Where(criterio)
         .ToListAsync();
+    }
+
+    public async Task<bool> NombreExiste(string NombreMetodoPago)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var nombreNormalizado = NombreMetodoPago.Trim().ToLower();
+        return await contexto.MetodosPagos
+            .AnyAsync(t => t.MetodoPago.Trim().ToLower() == nombreNormalizado);
     }
 }

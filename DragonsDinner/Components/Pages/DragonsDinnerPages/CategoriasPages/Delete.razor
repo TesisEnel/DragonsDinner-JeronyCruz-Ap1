@@ -3,6 +3,9 @@
 @rendermode InteractiveServer
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 
 <!-- bootstrap core css -->
@@ -74,7 +77,8 @@
 
         if (eliminar)
         {
-            Console.WriteLine("La Categoria fue eliminada correctamente.");
+            Toast.Notify(new(ToastType.Success, $"Categoria eliminada correctamente"));
+            await Task.Delay(3000);
             navigation.NavigateTo("/Categorias/Index");
         }
         else

@@ -845,7 +845,8 @@
 
     public async void RealizarPedido()
     {
-        var result = await carritoService.RealizarPedido(CarritoAMostrar);
+        CarritoAMostrar.Comprado = true;
+        var result = await carritoService.Guardar(CarritoAMostrar);
         if (result)
         {
             Toast.Notify(new(ToastType.Success, $"Se realizó el pedido correctamente."));

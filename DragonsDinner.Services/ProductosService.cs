@@ -105,36 +105,33 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
         else
             return await Modificar(productoDto);
     }
-    public async Task<List<ProductosDto>> Listar(Expression<Func<ProductosDto, bool>> criterio)
+    public async Task<List<ProductosDto>> Listar(Expression<Func<Productos, bool>> criterio)
+{
+    await using var contexto = await DbFactory.CreateDbContextAsync();
+
+    // Realizar la consulta sobre la entidad Productos
+    var productos = await contexto.Productos
+        .Where(criterio) // Filtrar sobre la entidad Productos
+        .Include(p => p.Categoria) // Incluir la categoría para no tener que hacer la búsqueda por separado
+        .ToListAsync();
+
+    // Mapear los productos a DTOs
+    var result = productos.Select(p => new ProductosDto
     {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        var result = await contexto.Productos
-            .Select(p => new ProductosDto
-            {
-                ProductoId = p.ProductoId,
-                Nombre = p.Nombre,
-                Existencia = p.Existencia,
-                Descripcion = p.Descripcion,
-                Precio = p.Precio,
-                Imagen = p.Imagen,
-                Costo = p.Costo,
-                CategoriaId = p.CategoriaId
-            })
-            .Where(criterio)
-            .ToListAsync();
+        ProductoId = p.ProductoId,
+        Nombre = p.Nombre,
+        Existencia = p.Existencia,
+        Descripcion = p.Descripcion,
+        Precio = p.Precio,
+        Imagen = p.Imagen,
+        Costo = p.Costo,
+        CategoriaId = p.CategoriaId,
+        Categoria = p.Categoria // Asignar la categoría cargada
+    }).ToList();
 
-        Categorias? categoria;
-        foreach (var item in result)
-        {
-            categoria = await contexto.Categorias.FindAsync(item.CategoriaId);
+    return result;
+}
 
-            if (categoria is null) continue;
-
-            item.Categoria = categoria;
-        }
-
-        return result;
-    }
 
     public Task<List<string>> ObtenerCategorias()
     {

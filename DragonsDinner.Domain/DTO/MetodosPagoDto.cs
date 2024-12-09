@@ -13,7 +13,5 @@ public class MetodosPagoDto
 {
     public int MetodoPagoId { get; set; }
 
-    public bool MetodoPago { get; set; }
-
-    public int TarjetaId { get; set; }
+    public string MetodoPago { get; set; }
 }

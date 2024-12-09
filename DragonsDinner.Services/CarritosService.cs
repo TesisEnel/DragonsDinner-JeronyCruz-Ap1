@@ -72,7 +72,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         var carrito = new Carritos()
         {
             Id = carritoDto.UsuarioId,
-            Comprado = false,
+            Comprado = carritoDto.Comprado,
             Total = carritoDto.Total,
             ListaDeArticulos = carritoDto.CarritoDetalle.Select(o => o.MapeoDetalle()).ToList()
         };
@@ -90,6 +90,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         var carrito = new Carritos()
         {
             CarritoId = carritoDto.CarritoId,
+            Comprado = carritoDto.Comprado,
             Total = carritoDto.Total,
             ListaDeArticulos = carritoDto.CarritoDetalle.Select(o => new CarritosDetalles()
             {
