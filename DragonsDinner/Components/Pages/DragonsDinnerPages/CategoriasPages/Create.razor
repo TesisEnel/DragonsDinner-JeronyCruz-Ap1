@@ -4,8 +4,29 @@
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
 
+
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<!-- nice select  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+<!-- font awesome style -->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="css/style.css" rel="stylesheet" />
+<!-- responsive style -->
+<link href="css/responsive.css" rel="stylesheet" />
+
 <link href="CreateCategorias.css" rel="stylesheet" />
 
+
+
+<div class="bg-box">
+    <img src="/images/Fondo.jpg" alt="">
+</div>
 
 <EditForm Model="@Categorias" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -15,8 +36,6 @@
             <div class="card-header text-center">
                 <h2 class="card-title">Crear Categoria</h2>
             </div>
-
-            <div class="card-body">
                 @*Categoria ID*@
                 <div class="mb-3">
                     <label for="CategoriaId" class="form-label"><strong>Categoria Id</strong></label>
@@ -35,14 +54,15 @@
                         </div>
                     }
                 </div>
-            </div>
 
             <div class="card-footer">
                 <a href="/Categorias/Index" class="btn btn-orange bi bi-arrow-left mt-3"> Volver</a>
                 <button type="submit" class="btn btn-orange bi bi-floppy mt-3"> Guardar</button>
             </div>
+
+            </div>
+
         </div>
-    </div>
 </EditForm>
 
 @code {

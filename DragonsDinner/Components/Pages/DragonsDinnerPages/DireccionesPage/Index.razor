@@ -4,6 +4,11 @@
 @inject NavigationManager navigationManager
 @inject ProductosService productosService
 @rendermode InteractiveServer
+@inject ToastService Toast 
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+
 
 <div class="bg-box">
     <img src="/images/Fondo.jpg" alt="">
@@ -238,7 +243,7 @@
                 <div class="col-3">
                     <InputSelect id="filtro" class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Cliente">Cliente</option>
+                        <option value="id">Id</option>
                     </InputSelect>
                 </div>
 
@@ -356,12 +361,21 @@
 
     private async Task Buscar()
     {
-        if (ValorFiltro.Trim() != "" && Filtro == "direccion")
+      if (ValorFiltro.Trim() != "" && Filtro == "id")
         {
-            ListDirecciones = await direccionesService
-            .Listar(p => p.Nombre.ToLower()
-            .Contains(ValorFiltro.ToLower()));
+            if (int.TryParse(ValorFiltro, out int direccionId))
+            {
+                ListDirecciones = await direccionesService
+                    .Listar(p => p.DireccionId == direccionId);
+            }
         }
+        if (!ListDirecciones.Any())
+        {
+            Toast.Notify(new(ToastType.Danger, "Dirección no encontrada"));
+            ListDirecciones = await direccionesService.Listar(c => c.DireccionId > 0);
+
+        }
+
     }
 
 
