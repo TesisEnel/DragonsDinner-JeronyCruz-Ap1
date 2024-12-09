@@ -1,8 +1,10 @@
 ﻿@page "/Estados/Edit/{EstadoId:int}"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject EstadosService estadosService
 @inject NavigationManager navigationManager
 @inject ToastService Toast
+@attribute [Authorize(Roles = "Admin")]
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 

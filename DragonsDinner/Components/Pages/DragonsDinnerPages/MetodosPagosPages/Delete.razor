@@ -1,9 +1,11 @@
 ﻿@page "/MetodosPagos/Delete/{MetodosPagosId:int}"
+@using Microsoft.AspNetCore.Authorization
 
 @rendermode InteractiveServer
 @inject MetodosPagoService metodoPagoSercice
 @inject NavigationManager navigation
 @inject ToastService Toast
+@attribute [Authorize(Roles = "Admin")]
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 

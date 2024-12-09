@@ -1,6 +1,8 @@
 ﻿@page "/Categorias/Index"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject CategoriasService categoriasService
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle> Index Categorias</PageTitle>
 

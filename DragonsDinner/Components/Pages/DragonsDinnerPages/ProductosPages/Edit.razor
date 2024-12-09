@@ -4,6 +4,8 @@
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
 @inject ToastService Toast
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 

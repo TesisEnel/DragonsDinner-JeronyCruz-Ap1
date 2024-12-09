@@ -1,7 +1,9 @@
 ﻿@page "/Estados/Index"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject EstadosService estadosService
 @inject NavigationManager navigation
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Estados</PageTitle>
 <div class="container">

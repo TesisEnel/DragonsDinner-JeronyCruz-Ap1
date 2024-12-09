@@ -1,4 +1,5 @@
 using DragonsDinner.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +27,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<IdentityRole>().HasData(
+           new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+           new IdentityRole { Name = "Cliente", NormalizedName = "CLIENTE" }
+       );
         modelBuilder.Entity<Provincias>().HasData(new List<Provincias>()
     {
+            
         new Provincias { ProvinciaId = 1, Nombre = "Distrito Nacional" },
         new Provincias { ProvinciaId = 2, Nombre = "Azua" },
         new Provincias { ProvinciaId = 3, Nombre = "Bahoruco" },

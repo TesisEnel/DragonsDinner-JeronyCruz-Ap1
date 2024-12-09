@@ -1,9 +1,11 @@
 ﻿﻿
 @page "/Categorias/Create"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
 @inject ToastService Toast
+@attribute [Authorize(Roles = "Admin")]
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
