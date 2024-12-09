@@ -14,12 +14,12 @@
 
 ## Usuarios y Claves de Acceso
 - User:
-  - 👤: 
-  - 🔑: 
+  - 👤: celainy_lopez@ucne.edu.do
+  - 🔑: User123@
 
 - Admin:
-  - 👤: 
-  - 🔑: 
+  - 👤: jerony_@ucne.edu.do
+  - 🔑: IronMan01@
 ---
 
 ## 📝 Funcionalidades Principales
@@ -47,4 +47,5 @@
 
 ---
 ##Link Azure
+https://dragonsdinner.azurewebsites.net
 -*Link*
