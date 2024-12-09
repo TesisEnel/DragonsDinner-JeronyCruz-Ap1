@@ -93,7 +93,7 @@
 
                         <!-- botón Carrito de compras -->
                         <button type="button" class="btn btn-no-color text-white" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                            <i class="bi bi-cart-fill"><span class="badge"> @Carrito.Sum(p => p.Cantidad)</span></i>
+                            <i class="bi bi-cart-fill"><span class="badge"> @CarritoAMostrar.CarritoDetalle?.Sum(d => d.Cantidad) ?? 0</span></i>
                         </button>
 
                         <!-- Modal carrito de compras -->
