@@ -1,0 +1,98 @@
+﻿@page "/MetodosPagos/Index"
+@rendermode InteractiveServer
+@inject MetodosPagoService metodoPagoServices
+
+<PageTitle> Index Tipo Metodos Pagos</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center">Registro de tipos Metodos Pagos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="filtrarPor"> Filtrar por:</label>
+                    <InputSelect id="filtrarPor" class="form-select" @bind-Value="FiltroSeleccionado">
+                        <option value="ID">ID</option>
+                        <option value="Metodo">Metodo</option>
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-6 d-flex justify-content-center mt-4">
+                    <div class="input-group">
+                        <InputText id="Busqueda" class="form-control" @bind-Value="CriterioBusqueda"></InputText>
+                        <button @onclick="BuscarCategoria" class="btn btn-outline-primary bi bi-search"> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col text-end">
+                    <a href="/MetodosPagos/Create" class="btn btn-primary bi bi-plus-square mt-3"> Crear</a>
+                </div>
+            </div>
+
+            <table class="table table-light table-hover">
+                <thead class="table table-striped">
+                    <tr class="text-center">
+                        <th>Metodo Pago Id</th>
+                        <th>Tipo de Metodo Pago</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var metodoPago in MetodoPago)
+                    {
+                        <tr class="text-center">
+                            <td>@metodoPago.MetodoPagoId</td>
+                            <td>@metodoPago.MetodoPago</td>
+                            <td><a href="/MetodosPagos/Edit/@metodoPago.MetodoPagoId" class="btn btn-outline-success bi bi-pencil-square"></a></td>
+                            <td><a href="/MetodosPagos/Delete/@metodoPago.MetodoPagoId" class="btn btn-outline-danger bi bi-trash"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <p><strong>Total de tipos de Metodos Pagos: </strong>@MetodoPago.Count</p>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<MetodosPagoDto> MetodoPago { get; set; } = new List<MetodosPagoDto>();
+    private string FiltroSeleccionado { get; set; } = "ID";
+    private string CriterioBusqueda { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        MetodoPago = await metodoPagoServices.Listar(a => true);
+    }
+
+    private async Task BuscarCategoria()
+    {
+        switch (FiltroSeleccionado)
+        {
+            case "ID":
+                if (int.TryParse(CriterioBusqueda, out int id))
+                {
+                    MetodoPago = await metodoPagoServices.Listar(a => a.MetodoPagoId == id);
+                }
+                break;
+
+            case "Metodo":
+                MetodoPago = await metodoPagoServices.Listar(e => e.MetodoPago.ToLower().Contains(CriterioBusqueda.ToLower()));
+                break;
+        }
+    }
+
+    private async Task RefrescarDatos()
+    {
+        MetodoPago = await metodoPagoServices.Listar(a => true);
+        CriterioBusqueda = string.Empty;
+    }
+
+}
