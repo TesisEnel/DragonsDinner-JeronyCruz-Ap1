@@ -357,7 +357,7 @@ namespace DragonsDinner.Migrations
                     b.ToTable("OrdenesDetalles");
                 });
 
-            modelBuilder.Entity("DragonsDinner.Data.Models.Productos", b =>
+            modelBuilder.Entity("DragonsDinner.Data.Models.ProductosFood", b =>
                 {
                     b.Property<int>("ProductoId")
                         .ValueGeneratedOnAdd()
@@ -398,7 +398,7 @@ namespace DragonsDinner.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("ProductosFood");
 
                     b.HasData(
                         new
@@ -870,6 +870,20 @@ namespace DragonsDinner.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Cliente",
+                            NormalizedName = "CLIENTE"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1011,7 +1025,7 @@ namespace DragonsDinner.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DragonsDinner.Data.Models.Productos", "Producto")
+                    b.HasOne("DragonsDinner.Data.Models.ProductosFood", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1047,7 +1061,7 @@ namespace DragonsDinner.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DragonsDinner.Data.Models.Productos", "Producto")
+                    b.HasOne("DragonsDinner.Data.Models.ProductosFood", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1058,7 +1072,7 @@ namespace DragonsDinner.Migrations
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("DragonsDinner.Data.Models.Productos", b =>
+            modelBuilder.Entity("DragonsDinner.Data.Models.ProductosFood", b =>
                 {
                     b.HasOne("DragonsDinner.Data.Models.Categorias", "Categoria")
                         .WithMany()
