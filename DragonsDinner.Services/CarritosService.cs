@@ -21,7 +21,6 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             .Where(e => e.CarritoId == id).Select(p => new CarritosDto()
             {
                 CarritoId = p.CarritoId,
-                Total = p.Total,
                 UsuarioId = p.UsuarioId,
                 CarritoDetalle = p.CarritoDetalle.Select(o => new CarritosDetallesDto()
                 {
@@ -30,6 +29,7 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                     ProductoId = o.ProductoId,
                     Cantidad = o.Cantidad,
                     Costo = o.Costo,
+                    Imagen = o.Producto.Imagen,
                 }).ToList()
             }).FirstOrDefaultAsync();
         return carrito ?? new CarritosDto();
@@ -38,9 +38,16 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
     public async Task<bool> Eliminar(int carritoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Carritos
-            .Where(e => e.CarritoId == carritoId)
-            .ExecuteDeleteAsync() > 0;
+        var carritoEntity = await contexto.Carritos.FindAsync(carritoId);
+
+        if (carritoEntity != null)
+        {
+            contexto.Carritos.Remove(carritoEntity);
+            await contexto.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<bool> Insertar(CarritosDto carritoDto)
@@ -48,21 +55,12 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
         await using var contexto = await DbFactory.CreateDbContextAsync();
         var carrito = new Carritos()
         {
-            CarritoId = carritoDto.CarritoId,
             Total = carritoDto.Total,
             UsuarioId = carritoDto.UsuarioId,
-            CarritoDetalle = carritoDto.CarritoDetalle.Select(o => new CarritosDetalles()
-            {
-                DetalleId = o.DetalleId,
-                CarritoId = o.CarritoId,
-                ProductoId = o.ProductoId,
-                Cantidad = o.Cantidad,
-                Costo = o.Costo,
-            }).ToList()
+            CarritoDetalle = carritoDto.CarritoDetalle.Select(o => o.MapeoDetalle()).ToList()
         };
         contexto.Carritos.Add(carrito);
         var guardo = await contexto.SaveChangesAsync() > 0;
-        carritoDto.CarritoId = carrito.CarritoId;
         return guardo;
     }
 
@@ -103,25 +101,18 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             return await Modificar(carrito);
     }
 
-    public async Task<List<CarritosDto>> Listar(Expression<Func<CarritosDto, bool>> criterio)
+    public async Task<CarritosDto?> Listar(Expression<Func<CarritosDto, bool>> criterio)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Carritos.Select(p => new CarritosDto()
+        return await contexto.Carritos
+            .Include(c => c.CarritoDetalle)
+            .Select(p => new CarritosDto()
         {
             CarritoId = p.CarritoId,
-            Total = p.Total,
-            UsuarioId = p.UsuarioId,
-            CarritoDetalle = p.CarritoDetalle.Select(o => new CarritosDetallesDto()
-            {
-                DetalleId = o.DetalleId,
-                CarritoId = o.CarritoId,
-                ProductoId = o.ProductoId,
-                Cantidad = o.Cantidad,
-                Costo = o.Costo,
-            }).ToList()
+            UsuarioId = p.UsuarioId
         })
-        .Where(criterio)
-        .ToListAsync();
+        .FirstOrDefaultAsync(criterio);
+
     }
 
     public async Task<List<CarritosDto>> ObtenerCarritosPorUsuarioAsync(string usuarioId)
@@ -132,7 +123,6 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
             .Select(c => new CarritosDto
             {
                 CarritoId = c.CarritoId,
-                Total = c.Total,
                 UsuarioId = c.UsuarioId,
                 CarritoDetalle = c.CarritoDetalle.Select(o => new CarritosDetallesDto()
                 {
@@ -141,9 +131,114 @@ public class CarritosService(IDbContextFactory<ApplicationDbContext> DbFactory) 
                     ProductoId = o.ProductoId,
                     Cantidad = o.Cantidad,
                     Costo = o.Costo,
+                    Imagen = o.Producto.Imagen,
                 }).ToList()
             })
             .ToListAsync();
     }
+
+    public async Task<bool> IncrementarCantidad(int detalleId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var detalle = await contexto.CarritosDetalles.FindAsync(detalleId);
+
+        if (detalle == null) return false;
+
+        detalle.Cantidad++;
+        detalle.Costo = detalle.Cantidad * detalle.Producto.Precio; // Asume que el producto tiene un precio asociado.
+
+        await contexto.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DecrementarCantidad(int detalleId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var detalle = await contexto.CarritosDetalles.FindAsync(detalleId);
+
+        if (detalle == null || detalle.Cantidad <= 1) return false;
+
+        detalle.Cantidad--;
+        detalle.Costo = detalle.Cantidad * detalle.Producto.Precio;
+
+        await contexto.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> RemoverDetalle(int detalleId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var detalle = await contexto.CarritosDetalles.FindAsync(detalleId);
+
+        if (detalle == null) return false;
+
+        contexto.CarritosDetalles.Remove(detalle);
+        await contexto.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> VaciarCarrito(int carritoId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var detalles = await contexto.CarritosDetalles
+            .Where(d => d.CarritoId == carritoId)
+            .ToListAsync();
+
+        contexto.CarritosDetalles.RemoveRange(detalles);
+        await contexto.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> AgregarProducto(int carritoId, int productoId, int cantidad)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+
+        // Verificar si el carrito existe
+        var carrito = await contexto.Carritos.Include(c => c.CarritoDetalle)
+                                              .FirstOrDefaultAsync(c => c.CarritoId == carritoId);
+
+        if (carrito == null)
+        {
+            return false; // Carrito no encontrado
+        }
+
+        // Verificar si el producto ya está en el carrito
+        var detalleExistente = carrito.CarritoDetalle.FirstOrDefault(d => d.ProductoId == productoId);
+
+        if (detalleExistente != null)
+        {
+            // Incrementar la cantidad si ya existe
+            detalleExistente.Cantidad += cantidad;
+            detalleExistente.Costo = detalleExistente.Cantidad * detalleExistente.Producto.Precio; // Precio actualizado
+        }
+        else
+        {
+            // Obtener el producto desde la base de datos
+            var producto = await contexto.Productos.FindAsync(productoId);
+
+            if (producto == null)
+            {
+                return false; // Producto no encontrado
+            }
+
+            // Crear un nuevo detalle para el producto
+            var nuevoDetalle = new CarritosDetalles
+            {
+                CarritoId = carritoId,
+                ProductoId = productoId,
+                Cantidad = cantidad,
+                Costo = cantidad * producto.Precio
+            };
+
+            carrito.CarritoDetalle.Add(nuevoDetalle);
+        }
+
+        // Recalcular el total del carrito
+        carrito.Total = carrito.CarritoDetalle.Sum(d => d.Costo);
+
+        await contexto.SaveChangesAsync();
+        return true;
+    }
+
 
 }
