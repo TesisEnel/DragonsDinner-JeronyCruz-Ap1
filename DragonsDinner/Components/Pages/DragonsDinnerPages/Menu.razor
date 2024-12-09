@@ -386,7 +386,7 @@
         // Filtrar productos según la categoría seleccionada
         if (!string.IsNullOrEmpty(FiltroActivo))
         {
-            ListProductos = await productosService.Listar(p => p.CategoriaNombre == FiltroActivo);
+            ListProductos = await productosService.Listar(p => p.Categoria.Nombre == FiltroActivo);
         }
         else
         {

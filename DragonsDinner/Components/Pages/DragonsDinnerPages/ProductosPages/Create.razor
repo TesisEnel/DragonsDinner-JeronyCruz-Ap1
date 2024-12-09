@@ -91,7 +91,7 @@
                 <div class="mb-3">
                     <label for="Categoria" class="form-label"><strong>Categoria</strong></label>
                     <InputSelect id="DeudorId" class="form-control" @bind-Value="Productos.CategoriaId">
-                        <option value="0" selected disabled>-- Seleccione un Tipo Tecnico --</option>
+                        <option value="0" selected disabled>-- Seleccione una categoria --</option>
                         @foreach (var categoria in Categorias)
                         {
                             <option value="@categoria.CategoriaId">@categoria.Nombre</option>
@@ -218,7 +218,7 @@
             MensajePrecio = "El precio del producto no puede ser menor o igual al costo del mismo.";
             return;
         }
-        if (Productos.CategoriaId <= 0)
+        if (Productos.Categoria.CategoriaId <= 0)
         {
             MensajeCategoria = "Debe seleccionar una categoría.";
             return;
