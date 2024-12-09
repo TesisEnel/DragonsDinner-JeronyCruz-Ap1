@@ -1,5 +1,13 @@
-﻿﻿body {
+﻿
+.container {
+    background-image: url('/images/Fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px; /* Para bordes redondeados */
+    padding: 20px; /* Para espacio interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para resaltar el contenedor */
 }
+
 
 .custom-card {
     max-width: 500px; 

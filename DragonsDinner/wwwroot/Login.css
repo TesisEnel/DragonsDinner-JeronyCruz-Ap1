@@ -13,7 +13,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
+    background-image: url('/images/Fondo login.png');
     background-size: cover;
     background-position: center;
 }
@@ -106,10 +106,10 @@ body {
 .login-btn {
     width: 100%;
     padding: 10px 0;
-    background: #2F9CF4;
+    background: #FFC107;
     border: none;
     border-radius: 99px;
-    color: white;
+    color: #ffffff;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -117,7 +117,7 @@ body {
 }
 
     .login-btn:hover {
-        background: #0B87EC;
+        background: #926d00;
     }
 
 .register {
@@ -126,7 +126,7 @@ body {
 }
 
     .register a {
-        color: white;
+        color: #FFC107;
         text-decoration: none;
         font-weight: 500;
     }
