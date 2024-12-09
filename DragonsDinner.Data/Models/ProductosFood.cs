@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DragonsDinner.Data.Models;
 
-public class Productos
+public class ProductosFood
 {
     [Key]
     public int ProductoId { get; set; }

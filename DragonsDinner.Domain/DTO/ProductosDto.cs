@@ -22,9 +22,9 @@ public class ProductosDto
 
     public int Cantidad { get; set; }
 
-    public Productos Mappear()
+    public ProductosFood Mappear()
     {
-        return new Productos()
+        return new ProductosFood()
         {
             ProductoId = ProductoId,
             Nombre = Nombre,

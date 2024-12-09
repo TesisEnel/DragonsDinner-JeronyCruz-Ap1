@@ -12,7 +12,7 @@ public class CarritosDetalles
     public Carritos Carrito { get; set; } = new Carritos();
 
     [ForeignKey("ProductoId")]
-    public Productos Producto { get; set; } = new Productos();
+    public ProductosFood Producto { get; set; } = new ProductosFood();
 
     public int Cantidad { get; set; }
 

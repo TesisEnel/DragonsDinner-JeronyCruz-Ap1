@@ -17,7 +17,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     public async Task<ProductosDto?> Buscar(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var Producto = await contexto.Productos
+        var Producto = await contexto.ProductosFood
             .Where(e => e.ProductoId == id).Select(p => new ProductosDto()
             {
                 ProductoId = p.ProductoId,
@@ -41,11 +41,11 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     public async Task<bool> Eliminar(int productoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var productoEntity = await contexto.Productos.FindAsync(productoId);
+        var productoEntity = await contexto.ProductosFood.FindAsync(productoId);
 
         if (productoEntity != null)
         {
-            contexto.Productos.Remove(productoEntity);
+            contexto.ProductosFood.Remove(productoEntity);
             await contexto.SaveChangesAsync();
             return true;
         }
@@ -56,7 +56,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     private async Task<bool> Insertar(ProductosDto productoDto)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var productos = new Productos()
+        var productos = new ProductosFood()
         {
             ProductoId = productoDto.ProductoId,
             Nombre = productoDto.Nombre,
@@ -75,7 +75,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     private async Task<bool> Modificar(ProductosDto productoDto)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var producto = new Productos()
+        var producto = new ProductosFood()
         {
             ProductoId = productoDto.ProductoId,
             Nombre = productoDto.Nombre,
@@ -94,7 +94,7 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     private async Task<bool> Existe(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Productos
+        return await contexto.ProductosFood
             .AnyAsync(e => e.ProductoId == id);
     }
 
@@ -105,33 +105,36 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
         else
             return await Modificar(productoDto);
     }
-    public async Task<List<ProductosDto>> Listar(Expression<Func<Productos, bool>> criterio)
-{
-    await using var contexto = await DbFactory.CreateDbContextAsync();
-
-    // Realizar la consulta sobre la entidad Productos
-    var productos = await contexto.Productos
-        .Where(criterio) // Filtrar sobre la entidad Productos
-        .Include(p => p.Categoria) // Incluir la categoría para no tener que hacer la búsqueda por separado
-        .ToListAsync();
-
-    // Mapear los productos a DTOs
-    var result = productos.Select(p => new ProductosDto
+    public async Task<List<ProductosDto>> Listar(Expression<Func<ProductosDto, bool>> criterio)
     {
-        ProductoId = p.ProductoId,
-        Nombre = p.Nombre,
-        Existencia = p.Existencia,
-        Descripcion = p.Descripcion,
-        Precio = p.Precio,
-        Imagen = p.Imagen,
-        Costo = p.Costo,
-        CategoriaId = p.CategoriaId,
-        Categoria = p.Categoria // Asignar la categoría cargada
-    }).ToList();
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        var result = await contexto.ProductosFood
+            .Select(p => new ProductosDto
+            {
+                ProductoId = p.ProductoId,
+                Nombre = p.Nombre,
+                Existencia = p.Existencia,
+                Descripcion = p.Descripcion,
+                Precio = p.Precio,
+                Imagen = p.Imagen,
+                Costo = p.Costo,
+                CategoriaId = p.CategoriaId
+            })
+            .Where(criterio)
+            .ToListAsync();
 
-    return result;
-}
+        Categorias? categoria;
+        foreach (var item in result)
+        {
+            categoria = await contexto.Categorias.FindAsync(item.CategoriaId);
 
+            if (categoria is null) continue;
+
+            item.Categoria = categoria;
+        }
+
+        return result;
+    }
 
     public Task<List<string>> ObtenerCategorias()
     {
@@ -142,14 +145,14 @@ public class ProductosService(IDbContextFactory<ApplicationDbContext> DbFactory)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         var numeroNormalizado = NombreProducto.Trim().ToLower();
-        return await contexto.Productos
+        return await contexto.ProductosFood
             .AnyAsync(t => t.Nombre.Trim().ToLower() == numeroNormalizado);
     }
 
     public async Task<string> ObtenerNombrePorId(int productoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var producto = await contexto.Productos.FirstOrDefaultAsync(p => p.ProductoId == productoId);
+        var producto = await contexto.ProductosFood.FirstOrDefaultAsync(p => p.ProductoId == productoId);
         return producto?.Nombre ?? string.Empty;
     }
 

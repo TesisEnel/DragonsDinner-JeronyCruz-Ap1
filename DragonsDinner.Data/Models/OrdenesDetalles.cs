@@ -19,7 +19,7 @@ public class OrdenesDetalles
 
     [ForeignKey("Producto")]
     public int ProductoId { get; set; }
-    public Productos? Producto { get; set; }
+    public ProductosFood? Producto { get; set; }
 
     public int Cantidad { get; set; }
 

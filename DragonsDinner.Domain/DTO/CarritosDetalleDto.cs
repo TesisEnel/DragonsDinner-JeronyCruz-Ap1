@@ -12,7 +12,7 @@ public class CarritosDetallesDto
 
     public double Total { get; set; }
 
-    public Productos Producto { get; set; } = new Productos();
+    public ProductosFood Producto { get; set; } = new ProductosFood();
 
     public int Cantidad { get; set; }
 
