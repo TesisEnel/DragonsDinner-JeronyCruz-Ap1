@@ -1,0 +1,69 @@
+﻿﻿
+@page "/MetodosPagos/Create"
+@rendermode InteractiveServer
+@inject MetodosPagoService metodosPagosService
+@inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<link href="CreateCategorias.css" rel="stylesheet" />
+
+<PageTitle>Crear tipo Metodo Pago</PageTitle>
+
+<EditForm Model="@MetodoPago" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card central-card shadow-lg">
+            <div class="card-header text-center">
+                <h2 class="card-title">Crear tipo Metodo Pago</h2>
+            </div>
+
+            <div class="card-body">
+                @*Metodo Pago ID*@
+                <div class="mb-3">
+                    <label for="MetodoPagoId" class="form-label"><strong>Metodo Pago Id:</strong></label>
+                    <InputNumber class="form-control" @bind-Value="MetodoPago.MetodoPagoId" readonly></InputNumber>
+                </div>
+
+                @*Tipo Meodo pago*@
+                <div class="mb-3">
+                    <label for="Nombre" class="form-label"><strong>Tipo Metodo Pago:</strong></label>
+                    <InputText class="form-control" @bind-Value="MetodoPago.MetodoPago"></InputText>
+                    <ValidationMessage For="(() => MetodoPago.MetodoPago)" />
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="/MetodosPagos/Index" class="btn btn-orange bi bi-arrow-left mt-3"> Volver</a>
+                <button type="submit" class="btn btn-orange bi bi-floppy mt-3"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    public MetodosPagoDto MetodoPago { get; set; } = new MetodosPagoDto();
+    public string Mensaje { get; set; } = string.Empty;
+
+    public async Task Guardar()
+    {
+        if (string.IsNullOrEmpty(MetodoPago.MetodoPago))
+        {
+            Toast.Notify(new(ToastType.Danger, $"El Nombre del tipo de metodo pago no puede estar vacio."));
+            return;
+        }
+        bool nombreExiste = await metodosPagosService.NombreExiste(MetodoPago.MetodoPago);
+        if (nombreExiste)
+        {
+            Toast.Notify(new(ToastType.Danger, $"El Nombre del tipo de metodo pago ya existe."));
+            return;
+        }
+        await metodosPagosService.Guardar(MetodoPago);
+        MetodoPago = new MetodosPagoDto();
+        Toast.Notify(new(ToastType.Success, $"El tipo de Metodo Pago ha sido registrado exitosamente."));
+        await Task.Delay(3000);
+        navigation.NavigateTo("/MetodosPagos/Index");
+    }
+}
