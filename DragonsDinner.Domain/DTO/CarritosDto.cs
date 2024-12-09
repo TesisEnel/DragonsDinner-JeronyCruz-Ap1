@@ -13,7 +13,7 @@ public class CarritosDto
 
     public ICollection<CarritosDetallesDto> CarritoDetalle { get; set; } = new List<CarritosDetallesDto>();
 
-    public double Total { get; set; }
+    public double Total => CarritoDetalle.Sum(c => c.Precio * c.Cantidad);
 
     public string? UsuarioId { get; set; }
 }

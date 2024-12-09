@@ -20,13 +20,24 @@ public class CarritosDetallesDto
 
     public int ProductoId { get; set; }
 
-    public string NombreProducto { get; set; }
+    public string NombreProducto { get; set; } = string.Empty;
 
-    public string DescripcionProducto { get; set; }
+    public string DescripcionProducto { get; set; } = string.Empty;
+
+    public string Imagen { get; set; } = string.Empty;
 
     public double Precio { get; set; }
 
     public int Cantidad { get; set; }
 
     public double Costo { get; set; }
+
+    public CarritosDetalles MapeoDetalle()
+    {
+        return new CarritosDetalles()
+        {
+            Cantidad = Cantidad,
+            Costo = Costo
+        };
+    }
 }

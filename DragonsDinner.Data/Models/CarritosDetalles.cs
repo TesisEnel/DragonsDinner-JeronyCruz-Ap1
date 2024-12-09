@@ -13,12 +13,10 @@ public class CarritosDetalles
     [Key]
     public int DetalleId { get; set; }
 
-    [ForeignKey("Carrito")]
-    public int CarritoId { get; set; }
+    [ForeignKey("CarritoId")]
     public Carritos? Carrito { get; set; }
 
-    [ForeignKey("Producto")]
-    public int ProductoId { get; set; }
+    [ForeignKey("ProductoId")]
     public Productos? Producto { get; set; }
 
     public int Cantidad { get; set; }
