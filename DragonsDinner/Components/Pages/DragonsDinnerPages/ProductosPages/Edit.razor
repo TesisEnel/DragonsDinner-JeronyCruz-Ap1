@@ -127,13 +127,6 @@
     public int ProductoId { get; set; }
     public ProductosDto Productos { get; set; } = new ProductosDto();
     public List<CategoriasDto> Categorias { get; set; } = new List<CategoriasDto>();
-    public string Mensaje { get; set; } = string.Empty;
-    public string MensajeDescripcion { get; set; } = string.Empty;
-    public string MensajeExistencia { get; set; } = string.Empty;
-    public string MensajePrecio { get; set; } = string.Empty;
-    public string MensajeCosto { get; set; } = string.Empty;
-    public string MensajeCategoria { get; set; } = string.Empty;
-    public string MensajeImagen { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
