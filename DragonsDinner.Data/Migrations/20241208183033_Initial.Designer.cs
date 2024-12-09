@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragonsDinner.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241208050641_Initial")]
+    [Migration("20241208183033_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -368,9 +368,6 @@ namespace DragonsDinner.Data.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CarritoId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
@@ -401,8 +398,6 @@ namespace DragonsDinner.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProductoId");
-
-                    b.HasIndex("CarritoId");
 
                     b.HasIndex("CategoriaId");
 
@@ -1036,7 +1031,7 @@ namespace DragonsDinner.Data.Migrations
             modelBuilder.Entity("DragonsDinner.Data.Models.CarritosDetalles", b =>
                 {
                     b.HasOne("DragonsDinner.Data.Models.Carritos", "Carrito")
-                        .WithMany()
+                        .WithMany("CarritoDetalle")
                         .HasForeignKey("CarritoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1101,10 +1096,6 @@ namespace DragonsDinner.Data.Migrations
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Productos", b =>
                 {
-                    b.HasOne("DragonsDinner.Data.Models.Carritos", null)
-                        .WithMany("Productos")
-                        .HasForeignKey("CarritoId");
-
                     b.HasOne("DragonsDinner.Data.Models.Categorias", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaId")
@@ -1198,7 +1189,7 @@ namespace DragonsDinner.Data.Migrations
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Carritos", b =>
                 {
-                    b.Navigation("Productos");
+                    b.Navigation("CarritoDetalle");
                 });
 
             modelBuilder.Entity("DragonsDinner.Data.Models.Ordenes", b =>
