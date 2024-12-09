@@ -1,0 +1,68 @@
+﻿@page "/MetodosPagos/Delete/{MetodosPagosId:int}"
+
+@rendermode InteractiveServer
+@inject MetodosPagoService metodoPagoSercice
+@inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<link href="Delete.css" rel="stylesheet" />
+
+<PageTitle>Eliminar Tipo metodo pago</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg custom-card">
+        <div class="card-header text-center">
+            <h5><strong>Datos del tipo metodo pago</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <div class="text-center">
+                <h5>¿Desea eliminar este tipo metodo pago?</h5>
+            </div>
+            <table class="mt-4 table text-center">
+                <tr>
+                    <td><strong>Metodo Pago Id:</strong></td>
+                    <td>@MetodosPago.MetodoPagoId</td>
+                </tr>
+                <tr>
+                    <td><strong>Metodo Pago:</strong></td>
+                    <td>@MetodosPago.MetodoPago</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/MetodosPagos/Index" class="btn btn-outline-primary bi bi-arrow-left"> Volver</a>
+            <button type="submit" @onclick="Eliminar" class="btn btn-outline-danger btn bi bi-trash"> Eliminar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int MetodosPagosId { get; set; }
+    public MetodosPagoDto MetodosPago { get; set; } = new MetodosPagoDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MetodosPago = await metodoPagoSercice.Buscar(MetodosPagosId);
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminar = await metodoPagoSercice.Eliminar(MetodosPago.MetodoPagoId);
+
+        if (eliminar)
+        {
+            Toast.Notify(new(ToastType.Success, $"Tipo Metodo pago eliminado correctamente"));
+            await Task.Delay(3000);
+            navigation.NavigateTo("/MetodosPagos/Index");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo eliminar la tipo emtodo Pago.");
+        }
+    }
+}
