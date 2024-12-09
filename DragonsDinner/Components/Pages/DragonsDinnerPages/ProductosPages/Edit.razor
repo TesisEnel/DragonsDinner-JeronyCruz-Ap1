@@ -3,6 +3,9 @@
 @inject ProductosService productosService
 @inject CategoriasService categoriasService
 @inject NavigationManager navigation
+@inject ToastService Toast
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <link href="CreateCategorias.css" rel="stylesheet" />
 
@@ -27,12 +30,6 @@
                     <label for="Nombre" class="form-label"><strong>Nombre</strong></label>
                     <InputText class="form-control" @bind-Value="Productos.Nombre"></InputText>
                     <ValidationMessage For="(() => Productos.Nombre)" />
-                    @if (!string.IsNullOrEmpty(Mensaje))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @Mensaje
-                        </div>
-                    }
                 </div>
 
                 @*Existencia*@
@@ -40,12 +37,6 @@
                     <label for="existencia" class="form-label"><strong>Existencia</strong></label>
                     <InputNumber class="form-control" @bind-Value="Productos.Existencia"></InputNumber>
                     <ValidationMessage For="(() => Productos.Existencia)" />
-                    @if (!string.IsNullOrEmpty(MensajeExistencia))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajeExistencia
-                        </div>
-                    }
                 </div>
 
                 @*Descripcion*@
@@ -53,12 +44,6 @@
                     <label for="Descripcion" class="form-label"><strong>Descripcion</strong></label>
                     <InputText class="form-control" @bind-Value="Productos.Descripcion"></InputText>
                     <ValidationMessage For="(() => Productos.Descripcion)" />
-                    @if (!string.IsNullOrEmpty(MensajeDescripcion))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajeDescripcion
-                        </div>
-                    }
                 </div>
 
                 @*Costo*@
@@ -66,12 +51,6 @@
                     <label for="Costo" class="form-label"><strong>Costo</strong></label>
                     <InputNumber class="form-control" @bind-Value="Productos.Costo"></InputNumber>
                     <ValidationMessage For="(() => Productos.Costo)" />
-                    @if (!string.IsNullOrEmpty(MensajeCosto))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajeCosto
-                        </div>
-                    }
                 </div>
 
                 @*Precio*@
@@ -79,12 +58,6 @@
                     <label for="precio" class="form-label"><strong>Precio</strong></label>
                     <InputNumber class="form-control" @bind-Value="Productos.Precio"></InputNumber>
                     <ValidationMessage For="(() => Productos.Precio)" />
-                    @if (!string.IsNullOrEmpty(MensajePrecio))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajePrecio
-                        </div>
-                    }
                 </div>
 
                 @*Categoria*@
@@ -97,12 +70,6 @@
                             <option value="@categoria.CategoriaId">@categoria.Nombre</option>
                         }
                     </InputSelect>
-                    @if (!string.IsNullOrEmpty(MensajeCategoria))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajeCategoria
-                        </div>
-                    }
                 </div>
 
 
@@ -118,12 +85,6 @@
                         </div>
                     }
                     <ValidationMessage For="(() => Productos.Imagen)" />
-                    @if (!string.IsNullOrEmpty(MensajeImagen))
-                    {
-                        <div class="alert alert-danger mt-3" role="alert">
-                            @MensajeImagen
-                        </div>
-                    }
                 </div>
 
             </div>
@@ -187,7 +148,7 @@
     {
         if (string.IsNullOrEmpty(Productos.Nombre))
         {
-            Mensaje = "El nombre del producto no puede estar vacío.";
+            Toast.Notify(new(ToastType.Danger, $"El Nombre del producto no puede estar vacio."));
             return;
         }
         bool nombreExiste = false;
@@ -197,41 +158,43 @@
         }
         if (Productos.Existencia <= 0)
         {
-            MensajeExistencia = "La existencia no puede ser 0.";
+            Toast.Notify(new(ToastType.Danger, $"La existencia no puede ser 0."));
             return;
         }
         if (string.IsNullOrWhiteSpace(Productos.Descripcion))
         {
-            MensajeDescripcion = "la Descripcion del producto no puede estar vacia.";
+            Toast.Notify(new(ToastType.Danger, $"la Descripcion del producto no puede estar vacia."));
             return;
         }
         if (Productos.Costo <= 0)
         {
-            MensajeCosto = "El costo del producto no puede ser menos o igual a 0.";
+            Toast.Notify(new(ToastType.Danger, $"El costo del producto no puede ser menos o igual a 0."));
             return;
         }
         if (Productos.Precio <= 0)
         {
-            MensajePrecio = "El precio del producto no puede ser menos o igual a 0.";
+            Toast.Notify(new(ToastType.Danger, $"El precio del producto no puede ser menos o igual a 0."));
             return;
         }
         if (Productos.Precio <= Productos.Costo)
         {
-            MensajePrecio = "El precio del producto no puede ser menor o igual al costo del mismo.";
+            Toast.Notify(new(ToastType.Danger, $"El precio del producto no puede ser menor o igual al costo del mismo."));
             return;
         }
         if (Productos.Categoria.CategoriaId <= 0)
         {
-            MensajeCategoria = "Debe seleccionar una categoría.";
+            Toast.Notify(new(ToastType.Danger, $"Debe seleccionar una categoría."));
             return;
         }
         if (string.IsNullOrEmpty(Productos.Imagen))
         {
-            MensajeImagen = "Debe subir una imagen del producto.";
+            Toast.Notify(new(ToastType.Danger, $"Debe subir una imagen del producto."));
             return;
         }
         await productosService.Guardar(Productos);
         Productos = new ProductosDto();
+        Toast.Notify(new(ToastType.Success, $"La Categoria ha sido editada exitosamente."));
+        await Task.Delay(3000);
         navigation.NavigateTo("/Productos/Index");
     }
 }
